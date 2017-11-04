@@ -124,6 +124,11 @@
 	-o-transform: rotate(-45deg) ;
 	transform: rotate(-45deg) ;
 }
+
+.navBox.navHidden .nextBtn,.navBox.navHidden .prevBtn,.navBox.navHidden .close-lightBox{
+	display: none;
+}
+
 .fullImg img{
 	position: fixed;	
 	cursor: pointer;
