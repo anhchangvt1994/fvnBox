@@ -161,12 +161,12 @@ $(function($) {
 	        		var curPoint = storage.event.originalEvent.touches[0].pageX;        		
 	        		var left;
 	        		if(curPoint > storage.prevPoint){
-	        			leftImgPos = leftImgPos+3.5;
-	        			leftImgBox = leftImgBox+3.5;
+	        			leftImgPos = leftImgPos+5;
+	        			leftImgBox = leftImgBox+5;
 	        			storage.distance = storage.distance + 1;
 	        		}else{
-	        			leftImgPos = leftImgPos-3.5;
-	        			leftImgBox = leftImgBox-3.5;        			
+	        			leftImgPos = leftImgPos-5;
+	        			leftImgBox = leftImgBox-5;        			
 	        			storage.distance = storage.distance - 1;
 	        		}
 	        		$(".fullImg img").offset({left:leftImgPos});
