@@ -24,7 +24,6 @@ $(function($) {
             })
 
             if(document.ontouchstart === null){
-            	console.log("run");
             	$(".navBox").addClass("navHidden");
             }
         }
@@ -340,12 +339,7 @@ $(function($) {
             wWidth = winW < winH ? winW * 80 / 100 : winW <= 640 ? winW * 60 / 100 : winW * 85 / 100 ;
             wHeight = winW < winH ? winH * 80 / 100 : winW <= 640 ? winH * 60 / 100 : winH * 85 / 100 ;
         },
-        setResizeImg: function() {        	
-        	if(document.ontouchstart === null){
-            	$(".navBox").addClass("navHidden");
-            }else{
-            	$(".navBox").removeClass("navHidden");
-            }  
+        setResizeImg: function() {  
         	this.setSizePercent();
             if (!$(".fullImg").hasClass("hidden")) {
                 var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueWidth;
