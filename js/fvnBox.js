@@ -333,6 +333,7 @@ $(function($) {
                     });
                 });
             }
+            console.log(fvnImgObj);
         },
         setSizePercent: function() {
         	var winW = $(window).outerWidth(false),winH = $(window).outerHeight(true);
