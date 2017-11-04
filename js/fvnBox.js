@@ -326,8 +326,8 @@ $(function($) {
                 var imgSrc = $("body img").attr("src");
                 var imgName = imgSrc.split("/")[$(this).length];
                 imgSrc = imgSrc.split(imgName)[0];
+                console.log(imgSrc);
                 $.get(imgSrc, function(data) {
-                	console.log(data);
                     $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
                         var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
                         fvnImgObj[suffix][id] = rootImgSrc;
