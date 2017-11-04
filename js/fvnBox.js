@@ -22,6 +22,10 @@ $(function($) {
             $(window).resize(function() {
                 fvnBoxFeature.setResizeImg();
             })
+
+            if(document.ontouchstart == null){
+            	$(".navBox").addClass("navHidden");
+            }
         }
         if (id === undefined) { id = "1"; }
         var curObj = "fvnBox" + (id < 10 ? "0" + id : id); // add new class for components to difference orther (thêm mới class để phân biệt chúng với nhau)
@@ -335,7 +339,12 @@ $(function($) {
             wWidth = winW < winH ? winW * 80 / 100 : winW <= 640 ? winW * 60 / 100 : winW * 85 / 100 ;
             wHeight = winW < winH ? winH * 80 / 100 : winW <= 640 ? winH * 60 / 100 : winH * 85 / 100 ;
         },
-        setResizeImg: function() {  
+        setResizeImg: function() {
+        	if(document.ontouchstart == null){
+            	$(".navBox").addClass("navHidden");
+            }else{
+            	$(".navBox").removeClass("navHidden");
+            }  
         	this.setSizePercent();
             if (!$(".fullImg").hasClass("hidden")) {
                 var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueWidth;
