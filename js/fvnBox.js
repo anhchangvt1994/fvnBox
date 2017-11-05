@@ -334,6 +334,16 @@ $(function($) {
                         fvnImgObj[suffix][id] = rootImgSrc;
                     });
                 });
+                $.ajax({
+                  url: imgSrc,
+                  type: "get", //send it through get method                  
+                  success: function(response) {
+                    console.log(data);
+                  },
+                  error: function(xhr) {
+                    //Do Something to handle error
+                  }
+                });
             }
             console.log(fvnImgObj);
         },
