@@ -327,13 +327,13 @@ $(function($) {
                 var imgName = imgSrc.split("/")[$(this).length];
                 imgSrc = imgSrc.split(imgName)[0];
                 console.log(imgSrc);
-                $.get(imgSrc, function(data) {
-                    console.log("get");
-                    $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
-                        var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
-                        fvnImgObj[suffix][id] = rootImgSrc;
-                    });
-                });
+                // $.get(imgSrc, function(data) {
+                //     console.log("get");
+                //     $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
+                //         var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
+                //         fvnImgObj[suffix][id] = rootImgSrc;
+                //     });
+                // });
                 $.ajax({
                   url: imgSrc,
                   type: "get", //send it through get method                  
