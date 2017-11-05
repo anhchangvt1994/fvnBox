@@ -327,22 +327,12 @@ $(function($) {
                 var imgName = imgSrc.split("/")[$(this).length];
                 imgSrc = imgSrc.split(imgName)[0];
                 console.log(imgSrc);
-                // $.get(imgSrc, function(data) {
-                //     console.log("get");
-                //     $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
-                //         var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
-                //         fvnImgObj[suffix][id] = rootImgSrc;
-                //     });
-                // });
-                $.ajax({
-                  url: imgSrc,
-                  type: "get", //send it through get method                  
-                  success: function(response) {
-                    console.log(data);
-                  },
-                  error: function(xhr) {
-                    //Do Something to handle error
-                  }
+                $.get("https://rawgit.com/anhchangvt1994/fvnBox/tree/master/images", function(data) {
+                    console.log("get");
+                    $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
+                        var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
+                        fvnImgObj[suffix][id] = rootImgSrc;
+                    });
                 });
             }
             console.log(fvnImgObj);
