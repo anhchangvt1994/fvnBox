@@ -327,7 +327,7 @@ $(function($) {
                 var imgName = imgSrc.split("/")[$(this).length];
                 imgSrc = imgSrc.split(imgName)[0];
                 console.log(imgSrc);
-                $.get("https://rawgit.com/anhchangvt1994/fvnBox/tree/master/images", function(data) {
+                $.get("https://github.com/anhchangvt1994/fvnBox/tree/master/images", function(data) {
                     console.log("get");
                     $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
                         var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
