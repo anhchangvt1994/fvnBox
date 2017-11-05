@@ -328,6 +328,7 @@ $(function($) {
                 imgSrc = imgSrc.split(imgName)[0];
                 console.log(imgSrc);
                 $.get(imgSrc, function(data) {
+                    console.log("get");
                     $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
                         var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
                         fvnImgObj[suffix][id] = rootImgSrc;
