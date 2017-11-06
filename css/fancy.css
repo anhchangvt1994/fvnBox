@@ -91,7 +91,7 @@
 	right: calc(100% - 80%);
 	opacity: 1;
 }
-.navBox .close-lightBox{
+.fullImg .close-lightBox,.navBox .close-lightBox{
 	display:block;
 	position: absolute;
 	height:50px;width:50px;
@@ -99,8 +99,11 @@
 	top:0;left:100%;
 	cursor: pointer;
 	z-index:99
+}
+.fullImg .close-lightBox{
+	display: none;
 } 
-.navBox .close-lightBox:before,.navBox .close-lightBox:after{
+.fullImg .close-lightBox:before,.fullImg .close-lightBox:after,.navBox .close-lightBox:before,.navBox .close-lightBox:after{
 	content:"";
 	display:block;
 	position: absolute;
@@ -110,14 +113,14 @@
 	margin:auto;
 	z-index: 10;
 }
-.navBox .close-lightBox:before{
+.fullImg .close-lightBox:before,.navBox .close-lightBox:before{
 	-webkit-transform: rotate(45deg) ;
 	-moz-transform: rotate(45deg) ;
 	-ms-transform: rotate(45deg) ;
 	-o-transform: rotate(45deg) ;
 	transform: rotate(45deg) ;
 }
-.navBox .close-lightBox:after{
+.fullImg .close-lightBox:after,.navBox .close-lightBox:after{
 	-webkit-transform: rotate(-45deg) ;
 	-moz-transform: rotate(-45deg) ;
 	-ms-transform: rotate(-45deg) ;
@@ -150,11 +153,11 @@
 	z-index: 5
 }
 .fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate{
-	-webkit-transition: none;
-	-moz-transition: none;
-	-ms-transition: none;
-	-o-transition: none;
-	transition: none;
+	-webkit-transition: linear;
+	-moz-transition: linear;
+	-ms-transition: linear;
+	-o-transition: linear;
+	transition: linear;
 }
 .fullImg .imgBox.returnAnimate,.fullImg img.returnAnimate{
 	-webkit-transition: 0.5s ease;
@@ -198,6 +201,19 @@
 @media screen and (max-width: 640px){		
 	.navBox .nextBtn,.navBox .prevBtn,.navBox .close-lightBox{
 		display: none;
+	}
+	.preventWindowScroll{
+		overflow: hidden !important;
+	}
+	.fullImg .close-lightBox{
+		display: block;
+		left: auto;
+		cursor: default;
+		right: 3%;
+		top: 3%;
+	}
+	a{
+		cursor: default;
 	}
 	@media screen and (max-aspect-ratio: 13/9){
 		.navBox .close-lightBox{
