@@ -22,10 +22,6 @@ $(function($) {
             $(window).resize(function() {
                 fvnBoxFeature.setResizeImg();
             })
-
-            if(document.ontouchstart === null){
-            	$(".navBox").addClass("navHidden");
-            }
         }
         if (id === undefined) { id = "1"; }
         var curObj = "fvnBox" + (id < 10 ? "0" + id : id); // add new class for components to difference orther (thêm mới class để phân biệt chúng với nhau)
@@ -62,7 +58,6 @@ $(function($) {
             fvnBoxController.detectEvent({ obj: curObj, tg: target, ev: event });
 
             $(curObj).find("img").on("touchstart click", function(e) {
-                e.preventDefault();
                 targetEl = curObj;
                 $(".navBox").addClass(curObj.split(".")[1]);
                 if (document.ontouchstart !== null) {
@@ -80,8 +75,7 @@ $(function($) {
                 	$(document).on("touchmove",function(){
                 		drag = true;
                 	});
-                	$(this).on("touchend",function(){
-                        e.preventDefault();
+                	$(this).on("touchend",function(){                        
                 		if(!drag){
                 			imgID = fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, suffixImg: opt.suffixImg });
                 		}else{
@@ -93,7 +87,7 @@ $(function($) {
 		                        navTouchEvent();
 		                    }, 0);
 		                    turnOn = true;
-		                }   		
+		                }  		
                 		return false;
                 	});
                 }                                
@@ -198,8 +192,9 @@ $(function($) {
 	            		$(".fullImg img").addClass("returnAnimate").css("left","");
 	            		$(".fullImg .imgBox").addClass("returnAnimate").css("left","");            		
 	            	}
-	            	if(remove){
+	            	if(remove){	            	
 	            		var img = $(".fullImg img"); imgBox = $(".fullImg .imgBox");
+	            		$(".navBox").css("display","none");
 	            		$(".fullImg").append("<div class='imgBox'></div>");
 	            		setTimeout(function(){
 	            			var src = fvnBoxController.detectContinueImg(targetEl,imgID,storage.distance>=7?[{className:"nextBtn"}]:[{className:"prevBtn"}]);
@@ -209,10 +204,13 @@ $(function($) {
 	            		setTimeout(function(){
 	            			img.height(img.height()/2).width(img.width()/2);	            		
 	            			imgBox.css({height:imgBox[0].clientHeight/2,width:imgBox[0].clientWidth/2});	
-	            		},70);	            			            		
+	            		},70);	            			       
 	            		setTimeout(function(){
-	            			$(".fullImg .outAnimate").remove();            			
-	            		},750);	            		
+	            			$(".navBox").css("display","");
+	            		},680);     		
+	            		setTimeout(function(){
+	            			$(".fullImg .outAnimate").remove();	            			
+	            		},720);	            		
 	            	}
 	            	$(".navBox").css("left","");
         		}        		
@@ -225,7 +223,6 @@ $(function($) {
             event.ev === null ? event.ev = "touchstart" : event.ev = "click";
             if (event.tg != "img" && event.ev == "click") {
                 $(event.obj).find(event.tg).click(function(e) {
-                    e.preventDefault();
                     $(this).find("img").click();
                 });
             }
@@ -351,11 +348,6 @@ $(function($) {
             wHeight = winW < winH ? winH * 80 / 100 : winW <= 640 ? winH * 60 / 100 : winH * 85 / 100 ;
         },
         setResizeImg: function() {
-            if(document.ontouchstart === null){
-                $(".navBox").addClass("navHidden");
-            }else{
-                $(".navBox").removeClass("navHidden");
-            }  
         	this.setSizePercent();
             if (!$(".fullImg").hasClass("hidden")) {
                 var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueWidth;
