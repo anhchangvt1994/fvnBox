@@ -46,7 +46,7 @@
 	letter-spacing: -4px
 }
 .navBox .prevBtn,.navBox .nextBtn{
-	display:inline-block;	
+	display:none;	
 	width:25%;height: 100%;
 	position: relative;
 	float: left;		
@@ -92,7 +92,7 @@
 	opacity: 1;
 }
 .fullImg .close-lightBox,.navBox .close-lightBox{
-	display:block;
+	display:none;
 	position: absolute;
 	height:50px;width:50px;
 	/* background:rgba(0,0,0,0.8); */
@@ -100,9 +100,6 @@
 	cursor: pointer;
 	z-index:99
 }
-.fullImg .close-lightBox{
-	display: none;
-} 
 .fullImg .close-lightBox:before,.fullImg .close-lightBox:after,.navBox .close-lightBox:before,.navBox .close-lightBox:after{
 	content:"";
 	display:block;
@@ -127,13 +124,15 @@
 	-o-transform: rotate(-45deg) ;
 	transform: rotate(-45deg) ;
 }
-
-.navBox.navHidden .nextBtn,.navBox.navHidden .prevBtn,.navBox.navHidden .close-lightBox{
-	display: none;
+.fullImg.fvnNavBox .close-lightBox,.navBox.fvnNavBox .close-lightBox{
+	display:block;
+}
+.navBox.fvnNavBox .prevBtn,.navBox.fvnNavBox .nextBtn{
+	display:inline-block;
 }
 
 .fullImg img{
-	position: fixed;	
+	position: absolute;	
 	cursor: pointer;
 	/* top: 0;left: 0;bottom: 0;right:0; */
 	left: 50%;top: 50%;
@@ -198,23 +197,17 @@
 	-o-transition: 0.8s ease;
 	transition: 0.8s ease;
 }
-@media screen and (max-width: 640px){		
-	.navBox .nextBtn,.navBox .prevBtn,.navBox .close-lightBox{
-		display: none;
-	}
-	.preventWindowScroll{
+.preventWindowScroll{
 		overflow: hidden !important;
-	}
-	.fullImg .close-lightBox{
-		display: block;
-		left: auto;
-		cursor: default;
-		right: 3%;
-		top: 3%;
-	}
-	a{
-		cursor: default;
-	}
+}
+.fullImg.fvnNavBox .close-lightBox{
+	display: block;
+	left: auto;
+	cursor: default;
+	right: 3%;
+	top: 3%;
+}
+@media screen and (max-width: 640px){	
 	@media screen and (max-aspect-ratio: 13/9){
 		.navBox .close-lightBox{
 			left: 85%;
