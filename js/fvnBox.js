@@ -67,7 +67,7 @@ $(function($) {
                 targetEl = curObj;
                 $(".navBox").addClass(curObj.split(".")[1]);
                 if (!fvnBoxFeature.detectDevice()) {
-                    imgID = fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, suffixImg: opt.suffixImg });                    
+                    fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, suffixImg: opt.suffixImg });                                        
                     if (!turnOn) {
 	                    setTimeout(function() {                    	
 	                        navClickEvent();
@@ -83,7 +83,7 @@ $(function($) {
                 	});
                 	$(this).on("touchend",function(){                        
                 		if(!drag){
-                			imgID = fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, suffixImg: opt.suffixImg });
+                			fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, suffixImg: opt.suffixImg });               			
                 		}else{
                 			drag = false;
                 		}             
@@ -123,7 +123,7 @@ $(function($) {
                     if ($(this)[0].className != "close-lightBox") {
                         var src = fvnBoxController.detectContinueImg(targetEl, imgID, $(this));
                         if (src !== undefined) {
-                            imgID = fvnBoxAnimation.mainAnimate({ item: $(src), imgs: imgs, suffixImg: opt.suffixImg });
+                            fvnBoxAnimation.mainAnimate({ item: $(src), imgs: imgs, suffixImg: opt.suffixImg });
                         }
                     } else {
                         targetEl = fvnBoxController.settingClose(targetEl, $(this));                        
@@ -137,7 +137,7 @@ $(function($) {
         mainAnimate: function(storage) {
             if (storage.type === undefined) {
                 var animate = 50;
-                var src, imgID;
+                var src;
                 // check if have suffix                                
                 if (storage.suffixImg !== undefined) {
                     if (storage.item.attr("data-src") === undefined) {
@@ -159,7 +159,6 @@ $(function($) {
                         imgID = id;
                     }
                 });
-                return imgID;
             }
         },
         dragAnimate: function(storage){
@@ -201,11 +200,9 @@ $(function($) {
 	            		var img = $(".fullImg img"); imgBox = $(".fullImg .imgBox");
 	            		$(".navBox").css("display","none");
 	            		$(".fullImg").append("<div class='imgBox'></div>");
-	            		setTimeout(function(){
-                            console.log(imgID);
-	            			var src = fvnBoxController.detectContinueImg(targetEl,imgID,storage.distance>=7?[{className:"nextBtn"}]:[{className:"prevBtn"}]);
-	            			imgID = fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, suffixImg: storage.suffix});
-                            console.log(imgID);
+	            		setTimeout(function(){	            			
+	            			var src = fvnBoxController.detectContinueImg(targetEl,imgID,storage.distance>=7?[{className:"nextBtn"}]:[{className:"prevBtn"}]);	            			
+	            			fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, suffixImg: storage.suffix});                            
 	            		},50)	            		
 	            		setTimeout(function(){
 	            			img.height(img.height()/2).width(img.width()/2);	            		
