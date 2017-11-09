@@ -66,7 +66,6 @@ $(function($) {
             $(curObj).find("img").on("touchstart click", function(e) {
                 targetEl = curObj;
                 $(".navBox").addClass(curObj.split(".")[1]);
-                console.log(fvnBoxFeature.detectDevice());
                 if (!fvnBoxFeature.detectDevice()) {
                     imgID = fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, suffixImg: opt.suffixImg });                    
                     if (!turnOn) {
@@ -106,7 +105,6 @@ $(function($) {
             		distance = 0;
             		$($(".fullImg").find("img")).removeClass("returnAnimate").addClass("noneAnimate");
             		$($(".fullImg").find(".imgBox")).removeClass("returnAnimate").addClass("noneAnimate");
-            		console.log($(".fullImg img").offset().left);
             	}).on("touchmove",function(e){
             		var dragVariables = fvnBoxAnimation.dragAnimate({event:e,prevPoint:prevPoint,distance:distance,outImg:false});
             		prevPoint = dragVariables.prevPoint;
@@ -161,7 +159,6 @@ $(function($) {
                         imgID = id;
                     }
                 });
-                console.log(imgID);
                 return imgID;
             }
         },
@@ -180,10 +177,7 @@ $(function($) {
 	        			leftImgBox = leftImgBox-5;        			
 	        			storage.distance = storage.distance - 1;
 	        		}
-	        		console.log(leftImgPos);
-	        		console.log(leftImgBox);
 	        		$(".fullImg img").offset({left:leftImgPos});
-	        		console.log($(".fullImg img").offset().left);
 	        		$(".fullImg .imgBox").offset({left:leftImgBox});
 	        		$(".navBox").offset({left:leftImgBox});
         			return {prevPoint:storage.event.originalEvent.touches[0].pageX,distance:storage.distance};
@@ -192,8 +186,8 @@ $(function($) {
 	            	$(".fullImg img").removeClass("noneAnimate");
 	            	$(".fullImg .imgBox").removeClass("noneAnimate");
 	            	if(storage.distance>=7){            		
-	            		$(".fullImg img").addClass("outAnimate").css("left",$(window).outerWidth());
-	            		$(".fullImg .imgBox").addClass("outAnimate").css("left",$(window).outerWidth());
+	            		$(".fullImg img").addClass("outAnimate").css("left",100+"%");
+	            		$(".fullImg .imgBox").addClass("outAnimate").css("left",100+"%");
 	            		remove = true;
 	            	}else if(storage.distance<=-7){
 	            		$(".fullImg img").addClass("outAnimate").css("left",0);
@@ -208,6 +202,7 @@ $(function($) {
 	            		$(".navBox").css("display","none");
 	            		$(".fullImg").append("<div class='imgBox'></div>");
 	            		setTimeout(function(){
+                            console.log(imgID);
 	            			var src = fvnBoxController.detectContinueImg(targetEl,imgID,storage.distance>=7?[{className:"nextBtn"}]:[{className:"prevBtn"}]);
 	            			imgID = fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, suffixImg: storage.suffix});
                             console.log(imgID);
@@ -345,7 +340,6 @@ $(function($) {
                 var imgName = imgSrc.split("/")[$(this).length];
                 imgSrc = imgSrc.split(imgName)[0];                
                 $.get(imgSrc, function(data) {
-                    console.log("get");
                     $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
                         var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
                         fvnImgObj[suffix][id] = rootImgSrc;
@@ -367,11 +361,9 @@ $(function($) {
 		},
         setResizeImg: function() {
         	if(this.detectDevice() && !$(".fullImg").hasClass("fvnNavBox")){
-        		console.log($(".fullImg").hasClass("fvnNavBox"));
         		$(".navBox").removeClass("fvnNavBox");
         		$(".fullImg").addClass("fvnNavBox");
-        	}else if(!this.detectDevice() && $(".fullImg").hasClass("fvnNavBox")){        		
-        		console.log($(".fullImg").hasClass("fvnNavBox"));
+        	}else if(!this.detectDevice() && $(".fullImg").hasClass("fvnNavBox")){      
         		$(".navBox").addClass("fvnNavBox");
         		$(".fullImg").removeClass("fvnNavBox");
         	}
