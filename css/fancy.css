@@ -27,11 +27,11 @@
 	-ms-transform: translate(-50%,-50%) ;
 	-o-transform: translate(-50%,-50%) ;
 	transform: translate(-50%,-50%) ;
-	/* -webkit-transition: all 0.9s ease ;
+	-webkit-transition: all 0.9s ease ;
 	-moz-transition: all 0.9s ease ;
 	-ms-transition: all 0.9s ease ;
 	-o-transition: all 0.9s ease ;
-	transition: all 0.9s ease ; */
+	transition: all 0.9s ease ;
 }
 .navBox{
 	position: fixed;
