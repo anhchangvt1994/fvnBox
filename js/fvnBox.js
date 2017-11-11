@@ -102,9 +102,9 @@ $(function($) {
             	$(".navBox"+ targetEl).on("touchstart",function(e){
                     $("body").addClass("preventWindowScroll");
             		prevPoint = e.originalEvent.touches[0].pageX;
-            		distance = 0;
+            		distance = 0;            		
             		$($(".fullImg").find("img")).removeClass("returnAnimate").addClass("noneAnimate");
-            		$($(".fullImg").find(".imgBox")).removeClass("returnAnimate").addClass("noneAnimate");
+            		$($(".fullImg").find(".imgBox")).removeClass("returnAnimate").addClass("noneAnimte");
             	}).on("touchmove",function(e){
             		var dragVariables = fvnBoxAnimation.dragAnimate({event:e,prevPoint:prevPoint,distance:distance,outImg:false});
             		prevPoint = dragVariables.prevPoint;
@@ -157,6 +157,7 @@ $(function($) {
                 storage.imgs.each(function(id) {
                     if (storage.item.attr("src") == $(this).attr("src")) {
                         imgID = id;
+                        console.log(imgID);
                     }
                 });
             }
@@ -167,6 +168,7 @@ $(function($) {
         			var leftImgPos = $(".fullImg img").offset().left,leftImgBox = $(".fullImg .imgBox").offset().left;        		        		        		
 	        		var curPoint = storage.event.originalEvent.touches[0].pageX;        		
 	        		var left;
+	        		console.log(leftImgPos);
 	        		if(curPoint > storage.prevPoint){
 	        			leftImgPos = leftImgPos+5;
 	        			leftImgBox = leftImgBox+5;
@@ -196,24 +198,28 @@ $(function($) {
 	            		$(".fullImg img").addClass("returnAnimate").css("left","");
 	            		$(".fullImg .imgBox").addClass("returnAnimate").css("left","");            		
 	            	}
-	            	if(remove){	            	
+	            	if(remove){		            	
 	            		var img = $(".fullImg img"); imgBox = $(".fullImg .imgBox");
-	            		$(".navBox").css("display","none");
+	            		$(".navBox").addClass("noneAnimate");
 	            		$(".fullImg").append("<div class='imgBox'></div>");
+	            		var height = imgBox[0].clientHeight;            	
+	            		var width = imgBox[0].clientWidth;
 	            		setTimeout(function(){	            			
 	            			var src = fvnBoxController.detectContinueImg(targetEl,imgID,storage.distance>=7?[{className:"nextBtn"}]:[{className:"prevBtn"}]);	            			
 	            			fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, suffixImg: storage.suffix});                            
 	            		},50)	            		
 	            		setTimeout(function(){
-	            			img.height(img.height()/2).width(img.width()/2);	            		
+	            			img.height(img.height()/3).width(img.width()/3);	            		
 	            			imgBox.css({height:imgBox[0].clientHeight/2,width:imgBox[0].clientWidth/2});	
-	            		},70);	            			       
+	            		},70);
 	            		setTimeout(function(){
-	            			$(".navBox").css("display","");
-	            		},680);     		
+	            			imgBox.animate({height:height,width:width},20);
+	            		},600);	            			       
+	            		setTimeout(function(){
+	            		},900);     		
 	            		setTimeout(function(){
 	            			$(".fullImg .outAnimate").remove();	            			
-	            		},720);	            		
+	            		},1000);	            		
 	            	}
 	            	$(".navBox").css("left","");
         		}        		
@@ -305,9 +311,11 @@ $(function($) {
                     $($(".fullImg").find("img")[id]).addClass("appearOpa");
                 }, 200);
                 setTimeout(function() {
-                    $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 });
-                    $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 });
-                }, animate);
+                    $("body").find(".imgBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
+                    $("body").find(".navBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
+                    // $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 });
+                    // $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 });
+                }, animate);                                
             });
         },
         settingClose: function(targetEl, nav) {

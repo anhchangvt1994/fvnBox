@@ -134,7 +134,6 @@
 .fullImg img{
 	position: absolute;	
 	cursor: pointer;
-	/* top: 0;left: 0;bottom: 0;right:0; */
 	left: 50%;top: 50%;
 	-webkit-transform: translate(-50%,-50%);
 	-moz-transform: translate(-50%,-50%);
@@ -158,6 +157,13 @@
 	-o-transition: linear;
 	transition: linear;
 }
+.fullImg .imgBox.quickMove,.fullImg img.quickMove{
+	-webkit-transition: 0.5s ease;
+	-moz-transition: 0.5s ease;
+	-ms-transition: 0.5s ease;
+	-o-transition: 0.5s ease;
+	transition: 0.5s ease;
+}
 .fullImg .imgBox.returnAnimate,.fullImg img.returnAnimate{
 	-webkit-transition: 0.5s ease;
 	-moz-transition: 0.5s ease;
@@ -167,11 +173,11 @@
 }
 .fullImg .imgBox.outAnimate,.fullImg img.outAnimate{
 	opacity: 0 !important;
-	-webkit-transition: 0.7s ease;
-	-moz-transition: 0.7s ease;
-	-ms-transition: 0.7s ease;
-	-o-transition: 0.7s ease;
-	transition: 0.7s ease;
+	-webkit-transition: 1.2s ease;
+	-moz-transition: 1.2s ease;
+	-ms-transition: 1.2s ease;
+	-o-transition: 1.2s ease;
+	transition: 1.2s ease;
 }
 .appearOpa{
 	opacity: 1 !important;
@@ -184,10 +190,10 @@
 	z-index: 10
 }
 .disappearOpa{
-	-webkit-transition: all 1s ease;
-	-moz-transition: all 1s ease;
-	-ms-transition: all 1s ease;
-	-o-transition: all 1s ease;
+	-webkit-transition: all 0.7s ease;
+	-moz-transition: all 0.7s ease;
+	-ms-transition: all 0.7s ease;
+	-o-transition: all 0.7s ease;
 	// transition: all 1s cubic-bezier(0.39, 0.575, 0.565, 1);		
 }
 .fullImg .fastAnimate{
