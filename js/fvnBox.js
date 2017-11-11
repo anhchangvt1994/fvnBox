@@ -320,8 +320,8 @@ $(function($) {
                     $($(".fullImg").find("img")[id]).addClass("appearOpa");
                 }, 200);
                 setTimeout(function() {
-                    $("body").find(".imgBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
-                    $("body").find(".navBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
+                    $("body").find(".imgBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:900,easing:"swing"});                    
+                    $("body").find(".navBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:900,easing:"swing"});                    
                     // $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 });
                     // $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 });
                 }, animate);                                
