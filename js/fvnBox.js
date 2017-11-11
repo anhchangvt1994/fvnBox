@@ -59,9 +59,9 @@ $(function($) {
 
             var currentPercent,prevPoint,distance; // declare available for mainbrain
 
-            var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
+            // var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
             var event = document.ontouchstart;
-            fvnBoxController.detectEvent({ obj: curObj, tg: target, ev: event });
+            // fvnBoxController.detectEvent({ obj: curObj, tg: target, ev: event });
 
             $(curObj).find("img").on("touchstart click", function(e) {
                 targetEl = curObj;
