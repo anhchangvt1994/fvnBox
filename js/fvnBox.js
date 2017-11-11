@@ -58,10 +58,9 @@ $(function($) {
         setup: function(curObj, opt, imgs) {
 
             var currentPercent,prevPoint,distance; // declare available for mainbrain
-
-            // var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
-            var event = document.ontouchstart;
-            // fvnBoxController.detectEvent({ obj: curObj, tg: target, ev: event });
+                        
+            var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
+            fvnBoxController.detectEvent({ obj: curObj, tg: target});
 
             $(curObj).find("img").on("touchstart click", function(e) {
                 targetEl = curObj;
@@ -170,7 +169,6 @@ $(function($) {
             			$($(".fullImg").find("img")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
             			$($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
             		}else{
-            			console.log($($(".fullImg").find("img"))[0]);
             			$($(".fullImg").find("img")[0]).removeClass("returnAnimate").addClass("quickMove");
             			$($(".fullImg").find(".imgBox")[0]).removeClass("returnAnimate").addClass("quickMove");
             		} 
@@ -237,10 +235,10 @@ $(function($) {
     };
 
     var fvnBoxController = {
-        detectEvent: function(event) {
-            event.ev === null ? event.ev = "touchstart" : event.ev = "click";
-            if (event.tg != "img" && event.ev == "click") {
+        detectEvent: function(event) {        	           
+            if (event.tg != "img" && fvnBoxFeature.detectDevice()) {
                 $(event.obj).find(event.tg).click(function(e) {
+                	e.preventDefault();
                     $(this).find("img").click();
                 });
             }
@@ -320,8 +318,8 @@ $(function($) {
                     $($(".fullImg").find("img")[id]).addClass("appearOpa");
                 }, 200);
                 setTimeout(function() {
-                    $("body").find(".imgBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:900,easing:"swing"});                    
-                    $("body").find(".navBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:900,easing:"swing"});                    
+                    $("body").find(".imgBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
+                    $("body").find(".navBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
                     // $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 });
                     // $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 });
                 }, animate);                                
