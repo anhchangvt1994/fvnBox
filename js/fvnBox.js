@@ -102,15 +102,13 @@ $(function($) {
             	$(".navBox"+ targetEl).on("touchstart",function(e){
                     $("body").addClass("preventWindowScroll");
             		prevPoint = e.originalEvent.touches[0].pageX;
-            		distance = 0;            		
-            		$($(".fullImg").find("img")).removeClass("returnAnimate").addClass("noneAnimate");
-            		$($(".fullImg").find(".imgBox")).removeClass("returnAnimate").addClass("noneAnimte");
+            		distance = 0;
             	}).on("touchmove",function(e){
             		var dragVariables = fvnBoxAnimation.dragAnimate({event:e,prevPoint:prevPoint,distance:distance,outImg:false});
             		prevPoint = dragVariables.prevPoint;
             		distance = dragVariables.distance;
             	}).on("touchend",function(){
-                    $("body").removeClass("preventWindowScroll");
+                    $("body").removeClass("preventWindowScroll");                    
             		var dragVariables = fvnBoxAnimation.dragAnimate({prevPoint:prevPoint,distance:distance,outImg:true,imgs:imgs,suffix:opt.suffixImg});
             	});
                 $(".fullImg").on("touchstart",".close-lightBox",function(){
@@ -165,10 +163,19 @@ $(function($) {
         dragAnimate: function(storage){
         	if(storage.type===undefined){
         		if(!storage.outImg){
-        			var leftImgPos = $(".fullImg img").offset().left,leftImgBox = $(".fullImg .imgBox").offset().left;        		        		        		
+        			var leftImgPos,leftImgBox;        		        		        		
 	        		var curPoint = storage.event.originalEvent.touches[0].pageX;        		
 	        		var left;
-	        		console.log(leftImgPos);
+	        		if($($(".fullImg").find("img"))[1]===undefined){
+            			$($(".fullImg").find("img")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
+            			$($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
+            		}else{
+            			console.log($($(".fullImg").find("img"))[0]);
+            			$($(".fullImg").find("img")[0]).removeClass("returnAnimate").addClass("quickMove");
+            			$($(".fullImg").find(".imgBox")[0]).removeClass("returnAnimate").addClass("quickMove");
+            		} 
+            		leftImgPos = $(".fullImg img").offset().left;
+            		leftImgBox = $(".fullImg .imgBox").offset().left;
 	        		if(curPoint > storage.prevPoint){
 	        			leftImgPos = leftImgPos+5;
 	        			leftImgBox = leftImgBox+5;
@@ -184,8 +191,8 @@ $(function($) {
         			return {prevPoint:storage.event.originalEvent.touches[0].pageX,distance:storage.distance};
         		}else{
         			var remove = false;
-	            	$(".fullImg img").removeClass("noneAnimate");
-	            	$(".fullImg .imgBox").removeClass("noneAnimate");
+	            	$(".fullImg img").removeClass("noneAnimate quickMove");
+	            	$(".fullImg .imgBox").removeClass("noneAnimate quickMove");
 	            	if(storage.distance>=7){            		
 	            		$(".fullImg img").addClass("outAnimate").css("left",100+"%");
 	            		$(".fullImg .imgBox").addClass("outAnimate").css("left",100+"%");
@@ -216,9 +223,11 @@ $(function($) {
 	            			imgBox.animate({height:height,width:width},20);
 	            		},600);	            			       
 	            		setTimeout(function(){
-	            		},900);     		
+	            			img.addClass("remove");
+	            			imgBox.addClass("remove");
+	            		},980);     		
 	            		setTimeout(function(){
-	            			$(".fullImg .outAnimate").remove();	            			
+	            			$(".fullImg .remove").remove();	            			
 	            		},1000);	            		
 	            	}
 	            	$(".navBox").css("left","");
