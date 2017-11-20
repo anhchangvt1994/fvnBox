@@ -30,6 +30,7 @@ $(function($) {
             }else{            	
             	$(".navBox").addClass("fvnNavBox");
             }
+            fvnBoxFeature.settingRemoveFunc();            
         }
         if (id === undefined) { id = "1"; }
         var curObj = "fvnBox" + (id < 10 ? "0" + id : id); // add new class for components to difference orther (thêm mới class để phân biệt chúng với nhau)
@@ -409,6 +410,15 @@ $(function($) {
                 $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
                 $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
             }      
+        },
+        settingRemoveFunc:function(){
+            if (!('remove' in Element.prototype)) {
+                Element.prototype.remove = function() {
+                    if (this.parentNode) {
+                        this.parentNode.removeChild(this);
+                    }
+                };
+            }
         }
     }
 })
