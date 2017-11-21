@@ -1,8 +1,15 @@
 $(function($) {
-    var targetEl = "",
-        imgsGB="",
-        optGB="",
-        turnOn = false,
+    var targetEl = "", // global for detect what component is running this plugin at current (biến toàn cục này dùng xác định component nào đang chạy fvnBox trong thời điểm hiện tại).
+        imgsGB="", // global for images list for the running component (global này dùng để lưu trữ danh sách image trong component đó, dù cho images đó nào ở các cấp element khác nhau trong component).
+        optGB="", // global for option component run this plugin (global này dùng lưu trữ options của component hiện tại)
+
+        /*
+            tất cả các biến global ngoài vai trò là những biến được sử dụng xuyên suốt plugin ra, thì nó còn dùng cho mục đích xác định đối tượng khởi chạy, 
+            bởi plugin chỉ chạy các event functions trong 1 lần khởi chạy, và các event functions này được dùng cho toàn bộ các khởi chạy khác trong page.
+            vd : component01, component02 chạy cùng fvnBox nhưng event functions chỉ khởi chạy 1 lần ở component01, sau đó được reuse cho cả component02, 03...
+        */
+
+        turnOn = false, // turnOn = false will come true after the event functions of "setup" module is actived, and it'll stop active more then
         imgID; // global varieties
     var fvnImgObj = {}, // global object for suffixImg (object toàn cục, dùng để lưu trữ các file có suffix nếu suffix được khai báo)
         wWidth, wHeight;
@@ -25,11 +32,17 @@ $(function($) {
                 fvnBoxFeature.setResizeImg();
             })
 
+            // setting navBox by detecting what device on use.
+
             if(fvnBoxFeature.detectDevice()){            	
             	$(".fullImg").addClass("fvnNavBox");
             }else{            	
             	$(".navBox").addClass("fvnNavBox");
             }
+
+            // for IE, cause IE doesn't support remove and replaceWith functions in jquery, so we will custom a remove function if browser doesn't support
+            // link for solution in it: https://stackoverflow.com/questions/20428877/javascript-remove-doesnt-work-in-ie
+
             fvnBoxFeature.settingRemoveFunc();            
         }
         if (id === undefined) { id = "1"; }
@@ -39,7 +52,7 @@ $(function($) {
             curObj = "fvnBox" + (id < 10 ? "0" + id : id);
         }
         $(this).addClass(curObj);
-        curObj = "." + curObj; // declare new class, to instead old class. (khai báo class mới được th6m, thay cho class trước đó)
+        curObj = "." + curObj; // declare new class, to instead old class. (khai báo class mới được thêm, thay cho class trước đó)
 
         var listImg = $($(curObj).find("img")); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)
 
@@ -332,7 +345,6 @@ $(function($) {
                     $("body").find(".imgBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
                     $("body").find(".navBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});
                     $("body").find(".fvnInforBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});
-                    console.log(opt.number);
                     if(opt.number){
                         $("body").find(".fvnInforBox .fvnNumber").html(imgID+1+" of "+imgs);
                     }else{
