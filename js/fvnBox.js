@@ -43,7 +43,8 @@ $(function($) {
             // for IE, cause IE doesn't support remove and replaceWith functions in jquery, so we will custom a remove function if browser doesn't support
             // link for solution in it: https://stackoverflow.com/questions/20428877/javascript-remove-doesnt-work-in-ie
 
-            fvnBoxFeature.settingRemoveFunc();            
+            fvnBoxFeature.settingRemoveFunc();  
+
         }
         if (id === undefined) { id = "1"; }
         var curObj = "fvnBox" + (id < 10 ? "0" + id : id); // add new class for components to difference orther (thêm mới class để phân biệt chúng với nhau)
@@ -79,6 +80,7 @@ $(function($) {
             fvnBoxController.detectEvent({ obj: curObj, tg: target});
 
             $(curObj).find("img").on("touchstart click", function(e) {
+                
                 targetEl = curObj;imgsGB = imgs; optGB = opt;                
                 $(".navBox").addClass(curObj.split(".")[1]);
                 if (!fvnBoxFeature.detectDevice()) {
@@ -111,7 +113,8 @@ $(function($) {
 		                }  		
                 		return false;
                 	});
-                }                                
+                }
+
             });     
             function navTouchEvent(){
             	$(".navBox"+ targetEl).on("touchstart",function(e){
@@ -214,7 +217,7 @@ $(function($) {
         			}
 	            	$(".fullImg img").removeClass("noneAnimate quickMove");
 	            	$(".fullImg .imgBox").removeClass("noneAnimate quickMove");
-	            	if(storage.distance>=outBorder){        		
+	            	if(storage.distance>=outBorder){        		                        
 	            		$(".fullImg img").addClass("outAnimate").css("left",100+"%");
 	            		$(".fullImg .imgBox").addClass("outAnimate").css("left",100+"%");
 	            		remove = true;
@@ -227,7 +230,7 @@ $(function($) {
 	            		$(".fullImg .imgBox").addClass("returnAnimate").css("left","");            		
 	            	}
 	            	if(remove){		            	
-	            		var img = $(".fullImg img"); imgBox = $(".fullImg .imgBox");
+	            		var img = $(".fullImg img"); imgBox = $(".fullImg .imgBox");                        
 	            		$(".navBox").addClass("noneAnimate");
 	            		$(".fullImg").append("<div class='imgBox'></div>");
 	            		var height = imgBox[0].clientHeight;            	
@@ -236,12 +239,12 @@ $(function($) {
 	            			var src = fvnBoxController.detectContinueImg(targetEl,imgID,storage.distance>=outBorder?[{className:"nextBtn"}]:[{className:"prevBtn"}]);	            			
 	            			fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt});                            
 	            		},50)	            		
-	            		setTimeout(function(){
-	            			img.height(img.height()/3).width(img.width()/3);	            		
-	            			imgBox.css({height:imgBox[0].clientHeight/2,width:imgBox[0].clientWidth/2});	
+	            		setTimeout(function(){                            
+	            			img.css({height:img.height()/3,width:img.width()/3});
+	            			imgBox.css({"height":imgBox[0].clientHeight/2+"px !important","width":imgBox[0].clientWidth/2+"px !important"});
 	            		},70);
 	            		setTimeout(function(){
-	            			imgBox.animate({height:height,width:width},20);
+	            			imgBox.css({height:height,width:width});
 	            		},600);	            			       
 	            		setTimeout(function(){
 	            			img.addClass("remove");
@@ -332,7 +335,7 @@ $(function($) {
                 $("body").find(".fullImg").removeClass("hidden");
                 $("body").find(".navBox").removeClass("hidden");
                 $("body").find(".fvnInforBox").removeClass("hidden");
-                $("body").find(".fullImg img").attr({ "width": trueW, "height": trueH });
+                $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });
                 setTimeout(function() {
                     var id = 0;
                     if ($($(".fullImg").find("img")).length == 2) {
@@ -342,9 +345,9 @@ $(function($) {
                     $($(".fullImg").find("img")[id]).addClass("appearOpa");
                 }, 200);
                 setTimeout(function() {
-                    $("body").find(".imgBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});                    
-                    $("body").find(".navBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});
-                    $("body").find(".fvnInforBox").animate({ "width": trueW + 10, "height": trueH + 10 },{duration:0,easing:"swing"});
+                    $("body").find(".imgBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });                    
+                    $("body").find(".navBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });
+                    $("body").find(".fvnInforBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });
                     if(opt.number){
                         $("body").find(".fvnInforBox .fvnNumber").html(imgID+1+" of "+imgs);
                     }else{
@@ -417,7 +420,7 @@ $(function($) {
             if (!$(".fullImg").hasClass("hidden")) {
                 var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueWidth;
             	var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueHeight;
-                $("body").find(".fullImg img").attr({ "width": trueW, "height": trueH }).addClass("fastAnimate");
+                $("body").find(".fullImg img").css({ "width": trueW, "height": trueH }).addClass("fastAnimate");
                 $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
                 $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
                 $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
