@@ -133,6 +133,10 @@
 }
 .fvnInforBox .fvnCaption{
 	right: 0;
+	max-width: 30%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 .fullImg img{
 	position: absolute;	
