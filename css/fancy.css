@@ -1,3 +1,12 @@
+/************************************
+
+authors : Nguyễn Minh Trường
+first released by : Nguyễn Minh Trường in 2017
+email : anhchangvt1994@gmail.com / fvn.truongnm@gmail.com
+phone number : 0948621519
+
+************************************/
+
 *{padding:0;margin:0;box-sizing: border-box}
 .fullImg{	
 	position: fixed;
@@ -17,7 +26,6 @@
 	background: #fff;	
 	top: 50%;
 	left: 50%;
-	/* text-align: center; */
 	-webkit-transform: translate(-50%,-50%) ;
 	-moz-transform: translate(-50%,-50%) ;
 	-ms-transform: translate(-50%,-50%) ;
