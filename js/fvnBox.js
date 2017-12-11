@@ -56,6 +56,9 @@ $(function($) {
         curObj = "." + curObj; // declare new class, to instead old class. (khai báo class mới được thêm, thay cho class trước đó)
 
         var listImg = $($(curObj).find("img")); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)
+        $.each(listImg,function(id,data){
+            $(data).attr("data-index",id);
+        });
 
         if (opt === undefined) { // if current coponent have "opt" then must add list of images (nếu component hiện tại có opt thì mới thêm danh sách hình ảnh tương ứng với suffix đó)
             opt = { "suffixImg": undefined };
@@ -82,8 +85,9 @@ $(function($) {
             $(curObj).find("img").on("touchstart click", function(e) {
                 
                 targetEl = curObj;imgsGB = imgs; optGB = opt;                
+                imgID = $(this).attr("data-index");
                 $(".navBox").addClass(curObj.split(".")[1]);
-                if (!fvnBoxFeature.detectDevice()) {
+                if (!fvnBoxFeature.detectDevice()) {                    
                     fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });                                        
                     if (!turnOn) {
 	                    setTimeout(function() {                    	
@@ -137,7 +141,7 @@ $(function($) {
             function navClickEvent() {
                 $(".navBox" + targetEl).on("click", ".prevBtn, .nextBtn, .close-lightBox", function() {
                     if ($(this)[0].className != "close-lightBox") {
-                        var src = fvnBoxController.detectContinueImg(targetEl, imgID, $(this));
+                        var src = fvnBoxController.detectContinueImg(targetEl, $(this));
                         if (src !== undefined) {
                             fvnBoxAnimation.mainAnimate({ item: $(src), imgs: imgsGB, opt: optGB });
                         }
@@ -172,12 +176,7 @@ $(function($) {
                 if ($($(".fullImg").find("img")).length > 2) {
                     $(".fullImg").find("img")[0].remove();
                 }                
-                fvnBoxController.settingTimer(storage.opt,src, animate, caption,$(storage.imgs).length);
-                storage.imgs.each(function(id) {
-                    if (storage.item.attr("src") == $(this).attr("src")) {
-                        imgID = id;
-                    }
-                });                
+                fvnBoxController.settingTimer(storage.opt,src, animate, caption,$(storage.imgs).length);               
             }
         },
         dragAnimate: function(storage){
@@ -236,7 +235,7 @@ $(function($) {
 	            		var height = imgBox[0].clientHeight;            	
 	            		var width = imgBox[0].clientWidth;
 	            		setTimeout(function(){	            			
-	            			var src = fvnBoxController.detectContinueImg(targetEl,imgID,storage.distance>=outBorder?[{className:"nextBtn"}]:[{className:"prevBtn"}]);	            			
+	            			var src = fvnBoxController.detectContinueImg(targetEl,storage.distance>=outBorder?[{className:"nextBtn"}]:[{className:"prevBtn"}]);	            			
 	            			fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt});                            
 	            		},50)	            		
 	            		setTimeout(function(){                            
@@ -305,7 +304,7 @@ $(function($) {
                 return { "trueWidth": curW, "trueHeight": curH };
             }
         },
-        detectContinueImg: function(targetEl, imgID, nav) {
+        detectContinueImg: function(targetEl, nav) {
             if (targetEl != "") {
                 if (nav[0].className == "prevBtn") {
                     if (imgID > 0) {
@@ -349,7 +348,7 @@ $(function($) {
                     $("body").find(".navBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });
                     $("body").find(".fvnInforBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });
                     if(opt.number){
-                        $("body").find(".fvnInforBox .fvnNumber").html(imgID+1+" of "+imgs);
+                        $("body").find(".fvnInforBox .fvnNumber").html(parseInt(imgID)+1+" of "+imgs);
                     }else{
                         $("body").find(".fvnInforBox .fvnNumber").html("")
                     }        
