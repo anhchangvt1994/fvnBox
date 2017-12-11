@@ -1,3 +1,12 @@
+/************************************
+
+authors : Nguyễn Minh Trường
+first released by : Nguyễn Minh Trường in 2017
+email : anhchangvt1994@gmail.com / fvn.truongnm@gmail.com
+phone number : 0948621519
+
+************************************/
+
 $(function($) {
     var targetEl = "", // global for detect what component is running this plugin at current (biến toàn cục này dùng xác định component nào đang chạy fvnBox trong thời điểm hiện tại).
         imgsGB="", // global for images list for the running component (global này dùng để lưu trữ danh sách image trong component đó, dù cho images đó nào ở các cấp element khác nhau trong component).
@@ -350,7 +359,7 @@ $(function($) {
                     if(opt.number){
                         $("body").find(".fvnInforBox .fvnNumber").html(parseInt(imgID)+1+" of "+imgs);
                     }else{
-                        $("body").find(".fvnInforBox .fvnNumber").html("")
+                        $("body").find(".fvnInforBox .fvnNumber").html("");
                     }        
                     if(caption!==undefined && opt.caption){
                     	$("body").find(".fvnInforBox .fvnCaption").html(caption);
