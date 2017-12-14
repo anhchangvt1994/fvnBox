@@ -12,11 +12,11 @@
 <body>
     <div class="section">
         <ul id="tst01" class="list-pdt">
-            <li>
+            <li class="none">
                 <img src="images/pdt_0x.jpg" alt="product">
             </li>
             <li>
-                <img src="images/pdt_01.jpg" alt="product01">
+                <img class="none" src="images/pdt_01.jpg" alt="product01">
             </li>
             <li>
                 <img src="images/pdt_02.jpg" alt="product02">
@@ -158,8 +158,8 @@
     <script src="js/fvnBox.js"></script>
     <script>
     $(document).ready(function() {
-        $("#tst01").fvnBox({number:true,caption:true}).except("");
-        $("#tst02").fvnBox();
+        $(".list-pdt").fvnBox({number:true,caption:true}).except(".none");
+        // $("#tst02").fvnBox({number:true,caption:true}).except(".fvnBox01");
     })
     </script>
 </body>

@@ -21,14 +21,21 @@ $(function($) {
     turnOn = false, // turnOn = false will come true after the event functions of "setup" module is actived, and it'll stop active more then
     imgID; // global varieties
   var fvnImgObj = {}, // global object for suffixImg (object toàn cục, dùng để lưu trữ các file có suffix nếu suffix được khai báo)
-    wWidth, wHeight;
+    wWidth, wHeight;    
   $.fn.fvnBox = function(opt, id) { // fvnBox plugin (khởi chạy fvnBox plugin)
     if ($(this).length > 1) { //cause we maybe use same class for multiple components in a page, so this will help us to break them.
-      // chúng ta có thể sử dụng chỉ 1 class cho nhiều components và dùng class đó để khởi chạy 1 plugin, tính năng này giúp plugin có thể phân chia tác vụ riêng biệt cho từng components.
-      $(this).each(function(id, data) {
-        $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption }, id);
-      });
-      return;
+      // chúng ta có thể sử dụng chỉ 1 class cho nhiều components và dùng class đó để khởi chạy 1 plugin, tính năng này giúp plugin có thể phân chia tác vụ riêng biệt cho từng components.      
+      const components = this;
+      // return;
+      return{
+        except:function(item){
+          // console.log(item);
+          components.each(function(id, data) {        
+            console.log(data);
+            $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption }, id).except(item);
+          });
+        }
+      };
     }
     if ($("body").find(".fullImg").length == 0) { // add new popup for fvnBox. (thêm mới cửa sổ bật hình ảnh cho fvnBox)
       $("body").append('<div class="fullImg hidden"><span class="close-lightBox"></span><div class="imgBox"></div></div><div class="fvnInforBox hidden"><span class="fvnNumber"></span><span class="fvnCaption"></span></div><div class="navBox hidden"><span class="prevBtn">&nbsp;</span><span class="close-lightBox"></span><span class="nextBtn">&nbsp;</span></div>');
@@ -64,23 +71,39 @@ $(function($) {
     $(this).addClass(curObj);
     curObj = "." + curObj; // declare new class, to instead old class. (khai báo class mới được thêm, thay cho class trước đó)
 
-    var listImg = $($(curObj).find("img")); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)
-    $.each(listImg, function(id, data) {
-      $(data).attr("data-index", id);
-    });
     if (opt !== undefined) {
-      if (!("suffixImg" in opt)) { // if current coponent have "opt" then must add list of images (nếu component hiện tại có opt thì mới thêm danh sách hình ảnh tương ứng với suffix đó)
+      if (!("suffixImg" in opt)) { // if current coponent have "opt.suffixImg" then must add list of images (nếu component hiện tại có opt.suffixImg thì mới thêm danh sách hình ảnh tương ứng với suffix đó)
         opt = { "suffixImg": undefined };
       } else {
-        setTimeout(function() {
-          fvnBoxFeature["init"]({ opt: "setSuffix", suffix: opt.suffixImg }); // add new list images with suffix before. (thêm mới danh sách images được định nghĩa trước bởi suffix)        
-        }, 0);
+        if(opt.suffixImg !== undefined){
+          setTimeout(function() {
+            fvnBoxFeature["init"]({ opt: "setSuffix", suffix: opt.suffixImg }); // add new list images with suffix before. (thêm mới danh sách images được định nghĩa trước bởi suffix)        
+          }, 0);
+        }        
       }
     }
-
-    setupFVNBox["init"](curObj, opt, listImg); // main brain to controll and resovle the main feature of fvnBox animation.
+    
+    $($(curObj).find("img")).attr("data-except",false);
+    return {
+      except:function(item){        
+        const exceptItem = $(curObj).find(item);
+        $.each(exceptItem,function(id,data){          
+          if($(data).attr("src") === undefined){
+            $($(data).find("img")).length >= 1 ? $($(data).find("img")).attr("data-except",true):"";
+          }else{
+            $(data).attr("data-except",true);
+          }
+          if(id == exceptItem.length-1){
+            listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)           
+            $.each(listImg, function(id, data) {
+              $(data).attr("data-index", id);
+            });
+            setupFVNBox["init"](curObj, opt, listImg); // main brain to controll and resovle the main feature of fvnBox animation.            
+          }
+        })
+      }
+    }
   };
-
   var setupFVNBox = {
     init: function(curObj, opt, imgs) {
       this.setup(curObj, opt, imgs);
@@ -92,35 +115,15 @@ $(function($) {
       var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
       fvnBoxController.detectEvent({ obj: curObj, tg: target });
 
-      $(curObj).find("img").on("touchstart click", function(e) {
-
-        targetEl = curObj;
-        imgsGB = imgs;
-        optGB = opt;
-        imgID = $(this).attr("data-index");
-        $(".navBox").addClass(curObj.split(".")[1]);
-        if (!fvnBoxFeature.detectDevice()) {
-          fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
-          if (!turnOn) {
-            setTimeout(function() {
-              navClickEvent();
-              navTouchEvent();
-            }, 0);
-            turnOn = true;
-          }
-          return false;
-        } else {
-          var drag = false,
-            item = $(this);
-          $(document).on("touchmove", function() {
-            drag = true;
-          });
-          $(this).on("touchend", function() {
-            if (!drag) {
-              fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
-            } else {
-              drag = false;
-            }
+      $(curObj).find("img").on("touchstart click", function(e) {        
+        if($(this).attr("data-except")=="false"){
+          targetEl = curObj;
+          imgsGB = imgs;
+          optGB = opt;
+          imgID = $(this).attr("data-index");
+          $(".navBox").addClass(curObj.split(".")[1]);
+          if (!fvnBoxFeature.detectDevice()) {
+            fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
             if (!turnOn) {
               setTimeout(function() {
                 navClickEvent();
@@ -129,9 +132,29 @@ $(function($) {
               turnOn = true;
             }
             return false;
-          });
-        }
-
+          } else {
+            var drag = false,
+              item = $(this);
+            $(document).on("touchmove", function() {
+              drag = true;
+            });
+            $(this).on("touchend", function() {
+              if (!drag) {
+                fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
+              } else {
+                drag = false;
+              }
+              if (!turnOn) {
+                setTimeout(function() {
+                  navClickEvent();
+                  navTouchEvent();
+                }, 0);
+                turnOn = true;
+              }
+              return false;
+            });
+          }
+        }        
       });
 
       function navTouchEvent() {
@@ -321,22 +344,21 @@ $(function($) {
         return { "trueWidth": curW, "trueHeight": curH };
       }
     },
-    detectContinueImg: function(targetEl, nav) {
+    detectContinueImg: function(targetEl, nav) {      
       if (targetEl != "") {
         if (nav[0].className == "prevBtn") {
           if (imgID > 0) {
             imgID--;
-          } else {
-            imgID = $(targetEl).find("img").length - 1;
+          } else {            
+            imgID = imgsGB.length - 1;
           }
         } else if (nav[0].className == "nextBtn") {
-          if (imgID < $(targetEl).find("img").length - 1) {
+          if (imgID < imgsGB.length - 1) {
             imgID++;
           } else {
             imgID = 0;
           }
         }
-        console.log("next");
         var getImgByID = imgsGB[imgID];
         return getImgByID;
       }
