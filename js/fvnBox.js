@@ -83,24 +83,31 @@ $(function($) {
       }
     }
     
-    $($(curObj).find("img")).attr("data-except",false);
+    $($(curObj).find("img")).attr("data-except",false);    
     return {
-      except:function(item){        
+      except:function(item){          
         const exceptItem = $(curObj).find(item);
-        $.each(exceptItem,function(id,data){          
-          if($(data).attr("src") === undefined){
-            $($(data).find("img")).length >= 1 ? $($(data).find("img")).attr("data-except",true):"";
-          }else{
-            $(data).attr("data-except",true);
-          }
-          if(id == exceptItem.length-1){
-            listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)           
-            $.each(listImg, function(id, data) {
-              $(data).attr("data-index", id);
-            });
-            setupFVNBox["init"](curObj, opt, listImg); // main brain to controll and resovle the main feature of fvnBox animation.            
-          }
-        })
+        if(exceptItem.length != 0){
+          $.each(exceptItem,function(id,data){          
+            if($(data).attr("src") === undefined){
+              $($(data).find("img")).length >= 1 ? $($(data).find("img")).attr("data-except",true):"";
+            }else{
+              $(data).attr("data-except",true);
+            }
+            if(id == exceptItem.length-1){
+              setListImg();              
+            }
+          })
+        }else{          
+          setListImg();          
+        }
+        function setListImg(){
+          listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)                         
+          $.each(listImg, function(id, data) {
+            $(data).attr("data-index", id);
+          });
+          setupFVNBox["init"](curObj, opt, listImg); // main brain to controll and resovle the main feature of fvnBox animation.            
+        }        
       }
     }
   };
