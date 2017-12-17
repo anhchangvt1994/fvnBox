@@ -21,7 +21,7 @@ $(function($) {
     turnOn = false, // turnOn = false will come true after the event functions of "setup" module is actived, and it'll stop active more then
     imgID; // global varieties
   var fvnImgObj = {}, // global object for suffixImg (object toàn cục, dùng để lưu trữ các file có suffix nếu suffix được khai báo)
-    wWidth, wHeight;    
+    wWidth, wHeight,pWidth,pHeight;    
   $.fn.fvnBox = function(opt, id) { // fvnBox plugin (khởi chạy fvnBox plugin)    
     if ($(this).length > 1) { //cause we maybe use same class for multiple components in a page, so this will help us to break them.
       // chúng ta có thể sử dụng chỉ 1 class cho nhiều components và dùng class đó để khởi chạy 1 plugin, tính năng này giúp plugin có thể phân chia tác vụ riêng biệt cho từng components.      
@@ -40,7 +40,6 @@ $(function($) {
           return {            
             slick:function(slick_opt){
               slick = true;
-              console.log(components);
               components.each(function(id, data) {
                 $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, w:opt.w, h:opt.h }, id).except(item).slick(slick_opt);          
               });          
@@ -64,10 +63,9 @@ $(function($) {
       $("body").append('<div class="fullImg hidden"><span class="close-lightBox"></span><div class="imgBox"></div></div><div class="fvnInforBox hidden"><span class="fvnNumber"></span><span class="fvnCaption"></span></div><div class="navBox hidden"><span class="prevBtn">&nbsp;</span><span class="close-lightBox"></span><span class="nextBtn">&nbsp;</span></div>');      
 
       // modify the resize function() for image in other screen size
-      
-      $(window).resize(function() {
-        console.log("width: "+opt.w+" height: "+opt.h);        
-        fvnBoxFeature.setResizeImg({width:opt.w,height:opt.h});
+
+      $(window).resize(function() {        
+        fvnBoxFeature.setResizeImg({width:pWidth,height:pHeight});
       })
 
       // setting navBox by detecting what device on use.
@@ -151,9 +149,9 @@ $(function($) {
           }
         }else{
           // set percent value of window size.                            
-          console.log("first width :"+opt.w+", first height :"+opt.h);
-          fvnBoxFeature["init"]({ opt: "setSizePercent",width:opt.w, height:opt.h });
-
+          
+          pWidth = opt.w;pHeight = opt.h;
+          fvnBoxFeature["init"]({ opt: "setSizePercent",width:opt.w, height:opt.h });          
           targetEl = curObj;
           imgsGB = imgs;
           optGB = opt;
@@ -338,12 +336,12 @@ $(function($) {
 
   var fvnBoxController = {
     detectEvent: function(event) {
-      if (event.tg != "img" && !fvnBoxFeature.detectDevice()) {        
-        $(event.obj).find(event.tg).click(function(e) {
-          e.preventDefault();
-          $(this).find("img").click();
-        });
-      }
+      // if (event.tg != "img" && !fvnBoxFeature.detectDevice()) {                
+      //   $(event.obj).find(event.tg).click(function(e) {
+      //     e.preventDefault();
+      //     $(this).find("img").click();
+      //   });
+      // }
     },
     detectSuffixImage: function(img, suffix) {
       var src = img.attr("src");
