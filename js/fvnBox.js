@@ -22,30 +22,52 @@ $(function($) {
     imgID; // global varieties
   var fvnImgObj = {}, // global object for suffixImg (object toàn cục, dùng để lưu trữ các file có suffix nếu suffix được khai báo)
     wWidth, wHeight;    
-  $.fn.fvnBox = function(opt, id) { // fvnBox plugin (khởi chạy fvnBox plugin)
+  $.fn.fvnBox = function(opt, id) { // fvnBox plugin (khởi chạy fvnBox plugin)    
     if ($(this).length > 1) { //cause we maybe use same class for multiple components in a page, so this will help us to break them.
       // chúng ta có thể sử dụng chỉ 1 class cho nhiều components và dùng class đó để khởi chạy 1 plugin, tính năng này giúp plugin có thể phân chia tác vụ riêng biệt cho từng components.      
       const components = this;
       // return;
       return{
         except:function(item){
-          // console.log(item);
-          components.each(function(id, data) {        
-            console.log(data);
-            $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption }, id).except(item);
-          });
+          let slick=false;
+          setTimeout(function(){
+            if(!slick){
+              components.each(function(id, data) {
+                $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, w:opt.w, h:opt.h }, id).except(item);          
+              });          
+            }
+          },0);
+          return {            
+            slick:function(slick_opt){
+              slick = true;
+              console.log(components);
+              components.each(function(id, data) {
+                $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, w:opt.w, h:opt.h }, id).except(item).slick(slick_opt);          
+              });          
+            }
+          };          
         }
       };
     }
-    if ($("body").find(".fullImg").length == 0) { // add new popup for fvnBox. (thêm mới cửa sổ bật hình ảnh cho fvnBox)
-      $("body").append('<div class="fullImg hidden"><span class="close-lightBox"></span><div class="imgBox"></div></div><div class="fvnInforBox hidden"><span class="fvnNumber"></span><span class="fvnCaption"></span></div><div class="navBox hidden"><span class="prevBtn">&nbsp;</span><span class="close-lightBox"></span><span class="nextBtn">&nbsp;</span></div>');
-      // set percent value of window size.            
-      fvnBoxFeature["init"]({ opt: "setSizePercent" });
+    if ($("body").find(".fullImg").length == 0) {
+
+      // auto add file css into bottom of head tag (tự động add file fancy css vào cuối head tag)
+      
+      $("<link>").appendTo("head").attr({
+        rel:  "stylesheet",
+        type: "text/css",
+        href: "css/fancy.css"
+      });
+
+      // add new popup for fvnBox. (thêm mới cửa sổ bật hình ảnh cho fvnBox)
+
+      $("body").append('<div class="fullImg hidden"><span class="close-lightBox"></span><div class="imgBox"></div></div><div class="fvnInforBox hidden"><span class="fvnNumber"></span><span class="fvnCaption"></span></div><div class="navBox hidden"><span class="prevBtn">&nbsp;</span><span class="close-lightBox"></span><span class="nextBtn">&nbsp;</span></div>');      
 
       // modify the resize function() for image in other screen size
-
+      
       $(window).resize(function() {
-        fvnBoxFeature.setResizeImg();
+        console.log("width: "+opt.w+" height: "+opt.h);        
+        fvnBoxFeature.setResizeImg({width:opt.w,height:opt.h});
       })
 
       // setting navBox by detecting what device on use.
@@ -73,7 +95,7 @@ $(function($) {
 
     if (opt !== undefined) {
       if (!("suffixImg" in opt)) { // if current coponent have "opt.suffixImg" then must add list of images (nếu component hiện tại có opt.suffixImg thì mới thêm danh sách hình ảnh tương ứng với suffix đó)
-        opt = { "suffixImg": undefined };
+        opt["suffixImg"] = undefined ;
       } else {
         if(opt.suffixImg !== undefined){
           setTimeout(function() {
@@ -82,32 +104,27 @@ $(function($) {
         }        
       }
     }
-    
+    var except=false;    
     $($(curObj).find("img")).attr("data-except",false);    
+    setTimeout(function(){
+      if(!except){
+        fvnBoxFeature.setListImg(curObj,opt);        
+      }
+    },0);
     return {
-      except:function(item){          
-        const exceptItem = $(curObj).find(item);
-        if(exceptItem.length != 0){
-          $.each(exceptItem,function(id,data){          
-            if($(data).attr("src") === undefined){
-              $($(data).find("img")).length >= 1 ? $($(data).find("img")).attr("data-except",true):"";
-            }else{
-              $(data).attr("data-except",true);
-            }
-            if(id == exceptItem.length-1){
-              setListImg();              
-            }
-          })
-        }else{          
-          setListImg();          
+      except: function(item,obj=curObj,option = opt){
+        except = true;        
+        fvnBoxFeature.except(item,obj,option);
+        return {
+          slick:function(slick_opt,obj=curObj){
+            fvnBoxFeature.slick(obj,slick_opt,opt);
+          }
         }
-        function setListImg(){
-          listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)                         
-          $.each(listImg, function(id, data) {
-            $(data).attr("data-index", id);
-          });
-          setupFVNBox["init"](curObj, opt, listImg); // main brain to controll and resovle the main feature of fvnBox animation.            
-        }        
+      },
+      slick:function(slick_opt,obj=curObj){        
+        setTimeout(function(){
+          fvnBoxFeature.slick(obj,slick_opt);
+        },0);
       }
     }
   };
@@ -122,8 +139,21 @@ $(function($) {
       var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
       fvnBoxController.detectEvent({ obj: curObj, tg: target });
 
-      $(curObj).find("img").on("touchstart click", function(e) {        
-        if($(this).attr("data-except")=="false"){
+      $(curObj).find("img").on("touchstart click", function(e) {
+
+
+        if($(this).attr("data-except")=="true"){
+          var atag = $(e.target).parents("a");          
+          if(atag.length>=1 && $(atag[0]).attr("href")=="#"){
+            $(atag[0]).on("click",function(e){
+              e.preventDefault();
+            })
+          }
+        }else{
+          // set percent value of window size.                            
+          console.log("first width :"+opt.w+", first height :"+opt.h);
+          fvnBoxFeature["init"]({ opt: "setSizePercent",width:opt.w, height:opt.h });
+
           targetEl = curObj;
           imgsGB = imgs;
           optGB = opt;
@@ -140,12 +170,12 @@ $(function($) {
             }
             return false;
           } else {
-            var drag = false,
-              item = $(this);
+            var drag = false;
+              // item = $(this);
             $(document).on("touchmove", function() {
               drag = true;
             });
-            $(this).on("touchend", function() {
+            $(this).on("touchend", function(e) {
               if (!drag) {
                 fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
               } else {
@@ -157,8 +187,8 @@ $(function($) {
                   navTouchEvent();
                 }, 0);
                 turnOn = true;
-              }
-              return false;
+              }                                
+              e.preventDefault();
             });
           }
         }        
@@ -308,7 +338,7 @@ $(function($) {
 
   var fvnBoxController = {
     detectEvent: function(event) {
-      if (event.tg != "img" && fvnBoxFeature.detectDevice()) {
+      if (event.tg != "img" && !fvnBoxFeature.detectDevice()) {        
         $(event.obj).find(event.tg).click(function(e) {
           e.preventDefault();
           $(this).find("img").click();
@@ -347,11 +377,11 @@ $(function($) {
       }
       if (curW > wWidth || curH > wHeight) {
         arguments.callee(curW, curH);
-      } else {
+      } else {                
         return { "trueWidth": curW, "trueHeight": curH };
       }
     },
-    detectContinueImg: function(targetEl, nav) {      
+    detectContinueImg: function(targetEl, nav) { 
       if (targetEl != "") {
         if (nav[0].className == "prevBtn") {
           if (imgID > 0) {
@@ -424,8 +454,8 @@ $(function($) {
     init: function(fn_Opt) {
       if (fn_Opt.opt == "setSuffix") {
         this.setListSuffix(fn_Opt.suffix);
-      } else if (fn_Opt.opt == "setSizePercent") {
-        this.setSizePercent();
+      } else if (fn_Opt.opt == "setSizePercent") {              
+        this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);
       }
     },
     setListSuffix: function(suffix) {
@@ -442,11 +472,38 @@ $(function($) {
         });
       }
     },
-    setSizePercent: function() {
+    setSizePercent: function(w,h) {      
       var winW = $(window).outerWidth(false),
         winH = $(window).outerHeight(true);
-      wWidth = winW < winH ? winW * 80 / 100 : winW <= 640 ? winW * 60 / 100 : winW * 85 / 100;
-      wHeight = winW < winH ? winH * 80 / 100 : winW <= 640 ? winH * 60 / 100 : winH * 85 / 100;
+      wWidth = winW < winH ? winW * w / 100 : winW <= 640 ? winW * (w >= 50 && w <= 79? w:w-20) / 100 : winW * (w <= 90 && w >= 80? w:w+5) / 100;
+      wHeight = winW < winH ? winH * h / 100 : winW <= 640 ? winH * (h >= 50 && h <= 79? h:h-20) / 100 : winH * (h <= 90 && h >= 80? h:h+5) / 100;
+    },
+    setListImg(curObj,opt){
+      let listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)                         
+      $.each(listImg, function(id, data) {
+        $(data).attr("data-index", id);
+      });
+      setupFVNBox["init"](curObj, opt, listImg); // main brain to controll and resovle the main feature of fvnBox animation.                  
+    },
+    except:function(item,curObj,opt){                  
+      const exceptItem = $(curObj).find(item),fboxFeature = this;      
+      if(exceptItem.length != 0){
+        $.each(exceptItem,function(id,data){          
+          if($(data).attr("src") === undefined){
+            $($(data).find("img")).length >= 1 ? $($(data).find("img")).attr("data-except",true):"";
+          }else{
+            $(data).attr("data-except",true);
+          }
+          if(id == exceptItem.length-1){
+            fboxFeature.setListImg(curObj,opt);              
+          }
+        })
+      }else{            
+        fboxFeature.setListImg(curObj,opt);          
+      }
+    },
+    slick:function(obj,slick_opt){
+      $(obj).slick(slick_opt);
     },
     detectDevice: function() {
       var isMobile = false; //initiate as false
@@ -455,7 +512,7 @@ $(function($) {
         /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) isMobile = true;
       return isMobile;
     },
-    setResizeImg: function() {
+    setResizeImg: function(fn_Opt) {
       if (this.detectDevice() && !$(".fullImg").hasClass("fvnNavBox")) {
         $(".navBox").removeClass("fvnNavBox");
         $(".fullImg").addClass("fvnNavBox");
@@ -463,7 +520,7 @@ $(function($) {
         $(".navBox").addClass("fvnNavBox");
         $(".fullImg").removeClass("fvnNavBox");
       }
-      this.setSizePercent();
+      this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);      
       if (!$(".fullImg").hasClass("hidden")) {
         var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueWidth;
         var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueHeight;

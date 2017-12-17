@@ -80,3 +80,13 @@
 	filter: none;
 	filter: grayscale(0);
 }
+.slick ul{
+  width:400px;
+  margin:20px auto;
+  text-align: center;
+  padding:20px;
+  color:white;  
+}
+.slick ul li{padding:15px;}
+.slick ul img{display: block;margin:auto;}
+
