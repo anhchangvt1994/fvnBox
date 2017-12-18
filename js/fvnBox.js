@@ -54,7 +54,7 @@ $(function($) {
         }
       };
     }
-    if ($("body").find(".fullImg").length == 0) {
+    if ($("body").find(".fullImg").length === 0) {
 
       // auto add file css into bottom of head tag (tự động add file fancy css vào cuối head tag)
       
@@ -72,7 +72,7 @@ $(function($) {
 
       $(window).resize(function() {        
         fvnBoxFeature.setResizeImg({width:pWidth,height:pHeight});
-      })
+      });
 
       // setting navBox by detecting what device on use.
 
@@ -90,7 +90,7 @@ $(function($) {
     }
     if (id === undefined) { id = "1"; }
     var curObj = "fvnBox" + (id < 10 ? "0" + id : id); // add new class for components to difference orther (thêm mới class để phân biệt chúng với nhau)
-    while ($($("body").find("." + curObj)).length != 0) {
+    while ($($("body").find("." + curObj)).length !== 0) {
       id++;
       curObj = "fvnBox" + (id < 10 ? "0" + id : id);
     }
@@ -123,14 +123,14 @@ $(function($) {
           slick:function(slick_opt,obj=curObj){
             fvnBoxFeature.slick(obj,slick_opt,opt);
           }
-        }
+        };
       },
       slick:function(slick_opt,obj=curObj){        
         setTimeout(function(){
           fvnBoxFeature.slick(obj,slick_opt);
         },0);
       }
-    }
+    };
   };
   var setupFVNBox = {
     init: function(curObj, opt, imgs) {
@@ -145,13 +145,12 @@ $(function($) {
 
       $(curObj).find("img").on("touchstart click", function(e) {
 
-
         if($(this).attr("data-except")=="true"){
           var atag = $(e.target).parents("a");          
           if(atag.length>=1 && $(atag[0]).attr("href")=="#"){
             $(atag[0]).on("click",function(e){
               e.preventDefault();
-            })
+            });
           }
         }else{
           // set percent value of window size.                            
@@ -164,6 +163,7 @@ $(function($) {
           imgID = $(this).attr("data-index");
           $(".navBox").addClass(curObj.split(".")[1]);
           if (!fvnBoxFeature.detectDevice()) {
+            console.log(e)           
             fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
             if (!turnOn) {
               setTimeout(function() {
@@ -214,7 +214,7 @@ $(function($) {
         $(".fullImg").on("touchstart", ".close-lightBox", function() {
           targetEl = fvnBoxController.settingClose(targetEl, $(this));
           return false;
-        })
+        });
       }
 
       function navClickEvent() {
@@ -228,7 +228,7 @@ $(function($) {
             targetEl = fvnBoxController.settingClose(targetEl, $(this));
           }
         });
-      };
+      }
     }
   };
 
@@ -318,7 +318,7 @@ $(function($) {
             setTimeout(function() {
               var src = fvnBoxController.detectContinueImg(targetEl, storage.distance >= outBorder ? [{ className: "nextBtn" }] : [{ className: "prevBtn" }]);
               fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });
-            }, 50)
+            }, 50);
             setTimeout(function() {
               img.css({ height: img.height() / 3, width: img.width() / 3 });
               imgBox.css({ "height": imgBox[0].clientHeight / 2 + "px !important", "width": imgBox[0].clientWidth / 2 + "px !important" });
@@ -482,7 +482,7 @@ $(function($) {
       wWidth = winW < winH ? winW * w / 100 : winW <= 640 ? winW * (w >= 50 && w <= 79? w:w-20) / 100 : winW * (w <= 90 && w >= 80? w:w+5) / 100;
       wHeight = winW < winH ? winH * h / 100 : winW <= 640 ? winH * (h >= 50 && h <= 79? h:h-20) / 100 : winH * (h <= 90 && h >= 80? h:h+5) / 100;
     },
-    setListImg(curObj,opt){
+    setListImg:function(curObj,opt){
       let listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)                         
       $.each(listImg, function(id, data) {
         $(data).attr("data-index", id);
@@ -501,7 +501,7 @@ $(function($) {
           if(id == exceptItem.length-1){
             fboxFeature.setListImg(curObj,opt);              
           }
-        })
+        });
       }else{            
         fboxFeature.setListImg(curObj,opt);          
       }
@@ -543,5 +543,5 @@ $(function($) {
         };
       }
     }
-  }
-})
+  };
+});
