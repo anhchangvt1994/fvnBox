@@ -29,7 +29,8 @@ $(function($) {
       // return;
       return{
         except:function(item){
-          let slick=false;
+          console.log("run");
+          var slick=false;
           setTimeout(function(){
             if(!slick){
               components.each(function(id, data) {
@@ -44,7 +45,12 @@ $(function($) {
                 $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, w:opt.w, h:opt.h }, id).except(item).slick(slick_opt);          
               });          
             }
-          };          
+          };
+        },
+        slick:function(slick_opt){
+          components.each(function(id, data) {
+            $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, w:opt.w, h:opt.h }, id).except(undefined).slick(slick_opt);          
+          });          
         }
       };
     }

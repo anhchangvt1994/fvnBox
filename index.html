@@ -15,7 +15,7 @@
 
 <body>
     <div class="section">
-        <ul id="slick01" class="slick">
+        <ul class="slick slick01">
             <li>
                 <img src="images/pdt_02.jpg" alt="product02">
             </li>
@@ -34,7 +34,7 @@
         </ul>
     </div>
     <div class="section">
-        <ul id="slick02" class="slick">
+        <ul class="slick slick01">
             <li>
                 <img src="images/pdt_00.jpg" alt="product">
             </li>
@@ -257,8 +257,7 @@
     $(document).ready(function() {
         $(".list-pdt").fvnBox({number:true,caption:true,w:50,h:50}).except(".none");
         // $("#tst02").fvnBox({number:true,caption:true}).except(".fvnBox01");
-        $("#slick01").slick({autoplay:true,prevArrow: false,nextArrow: false});
-        $("#slick02").fvnBox({number:true,caption:true,w:70,h:60}).slick({autoplay:true,prevArrow: false,nextArrow: false});
+        $(".slick01").fvnBox({number:true,caption:true,w:70,h:60}).slick({autoplay:true,prevArrow: false,nextArrow: false});
         $("#slick03").fvnBox({number:true,caption:true,w:80,h:55}).except(".hid").slick({autoplay:true,prevArrow: false,nextArrow: false});
     })
     </script>
