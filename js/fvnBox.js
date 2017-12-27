@@ -252,13 +252,22 @@ $(function($) {
           src = storage.item.attr("data-src");
           animate = 0;
         } else {
-          $("body").find(".fullImg").append(storage.item[0].outerHTML);
+          if($(storage.item[0]).attr("data-fvnScroll") === undefined){
+            $("body").find(".fullImg").append(storage.item[0].outerHTML);
+          }else{
+            $("body").find(".fullImg").append("<div class='fvnScrollBox'>"+storage.item[0].outerHTML+"</div>");
+          }          
           src = storage.item.attr("src");
         }
         if ($($(".fullImg").find("img")).length > 2) {
-          $(".fullImg").find("img")[0].remove();
+          const scrollBox = $($(".fullImg").find("img")[0]).parent(".fvnScrollBox")[0];
+          if(scrollBox === undefined){
+            $(".fullImg").find("img")[0].remove();
+          }else{
+            $(scrollBox).remove();
+          }          
         }
-        fvnBoxController.settingTimer(storage.opt, src, animate, caption, $(storage.imgs).length);
+        fvnBoxController.settingTimer(storage.opt, storage.item[0], src, animate, caption, $(storage.imgs).length);
       }
     },
     dragAnimate: function(storage) {
@@ -371,22 +380,58 @@ $(function($) {
         return newImg;
       }
     },
-    detectImageSize: function(curW, curH) {
-      if (curW > wWidth) {
-        currentPercent = (wWidth / curW) * 100;
-        curW = wWidth;
-        curH = (curH * currentPercent) / 100;
-      }
-      if (curH > wHeight) {
-        currentPercent = (wHeight / curH) * 100;
-        curH = wHeight;
-        curW = (curW * currentPercent) / 100;
-      }
-      if (curW > wWidth || curH > wHeight) {
-        arguments.callee(curW, curH);
-      } else {                
-        return { "trueWidth": curW, "trueHeight": curH };
-      }
+    detectImageSize: function(curW, curH, fullScreen) {
+      if(!fullScreen){        
+        if (curW > wWidth) {
+          currentPercent = (wWidth / curW) * 100;
+          curW = wWidth;
+          curH = (curH * currentPercent) / 100;
+        }
+        if (curH > wHeight) {
+          currentPercent = (wHeight / curH) * 100;
+          curH = wHeight;
+          curW = (curW * currentPercent) / 100;
+        }        
+        if (curW > wWidth || curH > wHeight) {
+          console.log("relay");
+          return arguments.callee(curW, curH, false);
+        } else {                          
+          console.log("curW : "+curW);
+          console.log("curH : "+curH);          
+          return { "trueWidth": curW, "trueHeight": curH, "actualWidth": undefined,"actualHeight":undefined};          
+        }
+      }else{        
+        const rootW = curW,rootH = curH;        
+        if(rootW > rootH){                    
+          let ratioH = $(window).outerHeight(true) * 0.5,ratioW = $(window).outerWidth(true) * 0.8;
+          if(curH > ratioH){
+            currentPercent = (ratioH / curH) * 100;
+            curH = ratioH;  
+            curW = (curW * currentPercent) / 100;
+          }          
+          console.log("curW : "+curW);
+          console.log("ratioW : "+ratioW);
+          if(curW > ratioW){
+            return {"trueWidth":curW,"trueHeight":curH,"actualWidth":ratioW,"actualHeight":undefined}; 
+          }
+          else{
+            return arguments.callee(rootW, rootH, false);
+          }        
+        }else{
+          let ratioH = $(window).outerHeight(true) * 0.7,ratioW = $(window).outerWidth(true) * 0.8;
+          if(curW > ratioW){
+            currentPercent = (ratioW / curW) * 100;
+            curW = ratioW;  
+            curH = (curH * currentPercent) / 100;
+          }          
+          if(curH > ratioH){
+            return {"trueWidth":curW,"trueHeight":curH,"actualWidth":undefined,"actualHeight":ratioH}; 
+          }
+          else{
+            return arguments.callee(rootW, rootH, false);
+          }
+        }
+      }      
     },
     detectContinueImg: function(targetEl, nav) { 
       if (targetEl != "") {
@@ -407,18 +452,28 @@ $(function($) {
         return getImgByID;
       }
     },
-    settingTimer: function(opt, item, animate, caption, imgs) {
-      $(".fullImg").find("img[src*='" + item + "']").load(function() {
-        // get width and height in fact of that image acording to % width and height of window                        
-        trueW = fvnBoxController.detectImageSize($(this).prop("naturalWidth"), $(this).prop("naturalHeight")).trueWidth;
-        trueH = fvnBoxController.detectImageSize($(this).prop("naturalWidth"), $(this).prop("naturalHeight")).trueHeight;
-
+    settingTimer: function(opt, item, src, animate, caption, imgs) {
+      $(".fullImg").find("img[src*='" + src + "']").load(function() {
+        // get width and height in fact of that image acording to % width and height of window                                                
+        if($(item).attr("data-fvnScroll") === undefined){
+          var imgSize = fvnBoxController.detectImageSize($(this).prop("naturalWidth"), $(this).prop("naturalHeight"),false);          
+        }else{
+          var imgSize = fvnBoxController.detectImageSize($(this).prop("naturalWidth"), $(this).prop("naturalHeight"),true);
+        }        
+        trueW = imgSize.trueWidth;
+        trueH = imgSize.trueHeight;
+        actualWidth = imgSize.actualWidth;
+        actualHeight = imgSize.actualHeight; 
+        console.log("trueW : "+trueW);
+        console.log("trueH : "+trueH);
+        // console.log("actualSize : "+actualSize);
         // animte for fancybox
 
-        $("body").find(".fullImg").removeClass("hidden");
+        $("body").find(".fullImg").removeClass("hidden");        
         $("body").find(".navBox").removeClass("hidden");
         $("body").find(".fvnInforBox").removeClass("hidden");
         $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });
+        $("body").find(".fvnScrollBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) : parseInt(trueW) + 30, "height": actualHeight !== undefined ? parseInt(actualHeight) : parseInt(trueH) + 30 });
         setTimeout(function() {
           var id = 0;
           if ($($(".fullImg").find("img")).length == 2) {
@@ -428,9 +483,9 @@ $(function($) {
           $($(".fullImg").find("img")[id]).addClass("appearOpa");
         }, 200);
         setTimeout(function() {
-          $("body").find(".imgBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });
-          $("body").find(".navBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });
-          $("body").find(".fvnInforBox").css({ "width": parseInt(trueW) + 10, "height": parseInt(trueH) + 10 });
+          $("body").find(".imgBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) + 50 : parseInt(trueW) + 50, "height": actualHeight !== undefined ? parseInt(actualHeight) + 50 : parseInt(trueH) + 50 });          
+          $("body").find(".navBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) + 50 : parseInt(trueW) + 10, "height": actualHeight !== undefined ? parseInt(actualHeight) + 50 : parseInt(trueH) + 10 });
+          $("body").find(".fvnInforBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) + 50 : parseInt(trueW) + 10, "height": actualHeight !== undefined ? parseInt(actualHeight) + 50 : parseInt(trueH) + 10 });
           if (opt.number) {
             $("body").find(".fvnInforBox .fvnNumber").html(parseInt(imgID) + 1 + " of " + imgs);
           } else {
@@ -496,7 +551,7 @@ $(function($) {
       wHeight = winW < winH ? winH * h / 100 : winW <= 640 ? winH * (h >= 50 && h <= 79? h:h-20) / 100 : winH * (h <= 90 && h >= 80? h:h+5) / 100;
     },
     setListImg:function(curObj,opt){
-      let listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)                         
+      let listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)                               
       $.each(listImg, function(id, data) {
         $(data).attr("data-index", id);
       });
@@ -506,9 +561,7 @@ $(function($) {
       const exceptItem = $(curObj).find(item),
         scrollItem = $(curObj).find(opt.scroll),
         fboxFeature = this;
-      const maxLength = Math.max(exceptItem.length,scrollItem.length);      
-      console.log("except : "+exceptItem.length);
-      console.log("scroll : "+scrollItem.length);      
+      const maxLength = Math.max(exceptItem.length,scrollItem.length);           
       if(maxLength > 0){
         for(let i = 0;i<maxLength;i++){
           if(exceptItem[i] !== undefined){
