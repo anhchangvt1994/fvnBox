@@ -459,7 +459,6 @@ $(function($) {
       }        
       trueW = parseInt(imgSize.trueWidth);
       trueH = parseInt(imgSize.trueHeight);
-      console.log(trueW+" & "+trueH);
       actualWidth = (imgSize.actualWidth !== undefined ? parseInt(imgSize.actualWidth) : undefined);
       actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined); 
       var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;        
@@ -744,12 +743,29 @@ $(function($) {
       }
       this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);      
       if (!$(".fullImg").hasClass("hidden")) {
-        var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueWidth;
-        var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg .appearOpa").prop("naturalWidth"), $("body").find(".fullImg .appearOpa").prop("naturalHeight")).trueHeight;
-        $("body").find(".fullImg img").css({ "width": trueW, "height": trueH }).addClass("fastAnimate");
-        $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
-        $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
-        $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
+        const isExist = $(".fullImg").find(".fvnScrollBox");
+        var isScroll = false;
+        if(isExist.length == 1){
+          isScroll = true;
+          $("")
+        }
+        var itemSize;
+        itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"));        
+        console.log(itemSize);
+        var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
+        scrollBox = itemSize.scrollBox;
+        scrollContent = itemSize.scrollContent;
+        imgBox = itemSize.imgBox;
+        navBox = itemSize.navBox;
+        fvnInforBox = itemSize.fvnInforBox;
+        commonSize = itemSize.commonSize;
+
+        // var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueWidth;
+        // var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueHeight;
+        // $("body").find(".fullImg img").css({ "width": trueW, "height": trueH }).addClass("fastAnimate");
+        // $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
+        // $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
+        // $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
       }
     },
     settingRemoveFunc: function() {
