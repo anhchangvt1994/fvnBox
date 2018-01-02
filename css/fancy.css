@@ -94,6 +94,9 @@ phone number : 0948621519
 	bottom: 0;	
 	background: #444;
 }
+.fullImg .fvnHideCord:after{
+	display: none;
+}
 .fullImg .fvnScrollContent{
 	position: absolute;
 	box-sizing: content-box;

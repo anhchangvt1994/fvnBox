@@ -460,19 +460,26 @@ $(function($) {
       trueW = parseInt(imgSize.trueWidth);
       trueH = parseInt(imgSize.trueHeight);
       actualWidth = (imgSize.actualWidth !== undefined ? parseInt(imgSize.actualWidth) : undefined);
-      actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined); 
+      actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined);       
+      var increaseSize,navWidth;      
+      if(fvnBoxFeature.detectDevice()){
+        increaseSize = 10;
+        navWidth = 1;
+      }else{
+        increaseSize = 70;
+      }
       var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;        
       if(actualWidth!==undefined && actualHeight === undefined){
-        scrollBox = {"width":actualWidth,"height":trueH+70};
+        scrollBox = {"width":actualWidth,"height":trueH+increaseSize};
         scrollContent = {"overflow-x":"auto","overflow-y":"hidden","padding-bottom":"17px"};
         imgBox = {"width":actualWidth+10,"height":trueH+10};
-        navBox = {"width":actualWidth*1.25,"height":trueH};
-        fvnInforBox = {"width":actualWidth,"height":trueH+70};
+        navBox = {"width":actualWidth * (navWidth !== undefined ? navWidth : 1.25),"height":trueH};
+        fvnInforBox = {"width":actualWidth,"height":trueH+increaseSize};
       }else if(actualWidth===undefined && actualHeight !== undefined){
-        scrollBox = {"width":trueW + 70,"height":actualHeight};
+        scrollBox = {"width":trueW + increaseSize,"height":actualHeight};
         scrollContent = {"overflow-x":"hidden","overflow-y":"auto","padding-right":"17px"};
         imgBox = {"width":trueW + 10,"height":actualHeight + 10};
-        navBox = {"width":trueW * 1.45,"height":actualHeight};
+        navBox = {"width":trueW * (navWidth !== undefined ? navWidth : 1.45),"height":actualHeight};
         fvnInforBox = {"width":trueW,"height":actualHeight};
       }else if(actualWidth===undefined && actualHeight === undefined){
         commonSize = {"width":trueW + 10,"height": trueH + 10,"z-index":""};
@@ -593,7 +600,8 @@ $(function($) {
         });
       }
     },
-    setCustomScroll:function(parent,item,cordinate){            
+    setCustomScroll:function(parent,item,cordinate){  
+    console.log(item)          ;
       var scrollContent = parent,
       wrapperContent = item,
       content = $(item).find("img"),
@@ -661,13 +669,16 @@ $(function($) {
         if(scrollerCordinate / (cordinate == "x" ? scrollContent.outerWidth(true) : scrollContent.outerHeight(true)) < 1){                              
           if(cordinate == "x"){            
             $(scroller).css({"width":scrollerCordinate+"px","height":"15px","bottom":3+"px","left":0});
-            scrollContent.addClass('fvnShowX');
-          }else{
+            scrollContent.addClass('fvnShowX');            
+          }else{            
             $(scroller).css({"width":15+"px","height":scrollerCordinate+"px","top":0,"right":2+"px"});
             scrollContent.addClass('fvnShowY');
           }          
-          scrollContent.append(scroller);                     
+          scrollContent.append(scroller);      
           scroller.addEventListener('mousedown',startDrag);
+          if(fvnBoxFeature.detectDevice()){
+            scrollContent.addClass('fvnHideCord');
+          }
           window.addEventListener('mouseup',stopDrag);
           window.addEventListener('mousemove',scrollBar);
         }
@@ -743,11 +754,21 @@ $(function($) {
       }
       this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);      
       if (!$(".fullImg").hasClass("hidden")) {
-        const isExist = $(".fullImg").find(".fvnScrollBox");
+        const isExist = $(".fullImg").find(".fvnScrollBox.appearOpa");
+        console.log(isExist);
         var isScroll = false;
         if(isExist.length == 1){
           isScroll = true;
-          $("")
+          if(this.detectDevice()){
+            $(".fvnScrollBox").addClass("fvnHideCord");
+            if($(isExist).find(".fvnScroller").length == 1){
+              $(isExist.find(".fvnScroller")).remove();
+            }
+          }else{
+            $(".fvnScrollBox").removeClass("fvnHideCord");
+            console.log($(isExist).find(".fvnScrollContent"));                        
+            fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollContent")[0],$(isExist).hasClass("fvnShowX") === true ? "x" : "y");            
+          }
         }
         var itemSize;
         itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"));        
@@ -759,7 +780,12 @@ $(function($) {
         navBox = itemSize.navBox;
         fvnInforBox = itemSize.fvnInforBox;
         commonSize = itemSize.commonSize;
-
+        $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });
+        $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize);
+        $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {});      
+        $("body").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize);                    
+        $("body").find(".navBox").css(navBox !== undefined ? navBox : commonSize);          
+        $("body").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize);
         // var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueWidth;
         // var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueHeight;
         // $("body").find(".fullImg img").css({ "width": trueW, "height": trueH }).addClass("fastAnimate");
