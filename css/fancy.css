@@ -16,8 +16,30 @@ phone number : 0948621519
 	background: rgba(0,0,0,0.8);
 	z-index: 9999;
 }
-.fvnScrollBox{
-	position: fixed;
+.fvnScroller{
+  position: absolute;
+  border-radius: 5px;
+  background:#b1b1b1;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+  white-space: nowrap;
+  /* -webkit-transition: top 0.1s linear; */
+  /* -moz-transition: top 0.1s linear; */
+  /* -ms-transition: top 0.1s linear; */
+  /* -o-transition: top 0.1s linear; */
+  /* transition: top 0.1s linear; */
+  z-index: 99999;
+}
+.fullImg .fvnScrollBox{
+	position: absolute;
 	overflow: auto;	
 	top: 50%;
 	left: 50%;
@@ -26,6 +48,57 @@ phone number : 0948621519
 	-ms-transform: translate(-50%,-50%) ;
 	-o-transform: translate(-50%,-50%) ;
 	transform: translate(-50%,-50%) ;
+	opacity:0;
+	overflow: hidden;
+}
+.fullImg .fvnShowY:before{
+	content: "";
+	position: absolute;
+	border-radius: 5px;
+	height: 100%;
+	width: 30px;
+	z-index: 9999;
+	right: 0;
+	top: 0;	
+}
+.fullImg .fvnShowY:after{
+	content: "";
+	position: absolute;
+	border-radius: 8px;
+	height: 100%;
+	width: 20px;
+	z-index: 9999;
+	right: 0;
+	top: 0;	bottom: 0;
+	margin: 0 auto;
+	background: #444;
+}
+.fullImg .fvnShowX:before{
+	content: "";
+	position: absolute;
+	border-radius: 5px;
+	width: 100%;
+	height: 30px;
+	z-index: 9999;
+	bottom: 0;
+	left: 0;
+}
+.fullImg .fvnShowX:after{
+	content: "";
+	position: absolute;
+	border-radius: 8px;
+	width: 100%;
+	height: 20px;	
+	z-index: 9999;
+	left: 0;
+	bottom: 0;	
+	background: #444;
+}
+.fullImg .fvnScrollContent{
+	position: absolute;
+	box-sizing: content-box;
+	width: 100%;
+	height: 100%;
 }
 .hidden{
 	display: none !important;
@@ -109,6 +182,19 @@ phone number : 0948621519
 	cursor: pointer;
 	z-index:99
 }
+.navBox .close-lightBox{
+	-webkit-transition: 0.5s ease;
+	-moz-transition: 0.5s ease;
+	-ms-transition: 0.5s ease;
+	-o-transition: 0.5s ease;
+	transition: 0.5s ease;
+}
+.navBox .close-lightBox.cordx{
+	left: calc(100% - 100px);
+}
+.navBox .close-lightBox.cordy{
+	left: calc(100% - 70px);
+}
 .fullImg .close-lightBox:before,.fullImg .close-lightBox:after,.navBox .close-lightBox:before,.navBox .close-lightBox:after{
 	content:"";
 	display:block;
@@ -133,7 +219,7 @@ phone number : 0948621519
 	-o-transform: rotate(-45deg) ;
 	transform: rotate(-45deg) ;
 }
-.fullImg.fvnNavBox .close-lightBox,.navBox.fvnNavBox .close-lightBox{
+.fullImg.fvnNavBox > .close-lightBox,.navBox.fvnNavBox .close-lightBox{
 	display:block;
 }
 .navBox.fvnNavBox .prevBtn,.navBox.fvnNavBox .nextBtn{
@@ -145,6 +231,17 @@ phone number : 0948621519
 	z-index: 9999;
 }
 .fvnInforBox .fvnNumber,.fvnInforBox .fvnCaption{
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+  white-space: nowrap;
 	position: absolute;
 	top: calc(100% + 7px);
 	color: #fff;
@@ -158,6 +255,21 @@ phone number : 0948621519
 	overflow: hidden;
 }
 .fullImg img{
+
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+  white-space: nowrap;
+
+	pointer-events: none;
+
 	position: absolute;	
 	cursor: pointer;
 	left: 50%;top: 50%;
@@ -168,11 +280,11 @@ phone number : 0948621519
 	transform: translate(-50%,-50%);
 	margin: auto;
 	/* vertical-align: middle; */
-	// -webkit-transition: all 0.9s ease;
-	// -moz-transition: all 0.9s ease;
-	// -ms-transition: all 0.9s ease;
-	// -o-transition: all 0.9s ease;
-	// transition: all 0.9s ease;
+	-webkit-transition: all 0.9s ease;
+	-moz-transition: all 0.9s ease;
+	-ms-transition: all 0.9s ease;
+	-o-transition: all 0.9s ease;
+	transition: all 0.9s ease;
 	opacity: 0;
 	z-index: 5
 }
@@ -232,8 +344,7 @@ phone number : 0948621519
 .preventWindowScroll{
 		overflow: hidden !important;
 }
-.fullImg.fvnNavBox .close-lightBox{
-	display: block;
+.fullImg.fvnNavBox > .close-lightBox{
 	left: auto;
 	cursor: default;
 	right: 3%;

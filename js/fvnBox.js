@@ -65,7 +65,7 @@ $(function($) {
 
       // add new popup for fvnBox. (thêm mới cửa sổ bật hình ảnh cho fvnBox)
 
-      $("body").append('<div class="fullImg hidden"><span class="close-lightBox"></span><div class="imgBox"></div></div><div class="fvnInforBox hidden"><span class="fvnNumber"></span><span class="fvnCaption"></span></div><div class="navBox hidden"><span class="prevBtn">&nbsp;</span><span class="close-lightBox"></span><span class="nextBtn">&nbsp;</span></div>');      
+      $("body").append('<div class="fullImg hidden"><span class="close-lightBox"></span><div class="fvnInforBox hidden"><span class="fvnNumber"></span><span class="fvnCaption"></span></div><div class="navBox hidden"><span class="prevBtn">&nbsp;</span><span class="close-lightBox"></span><span class="nextBtn">&nbsp;</span></div><div class="imgBox"></div></div>');      
 
       // modify the resize function() for image in other screen size
 
@@ -248,25 +248,28 @@ $(function($) {
           if (storage.item.attr("data-src") === undefined) {
             storage.item.attr("data-src", fvnBoxController.detectSuffixImage(storage.item, storage.opt.suffixImg));
           }
-          $("body").find(".fullImg").append("<img src=" + storage.item.attr("data-src") + ">").removeClass("hidden");
+          $("body").find(".fullImg").append("<img src=" + storage.item.attr("data-src") + " draggable='false'>").removeClass("hidden");
           src = storage.item.attr("data-src");
           animate = 0;
         } else {
           if($(storage.item[0]).attr("data-fvnScroll") === undefined){
             $("body").find(".fullImg").append(storage.item[0].outerHTML);
           }else{
-            $("body").find(".fullImg").append("<div class='fvnScrollBox'>"+storage.item[0].outerHTML+"</div>");
+            $("body").find(".fullImg").append("<div class='fvnScrollBox'><div class='fvnScrollContent'>"+storage.item[0].outerHTML+"</div></div>");
           }          
           src = storage.item.attr("src");
         }
         if ($($(".fullImg").find("img")).length > 2) {
-          const scrollBox = $($(".fullImg").find("img")[0]).parent(".fvnScrollBox")[0];
+          const scrollBox = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];          
           if(scrollBox === undefined){
             $(".fullImg").find("img")[0].remove();
           }else{
             $(scrollBox).remove();
           }          
         }
+        $('img').on('dragstart', function(event) {
+          event.preventDefault();
+        });
         fvnBoxController.settingTimer(storage.opt, storage.item[0], src, animate, caption, $(storage.imgs).length);
       }
     },
@@ -380,8 +383,8 @@ $(function($) {
         return newImg;
       }
     },
-    detectImageSize: function(curW, curH, fullScreen) {
-      if(!fullScreen){        
+    detectImageSize: function(curW, curH, scroll) {      
+      if(!scroll){        
         if (curW > wWidth) {
           currentPercent = (wWidth / curW) * 100;
           curW = wWidth;
@@ -393,11 +396,8 @@ $(function($) {
           curW = (curW * currentPercent) / 100;
         }        
         if (curW > wWidth || curH > wHeight) {
-          console.log("relay");
           return arguments.callee(curW, curH, false);
-        } else {                          
-          console.log("curW : "+curW);
-          console.log("curH : "+curH);          
+        } else {          
           return { "trueWidth": curW, "trueHeight": curH, "actualWidth": undefined,"actualHeight":undefined};          
         }
       }else{        
@@ -409,8 +409,6 @@ $(function($) {
             curH = ratioH;  
             curW = (curW * currentPercent) / 100;
           }          
-          console.log("curW : "+curW);
-          console.log("ratioW : "+ratioW);
           if(curW > ratioW){
             return {"trueWidth":curW,"trueHeight":curH,"actualWidth":ratioW,"actualHeight":undefined}; 
           }
@@ -452,40 +450,95 @@ $(function($) {
         return getImgByID;
       }
     },
+    calcActualSize:function(fvnScroll,item){      
+      var imgSize;
+      if(fvnScroll === undefined){
+        imgSize = fvnBoxController.detectImageSize($(item).prop("naturalWidth"), $(item).prop("naturalHeight"),false);          
+      }else{
+        imgSize = fvnBoxController.detectImageSize($(item).prop("naturalWidth"), $(item).prop("naturalHeight"),true);
+      }        
+      trueW = parseInt(imgSize.trueWidth);
+      trueH = parseInt(imgSize.trueHeight);
+      console.log(trueW+" & "+trueH);
+      actualWidth = (imgSize.actualWidth !== undefined ? parseInt(imgSize.actualWidth) : undefined);
+      actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined); 
+      var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;        
+      if(actualWidth!==undefined && actualHeight === undefined){
+        scrollBox = {"width":actualWidth,"height":trueH+70};
+        scrollContent = {"overflow-x":"auto","overflow-y":"hidden","padding-bottom":"17px"};
+        imgBox = {"width":actualWidth+10,"height":trueH+10};
+        navBox = {"width":actualWidth*1.25,"height":trueH};
+        fvnInforBox = {"width":actualWidth,"height":trueH+70};
+      }else if(actualWidth===undefined && actualHeight !== undefined){
+        scrollBox = {"width":trueW + 70,"height":actualHeight};
+        scrollContent = {"overflow-x":"hidden","overflow-y":"auto","padding-right":"17px"};
+        imgBox = {"width":trueW + 10,"height":actualHeight + 10};
+        navBox = {"width":trueW * 1.45,"height":actualHeight};
+        fvnInforBox = {"width":trueW,"height":actualHeight};
+      }else if(actualWidth===undefined && actualHeight === undefined){
+        commonSize = {"width":trueW + 10,"height": trueH + 10,"z-index":""};
+      }
+      return {"scrollBox":scrollBox,"scrollContent":scrollContent,"imgBox":imgBox,"navBox":navBox,"fvnInforBox":fvnInforBox,"commonSize":commonSize};
+    },
     settingTimer: function(opt, item, src, animate, caption, imgs) {
       $(".fullImg").find("img[src*='" + src + "']").load(function() {
         // get width and height in fact of that image acording to % width and height of window                                                
-        if($(item).attr("data-fvnScroll") === undefined){
-          var imgSize = fvnBoxController.detectImageSize($(this).prop("naturalWidth"), $(this).prop("naturalHeight"),false);          
-        }else{
-          var imgSize = fvnBoxController.detectImageSize($(this).prop("naturalWidth"), $(this).prop("naturalHeight"),true);
-        }        
-        trueW = imgSize.trueWidth;
-        trueH = imgSize.trueHeight;
-        actualWidth = imgSize.actualWidth;
-        actualHeight = imgSize.actualHeight; 
-        console.log("trueW : "+trueW);
-        console.log("trueH : "+trueH);
-        // console.log("actualSize : "+actualSize);
+        var itemSize;
+        const closeBtn = $(".navBox").find(".close-lightBox");
+        $(closeBtn).removeClass("cordx cordy");        
+        itemSize = fvnBoxController.calcActualSize($(item).attr("data-fvnScroll"),this);
+        console.log(itemSize);
+        var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
+        scrollBox = itemSize.scrollBox;
+        scrollContent = itemSize.scrollContent;
+        imgBox = itemSize.imgBox;
+        navBox = itemSize.navBox;
+        fvnInforBox = itemSize.fvnInforBox;
+        commonSize = itemSize.commonSize;
+               
         // animte for fancybox
 
         $("body").find(".fullImg").removeClass("hidden");        
         $("body").find(".navBox").removeClass("hidden");
-        $("body").find(".fvnInforBox").removeClass("hidden");
-        $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });
-        $("body").find(".fvnScrollBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) : parseInt(trueW) + 30, "height": actualHeight !== undefined ? parseInt(actualHeight) : parseInt(trueH) + 30 });
+        $("body").find(".fvnInforBox").removeClass("hidden");        
+        setTimeout(function(){
+          $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });              
+          if($("body").find(".fvnScrollBox").length > 0){          
+            $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize);                    
+          }        
+        },100)        
         setTimeout(function() {
-          var id = 0;
+          var id = 0,          
+          scrollItem = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];          
           if ($($(".fullImg").find("img")).length == 2) {
             $($(".fullImg").find("img")[0]).removeClass("appearOpa").addClass("disappearOpa");
+            if(scrollItem !== undefined){
+              $(scrollItem).removeClass("appearOpa").addClass("disappearOpa");
+            }
             id = 1;
           }
+          scrollItem = $($(".fullImg").find("img")[id]).parents(".fvnScrollBox")[0];          
           $($(".fullImg").find("img")[id]).addClass("appearOpa");
+          if(scrollItem !== undefined){
+            $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {});            
+            if(commonSize !== undefined){
+              $(scrollItem).addClass("appearOpa").css({"z-index":""});
+            }else{
+              $(scrollItem).addClass("appearOpa").css({"z-index":"99999"});             
+              if(trueW > trueH){                
+                $(closeBtn).addClass("cordx");
+                console.log("run");
+              }else{
+                $(closeBtn).addClass("cordy");
+              }
+              fvnBoxFeature.setCustomScroll($(scrollItem),$($(".fullImg").find("img")[id]).parent(".fvnScrollContent")[0],trueW > trueH ? "x" : "y");
+            }
+          }
         }, 200);
         setTimeout(function() {
-          $("body").find(".imgBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) + 50 : parseInt(trueW) + 50, "height": actualHeight !== undefined ? parseInt(actualHeight) + 50 : parseInt(trueH) + 50 });          
-          $("body").find(".navBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) + 50 : parseInt(trueW) + 10, "height": actualHeight !== undefined ? parseInt(actualHeight) + 50 : parseInt(trueH) + 10 });
-          $("body").find(".fvnInforBox").css({ "width": actualWidth !== undefined ? parseInt(actualWidth) + 50 : parseInt(trueW) + 10, "height": actualHeight !== undefined ? parseInt(actualHeight) + 50 : parseInt(trueH) + 10 });
+          $("body").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize);                    
+          $("body").find(".navBox").css(navBox !== undefined ? navBox : commonSize);          
+          $("body").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize);
           if (opt.number) {
             $("body").find(".fvnInforBox .fvnNumber").html(parseInt(imgID) + 1 + " of " + imgs);
           } else {
@@ -541,8 +594,87 @@ $(function($) {
         });
       }
     },
-    setScrollImg:function(imgs,opt){
+    setCustomScroll:function(parent,item,cordinate){            
+      var scrollContent = parent,
+      wrapperContent = item,
+      content = $(item).find("img"),
+      contentPos = 0,
+      beginDrag = false,
+      scroller,
+      scrollerCordinate,
+      topPos,
+      rootPos; 
+      function calcScrollCordinate() {
+        if(cordinate == "x"){
+          let visibleRatio = scrollContent.outerWidth(true) / $(wrapperContent).prop("scrollWidth");
+          return visibleRatio * scrollContent.outerWidth(true);
+        }else{
+          let visibleRatio = scrollContent.outerHeight(true) / $(wrapperContent).prop("scrollHeight");
+          return visibleRatio * scrollContent.outerHeight(true);
+        }                        
+      }
 
+      function moveScroller(ev){
+        if(cordinate == "x"){
+          let scrollPercent = ev.target.scrollLeft / $(wrapperContent).prop("scrollWidth");
+          topPos = scrollPercent * (scrollContent.outerWidth(true) - 5);
+          scroller.style.left = topPos+'px';
+        }else{
+          let scrollPercent = ev.target.scrollTop / $(wrapperContent).prop("scrollHeight");
+          topPos = scrollPercent * (scrollContent.outerHeight(true) - 5);
+          scroller.style.top = topPos+'px';
+        }        
+      }
+
+      function startDrag(ev){
+        if(cordinate == "x"){
+          rootPos = ev.pageX;
+          contentPos = $(wrapperContent).scrollLeft();          
+        }else{
+          rootPos = ev.pageY;
+          contentPos = $(wrapperContent).scrollTop();          
+        }
+        beginDrag = true;
+      }
+      
+      function scrollBar(ev){        
+        if(beginDrag){
+          if(cordinate == "x"){
+            let mouseDifferential = ev.pageX - rootPos;
+            let scrollEquivalent = mouseDifferential * ($(wrapperContent).prop("scrollWidth") / scrollContent.outerWidth(true));
+            $(wrapperContent).scrollLeft(contentPos + scrollEquivalent);            
+          }else{
+            let mouseDifferential = ev.pageY - rootPos;
+            let scrollEquivalent = mouseDifferential * ($(wrapperContent).prop("scrollHeight") / scrollContent.outerHeight(true));
+            $(wrapperContent).scrollTop(contentPos + scrollEquivalent);
+          }                    
+        }
+      }
+
+      function stopDrag(ev){
+        beginDrag = false;
+      }
+
+      function createScroll(){      
+        scroller = document.createElement("div");
+        scroller.className = "fvnScroller";
+        scrollerCordinate = calcScrollCordinate();                              
+        if(scrollerCordinate / (cordinate == "x" ? scrollContent.outerWidth(true) : scrollContent.outerHeight(true)) < 1){                              
+          if(cordinate == "x"){            
+            $(scroller).css({"width":scrollerCordinate+"px","height":"15px","bottom":3+"px","left":0});
+            scrollContent.addClass('fvnShowX');
+          }else{
+            $(scroller).css({"width":15+"px","height":scrollerCordinate+"px","top":0,"right":2+"px"});
+            scrollContent.addClass('fvnShowY');
+          }          
+          scrollContent.append(scroller);                     
+          scroller.addEventListener('mousedown',startDrag);
+          window.addEventListener('mouseup',stopDrag);
+          window.addEventListener('mousemove',scrollBar);
+        }
+      }
+      createScroll();
+      wrapperContent.addEventListener('scroll',moveScroller);
     },
     setSizePercent: function(w,h) {      
       var winW = $(window).outerWidth(false),
@@ -602,7 +734,7 @@ $(function($) {
         /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) isMobile = true;
       return isMobile;
     },
-    setResizeImg: function(fn_Opt) {
+    setResizeImg: function(fn_Opt) {      
       if (this.detectDevice() && !$(".fullImg").hasClass("fvnNavBox")) {
         $(".navBox").removeClass("fvnNavBox");
         $(".fullImg").addClass("fvnNavBox");
