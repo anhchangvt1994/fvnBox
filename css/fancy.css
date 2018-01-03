@@ -98,7 +98,7 @@ phone number : 0948621519
 	display: none;
 }
 .fullImg .fvnScrollContent{
-	position: absolute;
+	position: relative;
 	box-sizing: content-box;
 	width: 100%;
 	height: 100%;
@@ -275,13 +275,13 @@ phone number : 0948621519
 
 	position: absolute;	
 	cursor: pointer;
-	left: 50%;top: 50%;
+/* 	left: 50%;top: 50%;
 	-webkit-transform: translate(-50%,-50%);
 	-moz-transform: translate(-50%,-50%);
 	-ms-transform: translate(-50%,-50%);
 	-o-transform: translate(-50%,-50%);
-	transform: translate(-50%,-50%);
-	margin: auto;
+	transform: translate(-50%,-50%); */
+	/* margin: auto; */
 	/* vertical-align: middle; */
 	-webkit-transition: all 0.9s ease;
 	-moz-transition: all 0.9s ease;
@@ -289,7 +289,7 @@ phone number : 0948621519
 	-o-transition: all 0.9s ease;
 	transition: all 0.9s ease;
 	opacity: 0;
-	z-index: 5
+	/* z-index: 5 */
 }
 .fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate{
 	-webkit-transition: linear;

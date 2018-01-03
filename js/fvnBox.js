@@ -515,6 +515,7 @@ $(function($) {
         },100)        
         setTimeout(function() {
           var id = 0,          
+          imgPosition,
           scrollItem = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];          
           if ($($(".fullImg").find("img")).length == 2) {
             $($(".fullImg").find("img")[0]).removeClass("appearOpa").addClass("disappearOpa");
@@ -523,22 +524,32 @@ $(function($) {
             }
             id = 1;
           }
+          console.log("id"+id);
           scrollItem = $($(".fullImg").find("img")[id]).parents(".fvnScrollBox")[0];          
+          console.log(scrollItem);
           $($(".fullImg").find("img")[id]).addClass("appearOpa");
           if(scrollItem !== undefined){
             $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {});            
             if(commonSize !== undefined){
-              $(scrollItem).addClass("appearOpa").css({"z-index":""});
-            }else{
-              $(scrollItem).addClass("appearOpa").css({"z-index":"99999"});             
+              imgPosition = {"left":"50%","top":"50%","transform":"translate(-50%,-50%)","-webkit-transform":"translate(-50%,-50%)","-ms-transform":"translate(-50%,-50%)","-o-transform":"translate(-50%,-50%)"};
+              $(scrollItem).addClass("appearOpa").css({"z-index":""});              
+              $($(scrollItem).find("img")).css(imgPosition);
+            }else{              
+              $(scrollItem).addClass("appearOpa").css({"z-index":"99999"});                           
               if(trueW > trueH){                
+                imgPosition = {"left":"0","top":"50%","transform":"translate(0,-50%)","-webkit-transform":"translate(0,-50%)","-ms-transform":"translate(0,-50%)","-o-transform":"translate(0,-50%)"};
                 $(closeBtn).addClass("cordx");
-                console.log("run");
               }else{
+                imgPosition = {"left":"50%","top":"0","transform":"translate(-50%,0)","-webkit-transform":"translate(-50%,0)","-ms-transform":"translate(-50%,0)","-o-transform":"translate(-50%,0)"};
                 $(closeBtn).addClass("cordy");
               }
+              $($(scrollItem).find("img")).css(imgPosition);
               fvnBoxFeature.setCustomScroll($(scrollItem),$($(".fullImg").find("img")[id]).parent(".fvnScrollContent")[0],trueW > trueH ? "x" : "y");
             }
+          }else{
+            imgPosition = {"left":"50%","top":"50%","transform":"translate(-50%,-50%)","-webkit-transform":"translate(-50%,-50%)","-ms-transform":"translate(-50%,-50%)","-o-transform":"translate(-50%,-50%)"};
+            console.log("id"+id);
+            $($(".fullImg").find("img")[id]).css(imgPosition);
           }
         }, 200);
         setTimeout(function() {
@@ -600,7 +611,7 @@ $(function($) {
         });
       }
     },
-    setCustomScroll:function(parent,item,cordinate){  
+    setCustomScroll:function(parent,item,cordinate,scrollCntSize,wrapperCntSize){  
     console.log(item)          ;
       var scrollContent = parent,
       wrapperContent = item,
@@ -611,6 +622,8 @@ $(function($) {
       scrollerCordinate,
       topPos,
       rootPos; 
+      console.log($(wrapperContent).prop("scrollWidth"));
+      // console.log(scrollCntSize.width+" & "+wrapperCntSize.width);      
       function calcScrollCordinate() {
         if(cordinate == "x"){
           let visibleRatio = scrollContent.outerWidth(true) / $(wrapperContent).prop("scrollWidth");
@@ -754,8 +767,7 @@ $(function($) {
       }
       this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);      
       if (!$(".fullImg").hasClass("hidden")) {
-        const isExist = $(".fullImg").find(".fvnScrollBox.appearOpa");
-        console.log(isExist);
+        const isExist = $(".fullImg").find(".fvnScrollBox.appearOpa");        
         var isScroll = false;
         if(isExist.length == 1){
           isScroll = true;
@@ -765,14 +777,12 @@ $(function($) {
               $(isExist.find(".fvnScroller")).remove();
             }
           }else{
-            $(".fvnScrollBox").removeClass("fvnHideCord");
-            console.log($(isExist).find(".fvnScrollContent"));                        
-            fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollContent")[0],$(isExist).hasClass("fvnShowX") === true ? "x" : "y");            
+            let itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"));
+            $(".fvnScrollBox").removeClass("fvnHideCord");            
+            fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollContent")[0],$(isExist).hasClass("fvnShowX") === true ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});            
           }
-        }
-        var itemSize;
-        itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"));        
-        console.log(itemSize);
+        }        
+        let itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"));                        
         var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
         scrollBox = itemSize.scrollBox;
         scrollContent = itemSize.scrollContent;
@@ -780,12 +790,12 @@ $(function($) {
         navBox = itemSize.navBox;
         fvnInforBox = itemSize.fvnInforBox;
         commonSize = itemSize.commonSize;
-        $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });
-        $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize);
-        $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {});      
-        $("body").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize);                    
-        $("body").find(".navBox").css(navBox !== undefined ? navBox : commonSize);          
-        $("body").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize);
+        $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) }).addClass("fastAnimate");
+        $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize).addClass("fastAnimate");
+        $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {}).addClass("fastAnimate");      
+        $("body").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize).addClass("fastAnimate");                    
+        $("body").find(".navBox").css(navBox !== undefined ? navBox : commonSize).addClass("fastAnimate");          
+        $("body").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize).addClass("fastAnimate");
         // var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueWidth;
         // var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueHeight;
         // $("body").find(".fullImg img").css({ "width": trueW, "height": trueH }).addClass("fastAnimate");
