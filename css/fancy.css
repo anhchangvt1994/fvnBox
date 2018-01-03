@@ -275,12 +275,12 @@ phone number : 0948621519
 
 	position: absolute;	
 	cursor: pointer;
-/* 	left: 50%;top: 50%;
+	left: 50%;top: 50%;
 	-webkit-transform: translate(-50%,-50%);
 	-moz-transform: translate(-50%,-50%);
 	-ms-transform: translate(-50%,-50%);
 	-o-transform: translate(-50%,-50%);
-	transform: translate(-50%,-50%); */
+	transform: translate(-50%,-50%);
 	/* margin: auto; */
 	/* vertical-align: middle; */
 	-webkit-transition: all 0.9s ease;
@@ -290,6 +290,28 @@ phone number : 0948621519
 	transition: all 0.9s ease;
 	opacity: 0;
 	/* z-index: 5 */
+}
+.fullImg img.fvnWidth,.fullImg img.fvnHeight{
+	-webkit-transform: none;
+	-moz-transform: none;
+	-ms-transform: none;
+	-o-transform: none;
+	transform: none;
+	-webkit-transition: none;
+	-moz-transition: none;
+	-ms-transition: none;
+	-o-transition: none;
+	transition: none;
+}
+.fullImg img.fvnWidth{
+	left: 0;
+	top: 0;bottom: 0;
+	margin: auto 0;	
+}
+.fullImg img.fvnHeight{
+	left: 0;right: 0;
+	top: 0;
+	margin: 0 auto;
 }
 .fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate{
 	-webkit-transition: linear;
