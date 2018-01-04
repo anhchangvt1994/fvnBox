@@ -452,7 +452,7 @@ $(function($) {
         return getImgByID;
       }
     },
-    calcActualSize:function(fvnScroll,item){      
+    calcActualSize:function(fvnScroll,item,resize){      
       var imgSize;
       if(fvnScroll === undefined){
         imgSize = fvnBoxController.detectImageSize($(item).prop("naturalWidth"), $(item).prop("naturalHeight"),false);          
@@ -463,17 +463,20 @@ $(function($) {
       trueH = parseInt(imgSize.trueHeight);
       actualWidth = (imgSize.actualWidth !== undefined ? parseInt(imgSize.actualWidth) : undefined);
       actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined);       
-      var increaseSize,navWidth;      
+      var increaseSize,navWidth,srcCntSizing;      
       if(fvnBoxFeature.detectDevice()){
         increaseSize = 70;
-        navWidth = 1;
+        navWidth = 1;        
+        if(!resize){
+          srcCntSizing = "border-box";
+        } 
       }else{
         increaseSize = 70;
-      }
+      }      
       var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;        
       if(actualWidth!==undefined && actualHeight === undefined){
         scrollBox = {"width":actualWidth,"height":trueH+increaseSize};
-        scrollContent = {"overflow-x":"auto","overflow-y":"hidden","padding-bottom":"17px"};
+        scrollContent = {"box-sizing":srcCntSizing,"overflow-x":"auto","overflow-y":"hidden","padding-bottom":"17px"};
         imgBox = {"width":actualWidth+10,"height":trueH+10};
         navBox = {"width":actualWidth * (navWidth !== undefined ? navWidth : 1.25),"height":trueH};
         fvnInforBox = {"width":actualWidth,"height":trueH+increaseSize};
@@ -777,19 +780,19 @@ $(function($) {
         if(isExist.length == 1){
           isScroll = true;
           itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"));
-          // if(this.detectDevice()){
-          //   $(isExist).addClass("fvnHideCord");
-          //   if($(isExist).find(".fvnScroller").length == 1){              
-          //     $(isExist.find(".fvnScroller")).remove();
-          //   }
-          // }else{
+          if(this.detectDevice()){
+            // $(isExist).addClass("fvnHideCord");
+            if($(isExist).find(".fvnScroller").length == 1){              
+              $(isExist.find(".fvnScroller")).remove();
+            }
+          }else{
             
-          //   $(".fvnScrollBox").removeClass("fvnHideCord");                        
-          // }
+            // $(".fvnScrollBox").removeClass("fvnHideCord");                        
+          }
           console.log(itemSize);
           fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollContent")[0],$(isExist).hasClass("fvnShowX") === true ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});            
         }        
-        itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"));                        
+        itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"),true);                        
         var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
         scrollBox = itemSize.scrollBox;
         scrollContent = itemSize.scrollContent;
@@ -798,8 +801,8 @@ $(function($) {
         fvnInforBox = itemSize.fvnInforBox;
         commonSize = itemSize.commonSize;
         $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) }).addClass("fastAnimate");
-        $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize).addClass("fastAnimate");
-        $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {}).addClass("fastAnimate");      
+        $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize);
+        $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {});      
         $("body").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize).addClass("fastAnimate");                    
         $("body").find(".navBox").css(navBox !== undefined ? navBox : commonSize).addClass("fastAnimate");          
         $("body").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize).addClass("fastAnimate");
