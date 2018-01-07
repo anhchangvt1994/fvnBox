@@ -114,16 +114,19 @@ $(function($) {
       }
     },0);
     return {
-      except: function(item,obj=curObj,option = opt){
+      except: function(item,obj,option){
+        obj = obj || curObj; option = option || opt;
         except = true;        
         fvnBoxFeature.except(item,obj,option);
         return {
-          slick:function(slick_opt,obj=curObj){
+          slick:function(slick_opt,obj){
+            obj = obj || curObj;
             fvnBoxFeature.slick(obj,slick_opt,opt);
           }
         };
       },
-      slick:function(slick_opt,obj=curObj){        
+      slick:function(slick_opt,obj){        
+        obj = obj || curObj;
         setTimeout(function(){
           fvnBoxFeature.slick(obj,slick_opt);
         },0);
@@ -255,14 +258,12 @@ $(function($) {
           if($(storage.item[0]).attr("data-fvnScroll") === undefined){
             $("body").find(".fullImg").append(storage.item[0].outerHTML);
           }else{
-            $("body").find(".fullImg").append("<div class='fvnScrollBox'><div class='fvnScrollContent'><div class='fvnBox_ScrollBg'></div>"+storage.item[0].outerHTML+"</div></div>");
+            $("body").find(".fullImg").append("<div class='fvnScrollBox'><div class='fvnScrollContent'>"+storage.item[0].outerHTML+"</div></div>");
           }          
           src = storage.item.attr("src");
-        }
-        console.log("amount img : "+$($(".fullImg").find("img")).length);
+        }        
         if ($($(".fullImg").find("img")).length > 2) {          
-          const scrollBox = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];                    
-          console.log(scrollBox);
+          const scrollBox = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];                            
           if(scrollBox === undefined){
             $(".fullImg").find("img")[0].remove();
           }else{
@@ -463,26 +464,25 @@ $(function($) {
       trueH = parseInt(imgSize.trueHeight);
       actualWidth = (imgSize.actualWidth !== undefined ? parseInt(imgSize.actualWidth) : undefined);
       actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined);       
-      var increaseSize,navWidth,srcCntSizing;      
+      var increaseSize,navWidth,overflow_cord;      
       if(fvnBoxFeature.detectDevice()){
         increaseSize = 10;
         navWidth = 1;        
-        if(!resize){
-          srcCntSizing = "border-box";
-        } 
+        overflow_cord = "auto";
       }else{
         increaseSize = 70;
+        overflow_cord = "hidden";
       }      
       var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;        
       if(actualWidth!==undefined && actualHeight === undefined){
-        scrollBox = {"width":actualWidth,"height":trueH+increaseSize};
-        scrollContent = {"box-sizing":srcCntSizing,"overflow-x":"auto","overflow-y":"hidden","padding-bottom":"17px"};
+        scrollBox = {"width":actualWidth,"height":trueH+increaseSize,"z-index":"99999"};
+        scrollContent = {"overflow-x":overflow_cord,"overflow-y":"hidden"};
         imgBox = {"width":actualWidth+10,"height":trueH+10};
         navBox = {"width":actualWidth * (navWidth !== undefined ? navWidth : 1.25),"height":trueH};
         fvnInforBox = {"width":actualWidth,"height":trueH+increaseSize};
       }else if(actualWidth===undefined && actualHeight !== undefined){
-        scrollBox = {"width":trueW + increaseSize,"height":actualHeight};
-        scrollContent = {"overflow-x":"hidden","overflow-y":"auto","padding-right":"17px"};
+        scrollBox = {"width":trueW + increaseSize,"height":actualHeight,"z-index":"99999"};
+        scrollContent = {"overflow-x":"hidden","overflow-y":overflow_cord,"padding-right":(fvnBoxFeature.detectDevice() == true ? "" : "17px")};
         imgBox = {"width":trueW + 10,"height":actualHeight + 10};
         navBox = {"width":trueW * (navWidth !== undefined ? navWidth : 1.45),"height":actualHeight};
         fvnInforBox = {"width":trueW,"height":actualHeight};
@@ -497,8 +497,7 @@ $(function($) {
         var itemSize;
         const closeBtn = $(".navBox").find(".close-lightBox");
         $(closeBtn).removeClass("cordx cordy");        
-        itemSize = fvnBoxController.calcActualSize($(item).attr("data-fvnScroll"),this);
-        console.log(itemSize);
+        itemSize = fvnBoxController.calcActualSize($(item).attr("data-fvnScroll"),this);        
         var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
         scrollBox = itemSize.scrollBox;
         scrollContent = itemSize.scrollContent;
@@ -513,9 +512,18 @@ $(function($) {
         $("body").find(".navBox").removeClass("hidden");
         $("body").find(".fvnInforBox").removeClass("hidden");        
         setTimeout(function(){
-          $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });              
-          if($("body").find(".fvnScrollBox").length > 0){          
-            $(".fullImg").find(".fvnBox_ScrollBg").css({"width":(trueW > trueH ? trueW : ""),"height":(trueW < trueH ? trueH : "")});
+          const fvnBox_imgs = $("body").find(".fullImg img");
+          $.each(fvnBox_imgs,function(id,item){
+            var parent = $(item).parents("[class*='fvnShow']")[0];            
+            if(parent){
+              console.log($(parent).find(".fvnScrollContent"));
+              $(parent).find(".fvnScrollContent").css({"opacity":0});
+            }else{
+              $(item).css({ "width": parseInt(trueW), "height": parseInt(trueH) })
+            }
+          })
+          // $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });              
+          if($("body").find(".fvnScrollBox").length > 0){                      
             $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize);                    
           }        
         },100)        
@@ -523,10 +531,11 @@ $(function($) {
           var id = 0,          
           imgPosition,
           scrollItem = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];          
-          if ($($(".fullImg").find("img")).length == 2) {
-            $($(".fullImg").find("img")[0]).removeClass("appearOpa").addClass("disappearOpa");
-            if(scrollItem !== undefined){
+          if ($($(".fullImg").find("img")).length == 2) {            
+            if(scrollItem !== undefined){              
               $(scrollItem).removeClass("appearOpa").addClass("disappearOpa");
+            }else{
+              $($(".fullImg").find("img")[0]).removeClass("appearOpa").addClass("disappearOpa");
             }
             id = 1;
           }
@@ -537,15 +546,15 @@ $(function($) {
             if(commonSize !== undefined){              
               $(scrollItem).addClass("appearOpa").css({"z-index":""});                            
             }else{
-              $(scrollItem).addClass("appearOpa").css({"z-index":"99999"});             
+              $(scrollItem).addClass("appearOpa");             
               if(trueW > trueH){                                
                 setTimeout(function(){
-                  $($(scrollItem).find("img")).addClass("fvnWidth");                                  
+                  $($(scrollItem).find("img")).addClass("fvnBox_Width");                                  
                 },100);
                 $(closeBtn).addClass("cordx");
               }else{                
                 setTimeout(function(){
-                  $($(scrollItem).find("img")).addClass("fvnHeight");                                  
+                  $($(scrollItem).find("img")).addClass("fvnBox_Height");                                  
                 },100);
                 $(closeBtn).addClass("cordy");
               }                            
@@ -575,19 +584,18 @@ $(function($) {
       });
     },
     settingClose: function(targetEl, nav) {
-      console.log("run");
       if (targetEl != "" && targetEl !== undefined) {
         $(".navBox").removeClass(targetEl.split(".")[1]);
         $(".fullImg").addClass("hidden");
         const removeImgs = $(".fullImg").find("img");
         var amount = 0;
-        for(let item of removeImgs){
+        $.each(removeImgs,function(id,item){
           if($(item).parents(".fvnScrollBox")[0] !== undefined){
             $(item).parents(".fvnScrollBox").remove();
           }else{
             item.remove();
           }
-        }
+        });
         $(".fullImg").find(".imgBox").css({ "width": "", "height": "" });
         $(".navBox").addClass("hidden");
         $(".fvnInforBox").addClass("hidden");
@@ -638,10 +646,6 @@ $(function($) {
       rootPos;
       const scrollSize = cordinate == "x" ? scrollCntSize.width : scrollCntSize.height,
       wrapperSize = cordinate == "x" ? wrapperCntSize.width : wrapperCntSize.height;      
-      console.log(scrollSize);
-      console.log(wrapperSize);
-      console.log(scrollContent.outerWidth(true));      
-      console.log($(wrapperContent).prop("scrollWidth"));
       // console.log(scrollCntSize.width+" & "+wrapperCntSize.width);      
       function calcScrollCordinate() {
         let visibleRatio = scrollSize / wrapperSize;
@@ -695,16 +699,16 @@ $(function($) {
         scrollerCordinate = calcScrollCordinate();                              
         if(scrollerCordinate / scrollSize < 1){                              
           if(cordinate == "x"){            
-            $(scroller).css({"width":scrollerCordinate+"px","height":"15px","bottom":3+"px","left":0});
+            $(scroller).css({"width":scrollerCordinate+"px","height":"15px","bottom":3+"px","left":($(wrapperContent).scrollLeft()/wrapperSize)*(scrollSize - 5)+"px"});
             scrollContent.addClass('fvnShowX');            
           }else{            
-            $(scroller).css({"width":15+"px","height":scrollerCordinate+"px","top":0,"right":2+"px"});
+            $(scroller).css({"width":15+"px","height":scrollerCordinate+"px","top":($(wrapperContent).scrollTop()/wrapperSize)*(scrollSize - 5)+"px","right":2+"px"});
             scrollContent.addClass('fvnShowY');
           }                    
           scroller.addEventListener('mousedown',startDrag);
           if(fvnBoxFeature.detectDevice()){
             scrollContent.addClass('fvnHideCord');
-          }else{
+          }else{            
             scrollContent.removeClass('fvnHideCord');
             scrollContent.append(scroller);      
           }
@@ -769,8 +773,12 @@ $(function($) {
     detectDevice: function() {
       var isMobile = false; //initiate as false
       // device detection
+      const is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
+        is_android = navigator.platform.toLowerCase().indexOf("android") > -1;      
       if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
         /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) isMobile = true;
+      else if(is_firefox && is_android){isMobile = true;} 
+      console.log(isMobile);
       return isMobile;
     },
     setResizeImg: function(fn_Opt) {      
@@ -790,7 +798,7 @@ $(function($) {
           if(isExist.find(".fvnScroller")[0] !== undefined){
             $(isExist.find(".fvnScroller")).remove();
           }                    
-        }        
+        }
         itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.appearOpa"),true);                        
         var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
         scrollBox = itemSize.scrollBox;
@@ -798,26 +806,30 @@ $(function($) {
         imgBox = itemSize.imgBox;
         navBox = itemSize.navBox;
         fvnInforBox = itemSize.fvnInforBox;
-        commonSize = itemSize.commonSize;
+        commonSize = itemSize.commonSize;        
         $(".fullImg").find("img").css({ "width": parseInt(trueW), "height": parseInt(trueH) }).addClass("fastAnimate");
         $(".fullImg").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize).addClass("fastAnimate");
-        $(".fullImg").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {}).addClass("fastAnimate");      
-        $(".fullImg").find(".fvnBox_ScrollBg").css({"width":(trueW > trueH ? trueW : ""),"height":(trueW < trueH ? trueH : "")});
+        $(".fullImg").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {"overflow":"visible"}).addClass("fastAnimate");              
         $(".fullImg").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize).addClass("fastAnimate");                    
         $(".fullImg").find(".navBox").css(navBox !== undefined ? navBox : commonSize).addClass("fastAnimate");          
         $(".fullImg").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize).addClass("fastAnimate");
-        console.log($(".fullImg").find(".fvnBox_ScrollBg").css("width"));
-        console.log($(".fullImg").find(".fvnScrollContent").prop("scrollWidth"));
-        console.log($(".fullImg").find(".fvnScrollBox").css("width"));
+        const fvnBox_imgs = $(".fullImg").find("img");                              
         if(commonSize === undefined){          
+          if(actualWidth){
+            $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Width");
+          }else{
+            $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Height");
+          }
           fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollContent")[0],$(isExist).hasClass("fvnShowX") === true ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});            
+        }else{
+          $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).removeClass("fvnBox_Width fvnBox_Height");
         }
         // var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueWidth;
         // var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueHeight;
         // $("body").find(".fullImg img").css({ "width": trueW, "height": trueH }).addClass("fastAnimate");
         // $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
         // $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
-        // $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
+        // $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");               
       }
     },
     settingRemoveFunc: function() {
