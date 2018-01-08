@@ -132,7 +132,7 @@ phone number : 0948621519
 	position: fixed;	
 	background: none;
 	letter-spacing: -4px;
-	z-index: 9999
+	z-index: 10001
 }
 .navBox .prevBtn,.navBox .nextBtn{
 	display:none;	

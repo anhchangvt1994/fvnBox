@@ -478,13 +478,13 @@ $(function($) {
       }      
       var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;        
       if(actualWidth!==undefined && actualHeight === undefined){
-        scrollBox = {"width":actualWidth,"height":trueH+70,"z-index":(fvnBoxFeature.detectDevice() === true ? "" : "99999")};
+        scrollBox = {"width":actualWidth,"height":trueH+70,"z-index":(fvnBoxFeature.detectDevice() === true ? "10000" : "99999")};
         scrollContent = {"overflow-x":overflow_cord,"overflow-y":"hidden"};
         imgBox = {"width":actualWidth+10,"height":trueH+10};
         navBox = {"width":actualWidth * (navWidth !== undefined ? navWidth : 1.25),"height":trueH};
         fvnInforBox = {"width":actualWidth,"height":trueH+70};
       }else if(actualWidth===undefined && actualHeight !== undefined){
-        scrollBox = {"width":trueW + 70,"height":actualHeight,"z-index":(fvnBoxFeature.detectDevice() === true ? "" : "99999")};
+        scrollBox = {"width":trueW + 70,"height":actualHeight,"z-index":(fvnBoxFeature.detectDevice() === true ? "10000" : "99999")};
         scrollContent = {"overflow-x":"hidden","overflow-y":overflow_cord,"padding-right":(fvnBoxFeature.detectDevice() === true ? "" : "17px")};
         imgBox = {"width":trueW + 10,"height":actualHeight + 10};
         navBox = {"width":trueW * (navWidth !== undefined ? navWidth : 1.45),"height":actualHeight};
@@ -667,9 +667,9 @@ $(function($) {
         }        
       }
 
-      function startDrag(ev){
-        if(ev.originalEvent !== undefined && fvnBoxFeature.detectDevice()){
-          ev = ev.originalEvent.touches[0];          
+      function startDrag(ev){      
+        if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){
+          ev = ev.changedTouches[0];          
         }
         if(cordinate == "x"){
           rootPos = ev.pageX;
@@ -681,17 +681,16 @@ $(function($) {
         beginDrag = true;
       }
       
-      function scrollBar(ev){  
-        if(ev.originalEvent !== undefined && fvnBoxFeature.detectDevice()){
-          ev = ev.originalEvent.touches[0];          
-        }
-        if(beginDrag){
+      function scrollBar(ev){          
+        if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){          
+          ev = ev.changedTouches[0];                    
+        }               
+        if(beginDrag){          
           if(cordinate == "x"){
             let mouseDifferential = ev.pageX - rootPos;
             let scrollEquivalent = mouseDifferential * (wrapperSize / scrollSize);
             $(wrapperContent).scrollLeft(contentPos + scrollEquivalent);            
           }else{
-            console.log(ev.pageY);
             let mouseDifferential = ev.pageY - rootPos;
             let scrollEquivalent = mouseDifferential * (wrapperSize / scrollSize);
             $(wrapperContent).scrollTop(contentPos + scrollEquivalent);
@@ -709,13 +708,18 @@ $(function($) {
         scrollerCordinate = calcScrollCordinate();                              
         if(scrollerCordinate / scrollSize < 1){                              
           if(cordinate == "x"){            
-            $(scroller).css({"width":scrollerCordinate+"px","height":"15px","bottom":3+"px","left":($(wrapperContent).scrollLeft()/wrapperSize)*(scrollSize - 5)+"px"});
+            console.log($(wrapperContent).scrollLeft());            
+            console.log(wrapperSize);
+            console.log($(wrapperContent).scrollLeft()/wrapperSize);
+            $(scroller).css({"width":scrollerCordinate+"px","height":15+"px","bottom":3+"px","left":($(wrapperContent).scrollLeft()/wrapperSize)*(scrollSize - 5)+"px"});
             scrollContent.addClass('fvnShowX');            
           }else{            
+            console.log($(wrapperContent).scrollTop());
             $(scroller).css({"width":15+"px","height":scrollerCordinate+"px","top":($(wrapperContent).scrollTop()/wrapperSize)*(scrollSize - 5)+"px","right":2+"px"});
             scrollContent.addClass('fvnShowY');
           }                    
-          // scroller.addEventListener('mousedown',startDrag);
+          scroller.addEventListener('mousedown',startDrag);
+          scroller.addEventListener('touchstart',startDrag);
           // if(fvnBoxFeature.detectDevice()){
           //   scrollContent.addClass('fvnHideCord');
           // }else{            
@@ -723,17 +727,19 @@ $(function($) {
           //   scrollContent.append(scroller);      
           // }
           scrollContent.append(scroller);      
-          // window.addEventListener('mouseup',stopDrag);
-          // window.addEventListener('mousemove',scrollBar);
-          $(window).on("mousedown",function(e){
-            startDrag(e);
-          });
-          $(window).on("mousemove",function(e){
-            scrollBar(e);
-          });
-          $(window).on("mouseup",function(e){            
-            stopDrag(e);
-          });
+          window.addEventListener('mouseup',stopDrag);
+          window.addEventListener('mousemove',scrollBar);
+          window.addEventListener('touchend',stopDrag);
+          window.addEventListener('touchmove',scrollBar);
+          // $(scroller).on("mousedown",function(e){
+          //   startDrag(e);
+          // });
+          // $(scroller).on("mousemove",function(e){
+          //   scrollBar(e);
+          // });
+          // $(scroller).on("mouseup",function(e){            
+          //   stopDrag(e);
+          // });
         }
       }
       createScroll();
