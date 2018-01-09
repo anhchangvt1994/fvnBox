@@ -317,28 +317,28 @@ phone number : 0948621519
 	top: 0;
 	margin: 0 auto;
 }
-.fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate{
+.fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate,.fullImg .fvnScrollBox.noneAnimate{
 	-webkit-transition: linear;
 	-moz-transition: linear;
 	-ms-transition: linear;
 	-o-transition: linear;
 	transition: linear;
 }
-.fullImg .imgBox.quickMove,.fullImg img.quickMove{
+.fullImg .imgBox.quickMove,.fullImg img.quickMove,.fullImg .fvnScrollBox.quickMove{
 	-webkit-transition: 0.5s ease;
 	-moz-transition: 0.5s ease;
 	-ms-transition: 0.5s ease;
 	-o-transition: 0.5s ease;
 	transition: 0.5s ease;
 }
-.fullImg .imgBox.returnAnimate,.fullImg img.returnAnimate{
+.fullImg .imgBox.returnAnimate,.fullImg img.returnAnimate,.fullImg .fvnScrollBox.returnAnimate{
 	-webkit-transition: 0.5s ease;
 	-moz-transition: 0.5s ease;
 	-ms-transition: 0.5s ease;
 	-o-transition: 0.5s ease;
 	transition: 0.5s ease;
 }
-.fullImg .imgBox.outAnimate,.fullImg img.outAnimate{
+.fullImg .imgBox.outAnimate,.fullImg img.outAnimate,.fullImg .fvnScrollBox.outAnimate{
 	opacity: 0 !important;
 	-webkit-transition: 1.2s ease;
 	-moz-transition: 1.2s ease;
