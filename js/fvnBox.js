@@ -849,6 +849,8 @@ $(function($) {
             $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Width");
             $(isExist).addClass("fvnShowX");
           }else{
+            const closeBtn = $(".navBox").find(".close-lightBox");
+            $(closeBtn).removeClass("cordx cordy");
             $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Height");
             $(isExist).addClass("fvnShowY");
           }                    
