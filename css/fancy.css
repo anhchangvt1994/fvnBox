@@ -317,7 +317,7 @@ phone number : 0948621519
 	top: 0;
 	margin: 0 auto;
 }
-.fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate,.fullImg .fvnScrollBox.noneAnimate{
+.fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate,.fullImg .fvnScrollBox.noneAnimate,.fullImg .navBox.noneAnimate{
 	-webkit-transition: linear;
 	-moz-transition: linear;
 	-ms-transition: linear;
