@@ -318,11 +318,11 @@ phone number : 0948621519
 	margin: 0 auto;
 }
 .fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate,.fullImg .fvnScrollBox.noneAnimate,.fullImg .navBox.noneAnimate{
-	-webkit-transition: linear;
-	-moz-transition: linear;
-	-ms-transition: linear;
-	-o-transition: linear;
-	transition: linear;
+	-webkit-transition: linear 0.02s;
+	-moz-transition: linear 0.02s;
+	-ms-transition: linear 0.02s;
+	-o-transition: linear 0.02s;
+	transition: linear 0.02s;
 }
 .fullImg .imgBox.quickMove,.fullImg img.quickMove,.fullImg .fvnScrollBox.quickMove{
 	-webkit-transition: 0.5s ease;

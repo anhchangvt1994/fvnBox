@@ -282,7 +282,7 @@ $(function($) {
       if (storage.type === undefined) {
         var fvnScroll = storage.item.nextAll();
         fvnScroll = fvnScroll[fvnScroll.length - 1],curPoint=0,left=0;
-        var curPos = $(".navBox").offset().left,        
+        var distance = 0,        
         // console.log(fvnScroll.length > 0);
         // if(fvnScroll.length > 0){
           // fvnScroll = $(fvnScroll[fvnScroll.length - 1]).find(".fvnScroller");            
@@ -292,26 +292,31 @@ $(function($) {
         //   fvnScroll = $(".fullImg").find("img");
         // }
         // console.log(fvnScroll);        
-        curPoint = storage.event.originalEvent.touches[0].clientX; 
-        $(event.target).on("touchmove",function(e){            
+        curPoint = storage.event.originalEvent.touches[0].clientX;         
+        $(event.target).on("touchmove",function(e){
           left = curPoint - e.originalEvent.touches[0].clientX;                        
+          distance += left;
           curPoint = e.originalEvent.touches[0].clientX;                    
           $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
           $(".fullImg .imgBox").offset({ left: $(".fullImg .imgBox").offset().left - left});
-          $(".navBox").offset({ left: $(".navBox").offset().left - left});          
+          $(".navBox").offset({ left: $(".navBox").offset().left - left});                    
+          console.log("distance :"+ distance);
         });
         $(event.target).on("touchend",function(){
           $(".navBox").removeClass("noneAnimate"); 
+          $(this).unbind("touchmove");           
           checkDragOut();           
         });
         curPoint = storage.event.originalEvent.touches[0].clientX;          
-        if ($($(".fullImg").find("img"))[1] === undefined) {            
-          $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
-          $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
-        } else {            
-          $(fvnScroll).removeClass("returnAnimate").addClass("quickMove");                      
-          $($(".fullImg").find(".imgBox")[0]).removeClass("returnAnimate").addClass("quickMove");
-        }
+        $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
+        $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
+        // if ($($(".fullImg").find("img"))[1] === undefined) {            
+        //   $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
+        //   $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
+        // } else {            
+        //   $(fvnScroll).removeClass("returnAnimate").addClass("quickMove");                      
+        //   $($(".fullImg").find(".imgBox")[0]).removeClass("returnAnimate").addClass("quickMove");
+        // }
         // leftImgPos = $(fvnScroll).offset().left;
         // leftImgBox = $(".fullImg .imgBox").offset().left;          
         // if (curPoint > storage.prevPoint) {
@@ -329,17 +334,18 @@ $(function($) {
           var remove = false,
             outBorder;
           if ($(fvnScroll).hasClass("quickMove")) {
-            outBorder = 10;
+            outBorder = 100;
           } else {
-            outBorder = 15;
-          }
+            outBorder = 110;
+          }          
           $(fvnScroll).removeClass("noneAnimate quickMove");
           $(".fullImg .imgBox").removeClass("noneAnimate quickMove");          
-          if ($(".navBox").offset().left - curPos >= outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
+          if (distance <= outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
             $(fvnScroll).addClass("outAnimate").css("left", 100 + "%");
             $(".fullImg .imgBox").addClass("outAnimate").css("left", 100 + "%");
             remove = true;
-          } else if ($(".navBox").offset().left - curPos <= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
+          } else if (distance >= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
+            console.log(distance);
             $(fvnScroll).addClass("outAnimate").css("left", 0);
             $(".fullImg .imgBox").addClass("outAnimate").css("left", 0);
             remove = true;
@@ -355,7 +361,7 @@ $(function($) {
             var height = imgBox[0].clientHeight;
             var width = imgBox[0].clientWidth;
             setTimeout(function() {
-              var src = fvnBoxController.detectContinueImg(targetEl, $(".navBox").offset().left - curPos >= outBorder ? [{ className: "prevBtn" }] : [{ className: "nextBtn" }]);              
+              var src = fvnBoxController.detectContinueImg(targetEl, distance >= outBorder ? [{ className: "prevBtn" }] : [{ className: "nextBtn" }]);              
               fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });              
             }, 50);
             setTimeout(function() {
