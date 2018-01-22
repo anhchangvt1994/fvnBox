@@ -242,7 +242,7 @@ $(function($) {
     mainAnimate: function(storage) {
       if (storage.type === undefined) {
         var animate = 50;
-        var src, caption;
+        var src, caption,html;
         if (storage.opt.caption) {
           caption = storage.item.attr("alt");
         }
@@ -251,17 +251,18 @@ $(function($) {
           if (storage.item.attr("data-src") === undefined) {
             storage.item.attr("data-src", fvnBoxController.detectSuffixImage(storage.item, storage.opt.suffixImg));
           }
-          $("body").find(".fullImg").append("<img src=" + storage.item.attr("data-src") + " draggable='false'>").removeClass("hidden");
+          // $("body").find(".fullImg").append("<img src=" + storage.item.attr("data-src") + " draggable='false'>").removeClass("hidden");
           src = storage.item.attr("data-src");
           animate = 0;
         } else {
-          if($(storage.item[0]).attr("data-fvnScroll") === undefined){
-            $("body").find(".fullImg").append(storage.item[0].outerHTML);
-          }else{
-            $("body").find(".fullImg").append("<div class='fvnScrollBox'><div class='fvnScrollContent'>"+storage.item[0].outerHTML+"</div></div>");
-          }          
           src = storage.item.attr("src");
-        }        
+        }       
+        html = "<img src='" + src + "'>";
+        if($(storage.item[0]).attr("data-fvnScroll") === undefined){
+          $("body").find(".fullImg").append(html);
+        }else{
+          $("body").find(".fullImg").append("<div class='fvnScrollBox'><div class='fvnScrollContent'>"+html+"</div></div>").removeClass("hidden");
+        } 
         if ($($(".fullImg").find("img")).length > 2) {          
           const scrollBox = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];                            
           if(scrollBox === undefined){
