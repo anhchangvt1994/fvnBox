@@ -208,7 +208,7 @@ $(function($) {
         $(".navBox" + targetEl).on("touchstart", function(e) {          
           $("body").addClass("preventWindowScroll");
           $(this).addClass("noneAnimate");
-          fvnBoxAnimation.dragAnimate({ event: e, item: $(this) });
+          fvnBoxAnimation.dragAnimate({ event: e, item: $(this),imgs: imgsGB, opt: optGB });
         });
         // .on("touchmove", function(e) {
         //   var dragVariables = fvnBoxAnimation.dragAnimate({ event: e, prevPoint: prevPoint, distance: distance, outImg: false, item: $(this) });
@@ -302,7 +302,8 @@ $(function($) {
           $(".navBox").offset({ left: $(".navBox").offset().left - left});          
         });
         $(event.target).on("touchend",function(){
-          $(".navBox").removeClass("noneAnimate");            
+          $(".navBox").removeClass("noneAnimate"); 
+          checkDragOut();           
         });
         curPoint = storage.event.originalEvent.touches[0].clientX;          
         if ($($(".fullImg").find("img"))[1] === undefined) {            
@@ -325,54 +326,56 @@ $(function($) {
         // }
         
         // return { prevPoint: storage.event.originalEvent.touches[0].pageX, distance: storage.distance };
-        var remove = false,
-          outBorder;
-        if ($(fvnScroll).hasClass("quickMove")) {
-          outBorder = 10;
-        } else {
-          outBorder = 15;
+        function checkDragOut(){
+          var remove = false,
+            outBorder;
+          if ($(fvnScroll).hasClass("quickMove")) {
+            outBorder = 10;
+          } else {
+            outBorder = 15;
+          }
+          $(fvnScroll).removeClass("noneAnimate quickMove");
+          $(".fullImg .imgBox").removeClass("noneAnimate quickMove");          
+          if ($(".navBox").offset().left - curPos >= outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
+            $(fvnScroll).addClass("outAnimate").css("left", 100 + "%");
+            $(".fullImg .imgBox").addClass("outAnimate").css("left", 100 + "%");
+            remove = true;
+          } else if ($(".navBox").offset().left - curPos <= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
+            $(fvnScroll).addClass("outAnimate").css("left", 0);
+            $(".fullImg .imgBox").addClass("outAnimate").css("left", 0);
+            remove = true;
+          } else {
+            $(fvnScroll).addClass("returnAnimate").css("left", "");
+            $(".fullImg .imgBox").addClass("returnAnimate").css("left", "");
+          }
+          if (remove) {
+            var img = $(fvnScroll);
+            imgBox = $(".fullImg .imgBox");
+            $(".navBox").addClass("noneAnimate");
+            $(".fullImg").append("<div class='imgBox'></div>");
+            var height = imgBox[0].clientHeight;
+            var width = imgBox[0].clientWidth;
+            setTimeout(function() {
+              var src = fvnBoxController.detectContinueImg(targetEl, $(".navBox").offset().left - curPos >= outBorder ? [{ className: "prevBtn" }] : [{ className: "nextBtn" }]);              
+              fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });              
+            }, 50);
+            setTimeout(function() {
+              img.css({ height: img.height() / 3, width: img.width() / 3 });
+              imgBox.css({ "height": imgBox[0].clientHeight / 2 + "px !important", "width": imgBox[0].clientWidth / 2 + "px !important" });
+            }, 70);
+            setTimeout(function() {
+              imgBox.css({ height: height, width: width });
+            }, 600);
+            setTimeout(function() {
+              img.addClass("remove");
+              imgBox.addClass("remove");
+            }, 980);
+            setTimeout(function() {
+              $(".fullImg .remove").remove();
+            }, 1000);
+          }
+          $(".navBox").css("left", "");
         }
-        $(fvnScroll).removeClass("noneAnimate quickMove");
-        $(".fullImg .imgBox").removeClass("noneAnimate quickMove");          
-        if (storage.distance >= outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
-          $(fvnScroll).addClass("outAnimate").css("left", 100 + "%");
-          $(".fullImg .imgBox").addClass("outAnimate").css("left", 100 + "%");
-          remove = true;
-        } else if (storage.distance <= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
-          $(fvnScroll).addClass("outAnimate").css("left", 0);
-          $(".fullImg .imgBox").addClass("outAnimate").css("left", 0);
-          remove = true;
-        } else {
-          $(fvnScroll).addClass("returnAnimate").css("left", "");
-          $(".fullImg .imgBox").addClass("returnAnimate").css("left", "");
-        }
-        if (remove) {
-          var img = $(fvnScroll);
-          imgBox = $(".fullImg .imgBox");
-          $(".navBox").addClass("noneAnimate");
-          $(".fullImg").append("<div class='imgBox'></div>");
-          var height = imgBox[0].clientHeight;
-          var width = imgBox[0].clientWidth;
-          setTimeout(function() {
-            var src = fvnBoxController.detectContinueImg(targetEl, storage.distance >= outBorder ? [{ className: "prevBtn" }] : [{ className: "nextBtn" }]);
-            fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });
-          }, 50);
-          setTimeout(function() {
-            img.css({ height: img.height() / 3, width: img.width() / 3 });
-            imgBox.css({ "height": imgBox[0].clientHeight / 2 + "px !important", "width": imgBox[0].clientWidth / 2 + "px !important" });
-          }, 70);
-          setTimeout(function() {
-            imgBox.css({ height: height, width: width });
-          }, 600);
-          setTimeout(function() {
-            img.addClass("remove");
-            imgBox.addClass("remove");
-          }, 980);
-          setTimeout(function() {
-            $(".fullImg .remove").remove();
-          }, 1000);
-        }
-        $(".navBox").css("left", "");
       }
     }
   };
