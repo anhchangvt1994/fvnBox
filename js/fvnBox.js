@@ -292,8 +292,7 @@ $(function($) {
         //   fvnScroll = $(".fullImg").find("img");
         // }
         // console.log(fvnScroll);        
-        curPoint = storage.event.originalEvent.touches[0].clientX;          
-        var leftImgPos, leftImgBox;
+        curPoint = storage.event.originalEvent.touches[0].clientX; 
         $(event.target).on("touchmove",function(e){            
           left = curPoint - e.originalEvent.touches[0].clientX;                        
           curPoint = e.originalEvent.touches[0].clientX;                    
