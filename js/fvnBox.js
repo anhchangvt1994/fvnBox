@@ -300,23 +300,23 @@ $(function($) {
           $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
           $(".fullImg .imgBox").offset({ left: $(".fullImg .imgBox").offset().left - left});
           $(".navBox").offset({ left: $(".navBox").offset().left - left});                    
-          console.log("distance :"+ distance);
         });
         $(event.target).on("touchend",function(){
-          $(".navBox").removeClass("noneAnimate"); 
+          $(".navBox").removeClass("noneAnimate");           
+          checkDragOut();          
           $(this).unbind("touchmove");           
-          checkDragOut();           
+          $(this).unbind("touchend");          
         });
         curPoint = storage.event.originalEvent.touches[0].clientX;          
-        $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
-        $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
-        // if ($($(".fullImg").find("img"))[1] === undefined) {            
-        //   $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
-        //   $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
-        // } else {            
-        //   $(fvnScroll).removeClass("returnAnimate").addClass("quickMove");                      
-        //   $($(".fullImg").find(".imgBox")[0]).removeClass("returnAnimate").addClass("quickMove");
-        // }
+        // $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
+        // $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
+        if ($($(".fullImg").find("img"))[1] === undefined) {            
+          $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
+          $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
+        } else {            
+          $(fvnScroll).removeClass("returnAnimate").addClass("quickMove");                      
+          $($(".fullImg").find(".imgBox")[0]).removeClass("returnAnimate").addClass("quickMove");
+        }
         // leftImgPos = $(fvnScroll).offset().left;
         // leftImgBox = $(".fullImg .imgBox").offset().left;          
         // if (curPoint > storage.prevPoint) {
@@ -333,6 +333,7 @@ $(function($) {
         function checkDragOut(){
           var remove = false,
             outBorder;
+          distance = distance != 0 ? distance : undefined;
           if ($(fvnScroll).hasClass("quickMove")) {
             outBorder = 100;
           } else {
@@ -345,7 +346,6 @@ $(function($) {
             $(".fullImg .imgBox").addClass("outAnimate").css("left", 100 + "%");
             remove = true;
           } else if (distance >= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
-            console.log(distance);
             $(fvnScroll).addClass("outAnimate").css("left", 0);
             $(".fullImg .imgBox").addClass("outAnimate").css("left", 0);
             remove = true;
