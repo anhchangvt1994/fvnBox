@@ -122,11 +122,16 @@ phone number : 0948621519
 	-ms-transform: translate(-50%,-50%) ;
 	-o-transform: translate(-50%,-50%) ;
 	transform: translate(-50%,-50%) ;
-	-webkit-transition: all 0.9s ease ;
-	-moz-transition: all 0.9s ease ;
-	-ms-transition: all 0.9s ease ;
-	-o-transition: all 0.9s ease ;
-	transition: all 0.9s ease ;	
+	-webkit-transition: 0.9s ease ;
+	-moz-transition: 0.9s ease ;
+	-ms-transition: 0.9s ease ;
+	-o-transition: 0.9s ease ;
+	transition: 0.9s ease ;	
+	-webkit-transition-property: left,opacity,width,height ;
+	-moz-transition-property: left,opacity,width,height ;
+	-ms-transition-property: left,opacity,width,height ;
+	-o-transition-property: left,opacity,width,height ;
+	transition-property: left,opacity,width,height ;
 }
 .navBox{	
 	position: fixed;	
@@ -318,11 +323,11 @@ phone number : 0948621519
 	margin: 0 auto;
 }
 .fullImg .imgBox.noneAnimate,.fullImg img.noneAnimate,.fullImg .fvnScrollBox.noneAnimate,.fullImg .navBox.noneAnimate{
-	-webkit-transition: linear 0.02s;
-	-moz-transition: linear 0.02s;
-	-ms-transition: linear 0.02s;
-	-o-transition: linear 0.02s;
-	transition: linear 0.02s;
+	-webkit-transition: linear;
+	-moz-transition: linear;
+	-ms-transition: linear;
+	-o-transition: linear;
+	transition: linear;
 }
 .fullImg .imgBox.quickMove,.fullImg img.quickMove,.fullImg .fvnScrollBox.quickMove{
 	-webkit-transition: 0.5s ease;

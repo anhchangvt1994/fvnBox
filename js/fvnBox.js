@@ -296,6 +296,7 @@ $(function($) {
         $(event.target).on("touchmove",function(e){
           left = curPoint - e.originalEvent.touches[0].clientX;                        
           distance += left;
+          console.log("left :"+left);
           curPoint = e.originalEvent.touches[0].clientX;                    
           $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
           $(".fullImg .imgBox").offset({ left: $(".fullImg .imgBox").offset().left - left});
@@ -333,19 +334,20 @@ $(function($) {
         function checkDragOut(){
           var remove = false,
             outBorder;
+            console.log("distance :"+distance);
           distance = distance != 0 ? distance : undefined;
           if ($(fvnScroll).hasClass("quickMove")) {
-            outBorder = 100;
+            outBorder = 80;
           } else {
-            outBorder = 110;
+            outBorder = 90;
           }          
           $(fvnScroll).removeClass("noneAnimate quickMove");
           $(".fullImg .imgBox").removeClass("noneAnimate quickMove");          
-          if (distance <= outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
+          if (distance <= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
             $(fvnScroll).addClass("outAnimate").css("left", 100 + "%");
             $(".fullImg .imgBox").addClass("outAnimate").css("left", 100 + "%");
             remove = true;
-          } else if (distance >= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
+          } else if (distance >= outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
             $(fvnScroll).addClass("outAnimate").css("left", 0);
             $(".fullImg .imgBox").addClass("outAnimate").css("left", 0);
             remove = true;
@@ -361,7 +363,7 @@ $(function($) {
             var height = imgBox[0].clientHeight;
             var width = imgBox[0].clientWidth;
             setTimeout(function() {
-              var src = fvnBoxController.detectContinueImg(targetEl, distance >= outBorder ? [{ className: "prevBtn" }] : [{ className: "nextBtn" }]);              
+              var src = fvnBoxController.detectContinueImg(targetEl, distance <= -outBorder ? [{ className: "prevBtn" }] : [{ className: "nextBtn" }]);              
               fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });              
             }, 50);
             setTimeout(function() {
