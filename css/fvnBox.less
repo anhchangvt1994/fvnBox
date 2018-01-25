@@ -1,0 +1,31 @@
+.translate(@x,@y){
+  .translate_active when(@x), (@y){
+    -webkit-transform: @translate_value;
+    -moz-transform: @translate_value;
+    -ms-transform: @translate_value;
+    -o-transform: @translate_value;
+    transform: @translate_value;
+  }  
+}
+.postition(@pos;@center:false;@l;@t;@zindex;@x;@y){
+  position:@pos;
+  .center when (@center = true){
+    left:50%;
+    top:50%;
+    z-index:@zIndex;
+    @x:50%;@y:50%;
+    .translate(@x,@y);    
+  }
+  .adjust when (@center = false){
+    left: @l;
+    top: @t;
+    z-index:zIndex;
+    .translate(@x;@y);
+  }
+}
+.fvnBox{
+  .postition(@pos:fixed;@l:0;@t:0;@zindex:9999);
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.8);
+}
