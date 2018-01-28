@@ -1,31 +1,154 @@
-.translate(@x,@y){
-  .translate_active when(@x), (@y){
-    -webkit-transform: @translate_value;
-    -moz-transform: @translate_value;
-    -ms-transform: @translate_value;
-    -o-transform: @translate_value;
-    transform: @translate_value;
+.transform(@transform...){  
+  -webkit-transform: @arguments;
+  -moz-transform: @arguments;
+  -ms-transform: @arguments;
+  -o-transform: @arguments;
+  transform: @arguments;
+}
+.position(@pos:absolute,@l:"",@t:"",@r:"",@b:"",@zindex:""){
+  position:@pos;
+  .left() when not (@l = ""){left: @l};
+  .left();  
+  .top() when not (@t = ""){top: @t};
+  .top();
+  .right() when not (@r = ""){right: @r};
+  .right();  
+  .bottom() when not (@b = ""){bottom: @b};
+  .bottom();
+  .zindex() when not (@zindex=""){z-index:@zindex};  
+  .zindex();
+}
+.size(@w:"",@h:""){  
+  width:@w;
+  height:@h;  
+}
+.transition(@set...){
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -ms-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+.transition-property(@set...){
+  -webkit-transition-property: @arguments;
+  -moz-transition-property: @arguments;
+  -ms-transition-property: @arguments;
+  -o-transition-property: @arguments;
+  transition-property: @arguments;
+}
+.preventSelect(){
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+
+
+
+
+
+.fvnBox{
+  .position(@pos:fixed,@l:0,@t:0,@zindex:9999);
+  background:fade(#000,80%);
+  .size(@w:100%,@h:100%);
+}
+.fvnInforBox{
+  .position(@pos:fixed,@l:50%,@t:50%,@zindex:9999);
+  .size(@w:100px,@h:100px);
+  .transform(@transform:translate(-50%,-50%));
+  .transition(@set:0.9s ease);
+}
+.fvnBox_number{
+  .preventSelect();
+  white-space: nowrap;
+  .position(@t:calc(~"100% + 7px"));
+  color: #fff;
+  font-size: 20px;
+}
+.fvnBox_caption:extend(.fvnBox_number){
+  max-width: 30%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+[class*="fvnNavBox"]{  
+  > .fvnBox_close{
+    display:none;    
+    .size(@w:50px;@h:50px);    
+    cursor: pointer;
+    z-index:9999;
   }  
 }
-.postition(@pos;@center:false;@l;@t;@zindex;@x;@y){
-  position:@pos;
-  .center when (@center = true){
-    left:50%;
-    top:50%;
-    z-index:@zIndex;
-    @x:50%;@y:50%;
-    .translate(@x,@y);    
-  }
-  .adjust when (@center = false){
-    left: @l;
-    top: @t;
-    z-index:zIndex;
-    .translate(@x;@y);
+.fvnNavBox_show{
+  > .fvnBox_close{
+    display:block;
   }
 }
-.fvnBox{
-  .postition(@pos:fixed;@l:0;@t:0;@zindex:9999);
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.8);
+.fvnBox_close{
+  &:before,&:after{
+    content:"";
+    display:block;  
+    .position(@l:0,@r:0,@t:0,@b:0,@zindex:10);  
+    .size(@h:30px,@w:5px);
+    background:#fff;    
+    margin:auto;    
+  }
+  &:before{
+    .transform(@transform:rotate(45deg));
+  }
+  &:after{
+    .transform(@transform:rotate(-45deg));
+  }
+}
+.fvnNavBox_pc:extend(.fvnInforBox){
+  letter-spacing: -4px; 
+  > .fvnBox_close{
+    .position(@l:100%,@t:0);
+    .transition(@set: 0.5s ease);      
+  }    
+  > .fvnBox_x{
+    left:calc(~"100% - 100px");
+  }
+  > .fvnBox_y{
+    left: calc(~"100% - 70px");
+  }
+  & .fvnBox_next, & .fvnBox_prev{
+    position:relative;
+    display:none;
+    .size(@w:25%,@h:100%);
+    cursor: pointer;
+    &:before{
+      content: "";
+      .size(@w:30px,@h:30px);
+      opacity: 0;
+      .position(@t:0,@b:0);
+      position: absolute;
+      .transform(@transform:rotate(45deg));
+      margin: auto 0;
+      .transition(@set:0.2s ease);
+    }
+  }  
+  .fvnBox_prev{
+    border-top: 5px solid #fff;
+    border-right: 5px solid #fff;
+    right: 70px;
+    float:right;
+  }
+  .fvnBox_next{
+    border-bottom: 5px solid #fff;
+    border-left: 5px solid #fff;  
+    left: 70px;
+    float:left;
+  }
+}
+.fvnNavBox_sp{
+  > .fvnBox_close{
+    .position(@r:3%,@t:3%);
+  }  
 }
