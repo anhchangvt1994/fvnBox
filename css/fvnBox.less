@@ -64,6 +64,7 @@
   .size(@w:100px,@h:100px);
   .transform(@transform:translate(-50%,-50%));
   .transition(@set:0.9s ease);
+  .transition-property(@set:left,opacity,width,height);
 }
 .fvnBox_number{
   .preventSelect();
@@ -109,16 +110,16 @@
 }
 .fvnNavBox_pc:extend(.fvnInforBox){
   letter-spacing: -4px;
-  .fvnBox{
-    > &_close{
+  > .fvnBox{
+    &_close{
       display: none;
       .position(@l:100%,@t:0);
       .transition(@set: 0.5s ease);      
     }
-    > &_x{
+    &_x{
       left:calc(~"100% - 100px");
     }
-    > &_y{
+    &_y{
       left: calc(~"100% - 70px");
     }
     &_prev, &_next{
@@ -156,7 +157,8 @@
     .position(@r:3%,@t:3%);
   }  
 }
-.fvnBox_img{
+.fvnBox_img:extend(.fvnInforBox){
+  background:#fff;
   img{
     .preventSelect();
     white-space: nowrap;
@@ -194,5 +196,59 @@
   }
   &_disappear{
     .transition(@set: 0.7s ease) !important;
+  }
+  &_hidden{
+    display:none !important;
+  }
+}
+.fvnScrollBox{
+  .position(@t:50%,@l:50%);
+  .transform(@transform:translate(-50%,-50%));
+  opacity:0;
+  overflow:hidden;
+  &_cnt{
+    position: relative;
+    .size(@w:100%,@h:100%);
+    .transition(@set: 0.9s ease);
+  }
+}
+.fvnBox{
+  &_showX{
+    &:before{
+      content: "";
+      .position(@l:0,@b:0,@zindex:9999);      
+      .size(@w:100%,@h:30px);
+      border-radius: 5px;      
+    }
+    &:after{
+      content: "";
+      .position(@l:0,@b:0,@zindex:9999);
+      .size(@w:100%,@h:20px);
+      border-radius: 8px;
+      background: #444;
+    }
+  }
+  &_showY{
+    &:before{
+      content: "";
+      .position(@t:0,@r:0,@zindex:9999);
+      .size(@w:30px,@h:100%);      
+      border-radius: 5px;      
+    }
+    &:after{
+      content: "";
+      .position(@t:0,@r:0,@zindex:9999);
+      .size(@w:20px,@h:100%);      
+      border-radius: 8px;
+      background: #444;
+    }
+  }
+  &_scroller{
+    position: absolute;
+    border-radius: 5px;
+    background:#b1b1b1;
+    .preventSelect();    
+    white-space: nowrap;
+    z-index: 10000;
   }
 }

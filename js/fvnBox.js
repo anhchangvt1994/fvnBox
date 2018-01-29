@@ -53,19 +53,19 @@ $(function($) {
         }
       };
     }
-    if ($("body").find(".fullImg").length === 0) {
+    if ($("body").find(".fvnBox").length === 0) {
 
       // auto add file css into bottom of head tag (tự động add file fancy css vào cuối head tag)
       
       $("<link>").appendTo("head").attr({
         rel:  "stylesheet",
         type: "text/css",
-        href: "css/fancy.css"
+        href: "css/fvnBox.css"
       });
 
       // add new popup for fvnBox. (thêm mới cửa sổ bật hình ảnh cho fvnBox)
 
-      $("body").append('<div class="fullImg hidden"><span class="close-lightBox"></span><div class="fvnInforBox hidden"><span class="fvnNumber"></span><span class="fvnCaption"></span></div><div class="navBox hidden"><span class="prevBtn">&nbsp;</span><span class="close-lightBox"></span><span class="nextBtn">&nbsp;</span></div><div class="imgBox"></div></div>');      
+      $("body").append('<div class="fvnBox fvnBox_hidden"><span class="fvnBox_close"></span><div class="fvnInforBox fvnBox_hidden"><span class="fvnBox_number"></span><span class="fvnBox_caption"></span></div><div class="fvnNavBox_pc fvnBox_hidden"><span class="fvnBox_prev">&nbsp;</span><span class="fvnBox_close"></span><span class="fvnBox_next">&nbsp;</span></div><div class="fvnBox_img"></div></div>');      
 
       // modify the resize function() for image in other screen size
 
@@ -73,12 +73,12 @@ $(function($) {
         fvnBoxFeature.setResizeImg({width:pWidth,height:pHeight});
       });
 
-      // setting navBox by detecting what device on use.
+      // setting fvnNavBox by detecting what device on use.
 
       if (fvnBoxFeature.detectDevice()) {
-        $(".fullImg").addClass("fvnNavBox");
+        $(".fvnBox").addClass(".fvnNavBox_touch");
       } else {
-        $(".navBox").addClass("fvnNavBox");
+        $(".fvnNavBox_pc").addClass("fvnBox_show");
       }
 
       // for IE, cause IE doesn't support remove and replaceWith functions in jquery, so we will custom a remove function if browser doesn't support
@@ -162,11 +162,11 @@ $(function($) {
           imgsGB = imgs;
           optGB = opt;
           imgID = $(this).attr("data-index");
-          $(".navBox").addClass(curObj.split(".")[1]);
+          $(".fvnNavBox_pc").addClass(curObj.split(".")[1]);
           if(!fvnBoxController.detectImgsLength(imgsGB)){
-            $(".prevBtn,.nextBtn").css("display","none");  
+            $(".fvnBox_prev,.fvnBox_next").css("display","none");  
           }else{
-            $(".prevBtn,.nextBtn").removeAttr("style");
+            $(".fvnBox_prev,.fvnBox_next").removeAttr("style");
           }
           if (!fvnBoxFeature.detectDevice()) {    
             if(pos == e.pageX){
@@ -205,9 +205,9 @@ $(function($) {
       });
 
       function navTouchEvent() {
-        $(".navBox" + targetEl).on("touchstart", function(e) {          
+        $(".fvnNavBox_pc" + targetEl).on("touchstart", function(e) {          
           $("body,html").addClass("preventWindowScroll");
-          $(this).addClass("noneAnimate");
+          $(this).addClass("fvnBox_none");
           fvnBoxAnimation.dragAnimate({ event: e, item: $(this),imgs: imgsGB, opt: optGB });
         });
         // .on("touchmove", function(e) {
@@ -218,15 +218,15 @@ $(function($) {
         //   $("body").removeClass("preventWindowScroll");
         //   var dragVariables = fvnBoxAnimation.dragAnimate({ prevPoint: prevPoint, distance: distance, outImg: true, imgs: imgsGB, opt: optGB,item: $(this) });
         // });
-        $(".fullImg").on("touchstart", ".close-lightBox", function() {
+        $(".fvnBox").on("touchstart", ".fvnBox_close", function() {
           targetEl = fvnBoxController.settingClose(targetEl, $(this));
           return false;
         });
       }
 
       function navClickEvent() {        
-        $(".navBox" + targetEl).on("click", ".prevBtn, .nextBtn, .close-lightBox", function() {          
-          if ($(this)[0].className.split(" ")[0] != "close-lightBox") {
+        $(".fvnNavBox_pc" + targetEl).on("click", ".fvnBox_prev, .fvnBox_next, .fvnBox_close", function() {          
+          if ($(this)[0].className.split(" ")[0] != "fvnBox_close") {
             var src = fvnBoxController.detectContinueImg(targetEl, $(this));
             if (src !== undefined) {
               fvnBoxAnimation.mainAnimate({ item: $(src), imgs: imgsGB, opt: optGB });
@@ -252,7 +252,7 @@ $(function($) {
           if (storage.item.attr("data-src") === undefined) {            
             storage.item.attr("data-src", fvnBoxController.detectSuffixImage(storage.item, storage.opt.suffixImg));
           }
-          // $("body").find(".fullImg").append("<img src=" + storage.item.attr("data-src") + " draggable='false'>").removeClass("hidden");
+          // $("body").find(".fvnBox").append("<img src=" + storage.item.attr("data-src") + " draggable='false'>").removeClass("fvnBox_hidden");
           src = storage.item.attr("data-src");
           animate = 0;
         } else {
@@ -260,14 +260,14 @@ $(function($) {
         }       
         html = "<img src='" + src + "'>";
         if($(storage.item[0]).attr("data-fvnScroll") === undefined){
-          $("body").find(".fullImg").append(html);
+          $("body").find(".fvnBox").append(html);
         }else{
-          $("body").find(".fullImg").append("<div class='fvnScrollBox'><div class='fvnScrollContent'>"+html+"</div></div>").removeClass("hidden");
+          $("body").find(".fvnBox").append("<div class='fvnScrollBox'><div class='fvnScrollBox_cnt'>"+html+"</div></div>").removeClass("fvnBox_hidden");
         } 
-        if ($($(".fullImg").find("img")).length > 2) {          
-          const scrollBox = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];                            
+        if ($($(".fvnBox").find("img")).length > 2) {          
+          const scrollBox = $($(".fvnBox").find("img")[0]).parents(".fvnScrollBox")[0];                            
           if(scrollBox === undefined){
-            $(".fullImg").find("img")[0].remove();
+            $(".fvnBox").find("img")[0].remove();
           }else{
             $(scrollBox).remove();
           }          
@@ -285,11 +285,11 @@ $(function($) {
         var distance = 0,        
         // console.log(fvnScroll.length > 0);
         // if(fvnScroll.length > 0){
-          // fvnScroll = $(fvnScroll[fvnScroll.length - 1]).find(".fvnScroller");            
+          // fvnScroll = $(fvnScroll[fvnScroll.length - 1]).find(".fvnBox_scroller");            
           // fvnScroll = (fvnScroll.length == 0 ? undefined : $(fvnScroll).parents(".fvnScrollBox"));                        
         // }else{
         //   console.log("image");
-        //   fvnScroll = $(".fullImg").find("img");
+        //   fvnScroll = $(".fvnBox").find("img");
         // }
         // console.log(fvnScroll);        
         curPoint = storage.event.originalEvent.touches[0].clientX;         
@@ -299,35 +299,35 @@ $(function($) {
           console.log("left :"+left);
           curPoint = e.originalEvent.touches[0].clientX;                    
           $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
-          $(".fullImg .imgBox").offset({ left: $(".fullImg .imgBox").offset().left - left});
-          $(".navBox").offset({ left: $(".navBox").offset().left - left});                    
+          $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left});
+          $(".fvnNavBox_pc").offset({ left: $(".fvnNavBox_pc").offset().left - left});                    
         });
         $(event.target).on("touchend",function(){
-          $(".navBox").removeClass("noneAnimate");           
+          $(".fvnNavBox_pc").removeClass("fvnBox_none");           
           $("body,html").addClass("preventWindowScroll");
           checkDragOut();          
           $(this).unbind("touchmove");           
           $(this).unbind("touchend");          
         });
         curPoint = storage.event.originalEvent.touches[0].clientX;          
-        // $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
-        // $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
-        if ($($(".fullImg").find("img"))[1] === undefined) {            
-          $(fvnScroll).removeClass("returnAnimate quickMove").addClass("noneAnimate");            
-          $($(".fullImg").find(".imgBox")).removeClass("returnAnimate quickMove").addClass("noneAnimate");
+        // $(fvnScroll).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");            
+        // $($(".fvnBox").find(".fvnBox_img")).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");
+        if ($($(".fvnBox").find("img"))[1] === undefined) {            
+          $(fvnScroll).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");            
+          $($(".fvnBox").find(".fvnBox_img")).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");
         } else {            
-          $(fvnScroll).removeClass("returnAnimate").addClass("quickMove");                      
-          $($(".fullImg").find(".imgBox")[0]).removeClass("returnAnimate").addClass("quickMove");
+          $(fvnScroll).removeClass("fvnBox_return").addClass("fvnBox_quick");                      
+          $($(".fvnBox").find(".fvnBox_img")[0]).removeClass("fvnBox_return").addClass("fvnBox_quick");
         }
         // leftImgPos = $(fvnScroll).offset().left;
-        // leftImgBox = $(".fullImg .imgBox").offset().left;          
+        // leftfvnBox_img = $(".fvnBox .fvnBox_img").offset().left;          
         // if (curPoint > storage.prevPoint) {
         //   leftImgPos = leftImgPos + 5;
-        //   leftImgBox = leftImgBox + 5;
+        //   leftfvnBox_img = leftfvnBox_img + 5;
         //   storage.distance = storage.distance + 1;
         // } else if(curPoint < storage.prevPoint) {
         //   leftImgPos = leftImgPos - 5;
-        //   leftImgBox = leftImgBox - 5;
+        //   leftfvnBox_img = leftfvnBox_img - 5;
         //   storage.distance = storage.distance - 1;
         // }
         
@@ -337,52 +337,52 @@ $(function($) {
             outBorder;
             console.log("distance :"+distance);
           distance = distance != 0 ? distance : undefined;
-          if ($(fvnScroll).hasClass("quickMove")) {
+          if ($(fvnScroll).hasClass("fvnBox_quick")) {
             outBorder = 80;
           } else {
             outBorder = 90;
           }          
-          $(fvnScroll).removeClass("noneAnimate quickMove");
-          $(".fullImg .imgBox").removeClass("noneAnimate quickMove");          
+          $(fvnScroll).removeClass("fvnBox_none fvnBox_quick");
+          $(".fvnBox .fvnBox_img").removeClass("fvnBox_none fvnBox_quick");          
           if (distance <= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
-            $(fvnScroll).addClass("outAnimate").css("left", 100 + "%");
-            $(".fullImg .imgBox").addClass("outAnimate").css("left", 100 + "%");
+            $(fvnScroll).addClass("fvnBox_out").css("left", 100 + "%");
+            $(".fvnBox .fvnBox_img").addClass("fvnBox_out").css("left", 100 + "%");
             remove = true;
           } else if (distance >= outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
-            $(fvnScroll).addClass("outAnimate").css("left", 0);
-            $(".fullImg .imgBox").addClass("outAnimate").css("left", 0);
+            $(fvnScroll).addClass("fvnBox_out").css("left", 0);
+            $(".fvnBox .fvnBox_img").addClass("fvnBox_out").css("left", 0);
             remove = true;
           } else {
-            $(fvnScroll).addClass("returnAnimate").css("left", "");
-            $(".fullImg .imgBox").addClass("returnAnimate").css("left", "");
+            $(fvnScroll).addClass("fvnBox_return").css("left", "");
+            $(".fvnBox .fvnBox_img").addClass("fvnBox_return").css("left", "");
           }
           if (remove) {
             var img = $(fvnScroll);
-            imgBox = $(".fullImg .imgBox");
-            $(".navBox").addClass("noneAnimate");
-            $(".fullImg").append("<div class='imgBox'></div>");
-            var height = imgBox[0].clientHeight;
-            var width = imgBox[0].clientWidth;
+            fvnBox_img = $(".fvnBox .fvnBox_img");
+            $(".fvnNavBox_pc").addClass("fvnBox_none");
+            $(".fvnBox").append("<div class='fvnBox_img'></div>");
+            var height = fvnBox_img[0].clientHeight;
+            var width = fvnBox_img[0].clientWidth;
             setTimeout(function() {
-              var src = fvnBoxController.detectContinueImg(targetEl, distance <= -outBorder ? [{ className: "prevBtn" }] : [{ className: "nextBtn" }]);              
+              var src = fvnBoxController.detectContinueImg(targetEl, distance <= -outBorder ? [{ className: "fvnBox_prev" }] : [{ className: "fvnBox_next" }]);              
               fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });              
             }, 50);
             setTimeout(function() {
               img.css({ height: img.height() / 3, width: img.width() / 3 });
-              imgBox.css({ "height": imgBox[0].clientHeight / 2 + "px !important", "width": imgBox[0].clientWidth / 2 + "px !important" });
+              fvnBox_img.css({ "height": fvnBox_img[0].clientHeight / 2 + "px !important", "width": fvnBox_img[0].clientWidth / 2 + "px !important" });
             }, 70);
             setTimeout(function() {
-              imgBox.css({ height: height, width: width });
+              fvnBox_img.css({ height: height, width: width });
             }, 600);
             setTimeout(function() {
               img.addClass("remove");
-              imgBox.addClass("remove");
+              fvnBox_img.addClass("remove");
             }, 980);
             setTimeout(function() {
-              $(".fullImg .remove").remove();
+              $(".fvnBox .remove").remove();
             }, 1000);
           }
-          $(".navBox").css("left", "");
+          $(".fvnNavBox_pc").css("left", "");
         }
       }
     }
@@ -469,13 +469,13 @@ $(function($) {
     },
     detectContinueImg: function(targetEl, nav) { 
       if (targetEl != "") {
-        if (nav[0].className == "prevBtn") {
+        if (nav[0].className == "fvnBox_prev") {
           if (imgID > 0) {
             imgID--;
           } else {            
             imgID = imgsGB.length - 1;
           }
-        } else if (nav[0].className == "nextBtn") {
+        } else if (nav[0].className == "fvnBox_next") {
           if (imgID < imgsGB.length - 1) {
             imgID++;
           } else {
@@ -505,57 +505,57 @@ $(function($) {
         overflow_cord = "auto";
       }else{
         increaseSize = 0;
-        overflow_cord = "hidden";
+        overflow_cord = "fvnBox_hidden";
       }      
-      var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;        
+      var scrollBox,scrollContent,fvnBox_img,fvnNavBox,fvnInforBox,commonSize;        
       if(actualWidth!==undefined && actualHeight === undefined){
         scrollBox = $.extend({"width":actualWidth,"height":trueH+70,"z-index":(fvnBoxFeature.detectDevice() === true ? "10000" : "99999")},none_transform);
-        scrollContent = {"overflow":"hidden"};
-        imgBox = $.extend({"width":actualWidth+10,"height":trueH+10},none_transform);
-        navBox = $.extend({"width":actualWidth * (navWidth !== undefined ? navWidth : 1.25),"height":trueH},none_transform);
+        scrollContent = {"overflow":"fvnBox_hidden"};
+        fvnBox_img = $.extend({"width":actualWidth+10,"height":trueH+10},none_transform);
+        fvnNavBox = $.extend({"width":actualWidth * (navWidth !== undefined ? navWidth : 1.25),"height":trueH},none_transform);
         fvnInforBox = $.extend({"width":actualWidth,"height":trueH+70},none_transform);
       }else if(actualWidth===undefined && actualHeight !== undefined){
         scrollBox = $.extend({"width":trueW + 70,"height":actualHeight,"z-index":(fvnBoxFeature.detectDevice() === true ? "10000" : "99999")},transform01);
-        scrollContent = {"overflow":"hidden"};
-        imgBox = $.extend({"width":trueW + 10,"height":actualHeight + 10},transform02);
-        navBox = $.extend({"width":trueW * (navWidth !== undefined ? navWidth : 1.45),"height":actualHeight},transform02);
+        scrollContent = {"overflow":"fvnBox_hidden"};
+        fvnBox_img = $.extend({"width":trueW + 10,"height":actualHeight + 10},transform02);
+        fvnNavBox = $.extend({"width":trueW * (navWidth !== undefined ? navWidth : 1.45),"height":actualHeight},transform02);
         fvnInforBox = $.extend({"width":trueW,"height":actualHeight},transform02);
       }else if(actualWidth===undefined && actualHeight === undefined){
         commonSize = $.extend({"width":trueW + 10,"height": trueH + 10,"z-index":"","padding-right":"","padding-bottom":"","overflow":"visible"},none_transform);
       }
-      return {"scrollBox":scrollBox,"scrollContent":scrollContent,"imgBox":imgBox,"navBox":navBox,"fvnInforBox":fvnInforBox,"commonSize":commonSize};
+      return {"scrollBox":scrollBox,"scrollContent":scrollContent,"fvnBox_img":fvnBox_img,"fvnNavBox":fvnNavBox,"fvnInforBox":fvnInforBox,"commonSize":commonSize};
     },
     settingTimer: function(opt, item, src, animate, caption, imgs) {
-      $(".fullImg").find("img[src*='" + src + "']").load(function() {
+      $(".fvnBox").find("img[src*='" + src + "']").load(function() {
         // get width and height in fact of that image acording to % width and height of window                                                
         var itemSize;
-        const closeBtn = $(".navBox").find(".close-lightBox");
-        $(closeBtn).removeClass("cordx cordy");        
+        const closeBtn = $(".fvnNavBox_pc").find(".fvnBox_close");
+        $(closeBtn).removeClass("fvnBox_x fvnBox_y");        
         itemSize = fvnBoxController.calcActualSize($(item).attr("data-fvnScroll"),this);        
-        var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
+        var scrollBox,scrollContent,fvnBox_img,fvnNavBox,fvnInforBox,commonSize;
         scrollBox = itemSize.scrollBox;
         scrollContent = itemSize.scrollContent;
-        imgBox = itemSize.imgBox;
-        navBox = itemSize.navBox;
+        fvnBox_img = itemSize.fvnBox_img;
+        fvnNavBox = itemSize.fvnNavBox;
         fvnInforBox = itemSize.fvnInforBox;
         commonSize = itemSize.commonSize;
                
         // animte for fancybox
 
-        $("body").find(".fullImg").removeClass("hidden");        
-        $("body").find(".navBox").removeClass("hidden");
-        $("body").find(".fvnInforBox").removeClass("hidden");        
+        $("body").find(".fvnBox").removeClass("fvnBox_hidden");        
+        $("body").find(".fvnNavBox_pc").removeClass("fvnBox_hidden");
+        $("body").find(".fvnInforBox").removeClass("fvnBox_hidden");        
         setTimeout(function(){
-          const fvnBox_imgs = $("body").find(".fullImg img");
+          const fvnBox_imgs = $("body").find(".fvnBox img");
           $.each(fvnBox_imgs,function(id,item){
             var parent = $(item).parents("[class*='fvnShow']")[0];            
             if(parent){              
-              $(parent).find(".fvnScrollContent").css({"opacity":0});
+              $(parent).find(".fvnScrollBox_cnt").css({"opacity":0});
             }else{
               $(item).css({ "width": parseInt(trueW), "height": parseInt(trueH) })
             }
           })
-          // $("body").find(".fullImg img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });              
+          // $("body").find(".fvnBox img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });              
           if($("body").find(".fvnScrollBox").length > 0){                      
             $("body").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize);                    
           }        
@@ -563,65 +563,65 @@ $(function($) {
         setTimeout(function() {
           var id = 0,          
           imgPosition,
-          scrollItem = $($(".fullImg").find("img")[0]).parents(".fvnScrollBox")[0];          
-          if ($($(".fullImg").find("img")).length == 2) {            
+          scrollItem = $($(".fvnBox").find("img")[0]).parents(".fvnScrollBox")[0];          
+          if ($($(".fvnBox").find("img")).length == 2) {            
             if(scrollItem !== undefined){              
-              $(scrollItem).removeClass("appearOpa").addClass("disappearOpa");
+              $(scrollItem).removeClass("fvnBox_appear").addClass("disfvnBox_appear");
             }else{
-              $($(".fullImg").find("img")[0]).removeClass("appearOpa fvnBox_show").addClass("disappearOpa");
+              $($(".fvnBox").find("img")[0]).removeClass("fvnBox_appear fvnBox_show").addClass("disfvnBox_appear");
             }
-            $($(".fullImg").find("img")[0]).removeClass("fvnBox_show");
+            $($(".fvnBox").find("img")[0]).removeClass("fvnBox_show");
             id = 1;
           }
-          scrollItem = $($(".fullImg").find("img")[id]).parents(".fvnScrollBox")[0];  
-          $($(".fullImg").find("img")[id]).addClass("appearOpa fvnBox_show");
+          scrollItem = $($(".fvnBox").find("img")[id]).parents(".fvnScrollBox")[0];  
+          $($(".fvnBox").find("img")[id]).addClass("fvnBox_appear fvnBox_show");
           if(scrollItem !== undefined){
-            $("body").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {});            
+            $("body").find(".fvnScrollBox_cnt").css(scrollContent !== undefined ? scrollContent : {});            
             if(commonSize !== undefined){              
-              $(scrollItem).addClass("appearOpa").css({"z-index":""});                            
+              $(scrollItem).addClass("fvnBox_appear").css({"z-index":""});                            
             }else{
-              $(scrollItem).addClass("appearOpa");             
+              $(scrollItem).addClass("fvnBox_appear");             
               if(trueW > trueH){                                
                 setTimeout(function(){
                   $($(scrollItem).find("img")).addClass("fvnBox_Width");                                  
                 },100);
-                $(closeBtn).addClass("cordx");
+                $(closeBtn).addClass("fvnBox_x");
               }else{                
                 setTimeout(function(){
                   $($(scrollItem).find("img")).addClass("fvnBox_Height");                                  
                 },100);
-                $(closeBtn).addClass("cordy");
+                $(closeBtn).addClass("fvnBox_y");
               }                            
               setTimeout(function(){
-                fvnBoxFeature.setCustomScroll($(scrollItem),$($(".fullImg").find("img")[id]).parent(".fvnScrollContent")[0],trueW > trueH ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});
+                fvnBoxFeature.setCustomScroll($(scrollItem),$($(".fvnBox").find("img")[id]).parent(".fvnScrollBox_cnt")[0],trueW > trueH ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});
               },200);              
             }
           }else{                        
-            // $($(".fullImg").find("img")[id]).addClass("fvnNormal");
+            // $($(".fvnBox").find("img")[id]).addClass("fvnNormal");
           }
         }, 200);
         setTimeout(function() {
-          $("body").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize);                    
-          $("body").find(".navBox").css(navBox !== undefined ? navBox : commonSize);          
+          $("body").find(".fvnBox_img").css(fvnBox_img !== undefined ? fvnBox_img : commonSize);                    
+          $("body").find(".fvnNavBox_pc").css(fvnNavBox !== undefined ? fvnNavBox : commonSize);          
           $("body").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize);
           if (opt.number) {
-            $("body").find(".fvnInforBox .fvnNumber").html(parseInt(imgID) + 1 + " of " + imgs);
+            $("body").find(".fvnInforBox .fvnBox_number").html(parseInt(imgID) + 1 + " of " + imgs);
           } else {
-            $("body").find(".fvnInforBox .fvnNumber").html("");
+            $("body").find(".fvnInforBox .fvnBox_number").html("");
           }
           if (caption !== undefined && opt.caption) {
-            $("body").find(".fvnInforBox .fvnCaption").html(caption);
+            $("body").find(".fvnInforBox .fvnBox_caption").html(caption);
           } else {
-            $("body").find(".fvnInforBox .fvnCaption").html("");
+            $("body").find(".fvnInforBox .fvnBox_caption").html("");
           }
         }, animate);
       });
     },
     settingClose: function(targetEl, nav) {
       if (targetEl != "" && targetEl !== undefined) {
-        $(".navBox").removeClass(targetEl.split(".")[1]);
-        $(".fullImg").addClass("hidden");
-        const removeImgs = $(".fullImg").find("img");
+        $("[class*='fvnNavBox']").removeClass(targetEl.split(".")[1]);
+        $(".fvnBox").addClass("fvnBox_hidden");
+        const removeImgs = $(".fvnBox").find("img");
         var amount = 0;
         $.each(removeImgs,function(id,item){
           if($(item).parents(".fvnScrollBox")[0] !== undefined){
@@ -630,9 +630,9 @@ $(function($) {
             item.remove();
           }
         });
-        $(".fullImg").find(".imgBox").css({ "width": "", "height": "" });
-        $(".navBox").addClass("hidden");
-        $(".fvnInforBox").addClass("hidden");
+        $(".fvnBox").find(".fvnBox_img").css({ "width": "", "height": "" });
+        $("[class*='fvnNavBox']").addClass("fvnBox_hidden");
+        $(".fvnInforBox").addClass("fvnBox_hidden");
         targetEl = "";
         return targetEl;
       }
@@ -699,7 +699,7 @@ $(function($) {
 
       function startDrag(ev){        
         if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){
-          $("body").css({"overflow":"hidden"});      
+          $("body").css({"overflow":"fvnBox_hidden"});      
           ev = ev.changedTouches[0];          
         }
         if(cordinate == "x"){
@@ -735,15 +735,15 @@ $(function($) {
       }      
       function createScroll(){      
         scroller = document.createElement("div");
-        scroller.className = "fvnScroller";
+        scroller.className = "fvnBox_scroller";
         scrollerCordinate = calcScrollCordinate();         
         if(scrollerCordinate / scrollSize < 1){                              
           if(cordinate == "x"){                        
             $(scroller).css({"width":scrollerCordinate+"px","height":15+"px","bottom":3+"px","left":($(wrapperContent).scrollLeft()/wrapperSize)*(scrollSize - 5)+"px"});
-            scrollContent.addClass('fvnShowX');            
+            scrollContent.addClass('fvnBox_showX');            
           }else{                        
             $(scroller).css({"width":15+"px","height":scrollerCordinate+"px","top":($(wrapperContent).scrollTop()/wrapperSize)*(scrollSize - 5)+"px","right":2+"px"});
-            scrollContent.addClass('fvnShowY');
+            scrollContent.addClass('fvnBox_showY');
           }                    
           scroller.addEventListener('mousedown',startDrag);
           scroller.addEventListener('touchstart',startDrag);
@@ -834,59 +834,59 @@ $(function($) {
       return isMobile;
     },
     setResizeImg: function(fn_Opt) {      
-      if (this.detectDevice() && !$(".fullImg").hasClass("fvnNavBox")) {
-        $(".navBox").removeClass("fvnNavBox");
-        $(".fullImg").addClass("fvnNavBox");
-      } else if (!this.detectDevice() && $(".fullImg").hasClass("fvnNavBox")) {
-        $(".navBox").addClass("fvnNavBox");
-        $(".fullImg").removeClass("fvnNavBox");
+      if (this.detectDevice() && !$(".fvnBox").hasClass("fvnNavBox_touch")) {
+        $(".fvnNavBox_pc").removeClass("fvnBox_show");
+        $(".fvnBox").addClass("fvnNavBox_touch");
+      } else if (!this.detectDevice() && $(".fvnBox").hasClass("fvnNavBox_touch")) {
+        $(".fvnNavBox_pc").addClass("fvnBox_show");
+        $(".fvnBox").removeClass("fvnNavBox_touch");
       }
       this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);      
-      if (!$(".fullImg").hasClass("hidden")) {
-        const isExist = $(".fullImg").find(".fvnScrollBox.appearOpa");        
+      if (!$(".fvnBox").hasClass("fvnBox_hidden")) {
+        const isExist = $(".fvnBox").find(".fvnScrollBox.fvnBox_appear");        
         var isScroll = undefined,itemSize;
         if(isExist.length == 1){
           isScroll = true;          
-          if(isExist.find(".fvnScroller")[0] !== undefined){
-            $(isExist.find(".fvnScroller")).remove();
+          if(isExist.find(".fvnBox_scroller")[0] !== undefined){
+            $(isExist.find(".fvnBox_scroller")).remove();
           }                    
         }
-        itemSize = fvnBoxController.calcActualSize(isScroll,$(".fullImg").find("img.fvnBox_show"),true);                        
-        var scrollBox,scrollContent,imgBox,navBox,fvnInforBox,commonSize;
+        itemSize = fvnBoxController.calcActualSize(isScroll,$(".fvnBox").find("img.fvnBox_show"),true);                        
+        var scrollBox,scrollContent,fvnBox_img,fvnNavBox,fvnInforBox,commonSize;
         scrollBox = itemSize.scrollBox;
         scrollContent = itemSize.scrollContent;
-        imgBox = itemSize.imgBox;
-        navBox = itemSize.navBox;
+        fvnBox_img = itemSize.fvnBox_img;
+        fvnNavBox = itemSize.fvnNavBox;
         fvnInforBox = itemSize.fvnInforBox;
         commonSize = itemSize.commonSize;        
-        $(".fullImg").find("img").css({ "width": parseInt(trueW), "height": parseInt(trueH) }).addClass("fastAnimate");
-        $(".fullImg").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize).addClass("fastAnimate");
-        $(".fullImg").find(".fvnScrollContent").css(scrollContent !== undefined ? scrollContent : {"overflow":"visible"}).addClass("fastAnimate");              
-        $(".fullImg").find(".imgBox").css(imgBox !== undefined ? imgBox : commonSize).addClass("fastAnimate");                    
-        $(".fullImg").find(".navBox").css(navBox !== undefined ? navBox : commonSize).addClass("fastAnimate");          
-        $(".fullImg").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize).addClass("fastAnimate");
-        const fvnBox_imgs = $(".fullImg").find("img");        
+        $(".fvnBox").find("img").css({ "width": parseInt(trueW), "height": parseInt(trueH) }).addClass("fvnBox_fast");
+        $(".fvnBox").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize).addClass("fvnBox_fast");
+        $(".fvnBox").find(".fvnScrollBox_cnt").css(scrollContent !== undefined ? scrollContent : {"overflow":"visible"}).addClass("fvnBox_fast");              
+        $(".fvnBox").find(".fvnBox_img").css(fvnBox_img !== undefined ? fvnBox_img : commonSize).addClass("fvnBox_fast");                    
+        $(".fvnBox").find(".fvnNavBox_pc").css(fvnNavBox !== undefined ? fvnNavBox : commonSize).addClass("fvnBox_fast");          
+        $(".fvnBox").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize).addClass("fvnBox_fast");
+        const fvnBox_imgs = $(".fvnBox").find("img");        
         if(commonSize === undefined){          
           if(actualWidth){
             $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Width");
-            $(isExist).addClass("fvnShowX");
+            $(isExist).addClass("fvnBox_showX");
           }else{
-            const closeBtn = $(".navBox").find(".close-lightBox");
-            $(closeBtn).removeClass("cordx cordy");
+            const closeBtn = $(".fvnNavBox_pc").find(".fvnBox_close");
+            $(closeBtn).removeClass("fvnBox_x fvnBox_y");
             $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Height");
-            $(isExist).addClass("fvnShowY");
+            $(isExist).addClass("fvnBox_showY");
           }                    
-          fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollContent")[0],$(isExist).hasClass("fvnShowX") === true ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});            
+          fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollBox_cnt")[0],$(isExist).hasClass("fvnBox_showX") === true ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});            
         }else{
-          $(isExist).removeClass("fvnShowX fvnShowY");
+          $(isExist).removeClass("fvnBox_showX fvnBox_showY");
           $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).removeClass("fvnBox_Width fvnBox_Height");
         }
-        // var trueW = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueWidth;
-        // var trueH = fvnBoxController.detectImageSize($("body").find(".fullImg img.appearOpa").prop("naturalWidth"), $("body").find(".fullImg img.appearOpa").prop("naturalHeight")).trueHeight;
-        // $("body").find(".fullImg img").css({ "width": trueW, "height": trueH }).addClass("fastAnimate");
-        // $("body").find(".imgBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
-        // $("body").find(".navBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");
-        // $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fastAnimate");               
+        // var trueW = fvnBoxController.detectImageSize($("body").find(".fvnBox img.fvnBox_appear").prop("naturalWidth"), $("body").find(".fvnBox img.fvnBox_appear").prop("naturalHeight")).trueWidth;
+        // var trueH = fvnBoxController.detectImageSize($("body").find(".fvnBox img.fvnBox_appear").prop("naturalWidth"), $("body").find(".fvnBox img.fvnBox_appear").prop("naturalHeight")).trueHeight;
+        // $("body").find(".fvnBox img").css({ "width": trueW, "height": trueH }).addClass("fvnBox_fast");
+        // $("body").find(".fvnBox_img").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fvnBox_fast");
+        // $("body").find(".fvnNavBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fvnBox_fast");
+        // $("body").find(".fvnInforBox").css({ "width": trueW + 10, "height": trueH + 10 }).addClass("fvnBox_fast");               
       }
     },
     settingRemoveFunc: function() {
