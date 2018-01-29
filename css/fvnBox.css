@@ -1,2 +1,198 @@
-.fvnBox{position:fixed;left:0;top:0;z-index:9999;background:rgba(0,0,0,0.8);width:100%;height:100%}.fvnInforBox,.fvnNavBox_pc{position:fixed;left:50%;top:50%;z-index:9999;width:100px;height:100px;-webkit-transform:translate(-50%, -50%);transform:translate(-50%, -50%);-webkit-transition:.9s ease;transition:.9s ease}.fvnBox_number,.fvnBox_caption{-webkit-touch-callout:none;-ms-user-select:none;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;user-select:none;white-space:nowrap;position:absolute;top:calc(100% + 7px);color:#fff;font-size:20px}.fvnBox_caption{max-width:30%;text-overflow:ellipsis;overflow:hidden}[class*="fvnNavBox"]>.fvnBox_close{display:none;width:50px;height:50px;cursor:pointer;z-index:9999}.fvnNavBox_show>.fvnBox_close{display:block}.fvnBox_close:before,.fvnBox_close:after{content:"";display:block;position:absolute;left:0;top:0;right:0;bottom:0;z-index:10;width:5px;height:30px;background:#fff;margin:auto}.fvnBox_close:before{-webkit-transform:rotate(45deg);transform:rotate(45deg)}.fvnBox_close:after{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}.fvnNavBox_pc{letter-spacing:-4px}.fvnNavBox_pc>.fvnBox_close{position:absolute;left:100%;top:0;-webkit-transition:.5s ease;transition:.5s ease}.fvnNavBox_pc>.fvnBox_x{left:calc(100% - 100px)}.fvnNavBox_pc>.fvnBox_y{left:calc(100% - 70px)}.fvnNavBox_pc .fvnBox_next,.fvnNavBox_pc .fvnBox_prev{position:relative;display:none;width:25%;height:100%;cursor:pointer}.fvnNavBox_pc .fvnBox_next:before,.fvnNavBox_pc .fvnBox_prev:before{content:"";width:30px;height:30px;opacity:0;top:0;bottom:0;position:absolute;-webkit-transform:rotate(45deg);transform:rotate(45deg);margin:auto 0;-webkit-transition:.2s ease;transition:.2s ease}.fvnNavBox_pc .fvnBox_prev{border-top:5px solid #fff;border-right:5px solid #fff;right:70px;float:right}.fvnNavBox_pc .fvnBox_next{border-bottom:5px solid #fff;border-left:5px solid #fff;left:70px;float:left}.fvnNavBox_sp>.fvnBox_close{position:absolute;top:3%;right:3%}
-/*# sourceMappingURL=fvnBox.css.map */
+.fvnBox {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+}
+.fvnInforBox,
+.fvnNavBox_pc {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 9999;
+  width: 100px;
+  height: 100px;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  -webkit-transition: 0.9s ease;
+  transition: 0.9s ease;
+}
+.fvnBox_number,
+.fvnBox_caption {
+  -webkit-touch-callout: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  white-space: nowrap;
+  position: absolute;
+  top: calc(100% + 7px);
+  color: #fff;
+  font-size: 20px;
+}
+.fvnBox_caption {
+  max-width: 30%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+[class*="fvnNavBox"] > .fvnBox_close {
+  display: none;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  z-index: 9999;
+}
+[class*="fvnNavBox"].fvnBox_show > .fvnBox_close {
+  display: block;
+}
+[class*="fvnNavBox"].fvnBox_show > .fvnBox_next,
+[class*="fvnNavBox"].fvnBox_show > .fvnBox_prev {
+  display: inline-block;
+}
+.fvnBox_close:before,
+.fvnBox_close:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  width: 5px;
+  height: 30px;
+  background: #fff;
+  margin: auto;
+}
+.fvnBox_close:before {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.fvnBox_close:after {
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.fvnNavBox_pc {
+  letter-spacing: -4px;
+}
+ > .fvnNavBox_pc .fvnBox_close {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  -webkit-transition: 0.5s ease;
+  transition: 0.5s ease;
+}
+ > .fvnNavBox_pc .fvnBox_x {
+  left: calc(100% - 100px);
+}
+ > .fvnNavBox_pc .fvnBox_y {
+  left: calc(100% - 70px);
+}
+.fvnNavBox_pc .fvnBox_prev,
+.fvnNavBox_pc .fvnBox_next {
+  position: relative;
+  display: none;
+  width: 25%;
+  height: 100%;
+  cursor: pointer;
+}
+.fvnNavBox_pc .fvnBox_prev:before,
+.fvnNavBox_pc .fvnBox_next:before {
+  content: "";
+  width: 30px;
+  height: 30px;
+  opacity: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  margin: auto 0;
+  -webkit-transition: 0.2s ease;
+  transition: 0.2s ease;
+}
+.fvnNavBox_pc .fvnBox_prev {
+  border-top: 5px solid #fff;
+  border-right: 5px solid #fff;
+  right: 70px;
+  float: right;
+}
+.fvnNavBox_pc .fvnBox_next {
+  border-bottom: 5px solid #fff;
+  border-left: 5px solid #fff;
+  left: 70px;
+  float: left;
+}
+.fvnNavBox_touch > .fvnBox_close {
+  position: absolute;
+  top: 3%;
+  right: 3%;
+}
+.fvnBox_img img {
+  -webkit-touch-callout: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  white-space: nowrap;
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  -webkit-transition: 0.9s ease;
+  transition: 0.9s ease;
+  opacity: 0;
+}
+.fvnBox_img .fvnBox_Width,
+.fvnBox_img .fvnBox_Height {
+  -webkit-transform: none;
+  transform: none;
+  -webkit-transition: none;
+  transition: none;
+}
+.fvnBox_img .fvnBox_Width {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+}
+.fvnBox_img .fvnBox_Height {
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0 auto;
+}
+.fvnBox_none {
+  -webkit-transition: linear !important;
+  transition: linear !important;
+}
+.fvnBox_quick,
+.fvnBox_return {
+  -webkit-transition: 0.5s ease !important;
+  transition: 0.5s ease !important;
+}
+.fvnBox_out {
+  -webkit-transition: 1.2s ease !important;
+  transition: 1.2s ease !important;
+}
+.fvnBox_fast {
+  -webkit-transition: 0.8s ease !important;
+  transition: 0.8s ease !important;
+}
+.fvnBox_appear {
+  opacity: 1;
+  -webkit-transition: 1.5s ease;
+  transition: 1.5s ease;
+}
+.fvnBox_disappear {
+  -webkit-transition: 0.7s ease !important;
+  transition: 0.7s ease !important;
+}

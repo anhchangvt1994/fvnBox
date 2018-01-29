@@ -206,7 +206,7 @@ $(function($) {
 
       function navTouchEvent() {
         $(".navBox" + targetEl).on("touchstart", function(e) {          
-          $("body").addClass("preventWindowScroll");
+          $("body,html").addClass("preventWindowScroll");
           $(this).addClass("noneAnimate");
           fvnBoxAnimation.dragAnimate({ event: e, item: $(this),imgs: imgsGB, opt: optGB });
         });
@@ -304,6 +304,7 @@ $(function($) {
         });
         $(event.target).on("touchend",function(){
           $(".navBox").removeClass("noneAnimate");           
+          $("body,html").addClass("preventWindowScroll");
           checkDragOut();          
           $(this).unbind("touchmove");           
           $(this).unbind("touchend");          
