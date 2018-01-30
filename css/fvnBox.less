@@ -62,10 +62,22 @@
     .preventSelect();
     white-space: nowrap;
     pointer-events:none;
-    .position(@l:50%,@t:50%);
+    .position(@l:50%,@t:50%,@zindex:10000);
     .transform(@transform:translate(-50%,-50%));
-    .transition(@set: 0.9s ease);
-    opacity:0;
+    .transition(@set: 0.9s ease);    
+    opacity:0;    
+  }
+  & &_Width, & &_Height{
+    .transform(@transform:none);
+    .transition(@set:none) !important;      
+  }    
+  & &_Width{
+    left:0;top:0;bottom:0;
+    margin: auto 0;    
+  }
+  & &_Height{
+    left: 0;right: 0;top: 0;
+    margin: 0 auto;
   }
 }
 .fvnInforBox{
@@ -121,7 +133,7 @@
 }
 .fvnNavBox_pc:extend(.fvnInforBox){
   letter-spacing: -4px;
-  z-index:10000;
+  z-index:10001;
   > .fvnBox{
     &_close{
       display: none;
@@ -184,20 +196,6 @@
 }
 .fvnBox_img:extend(.fvnInforBox){
   background:#fff;  
-  .fvnBox{
-    &_Width, &_Height{
-      .transform(@transform:none);
-      .transition(@set:none);      
-    }    
-    &_Width{
-      left:0;top:0;bottom:0;
-      margin: auto 0;    
-    }
-    &_Height{
-      left: 0;right: 0;top: 0;
-      margin: 0 auto;
-    }
-  }
 }
 .fvnBox{
   &_none{.transition(@set:linear) !important;}
@@ -218,14 +216,14 @@
   }
 }
 .fvnScrollBox{
-  .position(@t:50%,@l:50%);
+  .position(@t:50%,@l:50%,@zindex:1000);
   .transform(@transform:translate(-50%,-50%));
-  opacity:0;
-  overflow:hidden;
+  opacity:0;  
   &_cnt{
     position: relative;
     .size(@w:100%,@h:100%);
     .transition(@set: 0.9s ease);
+    overflow:hidden;
   }
 }
 .fvnBox{

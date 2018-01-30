@@ -19,11 +19,31 @@
   position: absolute;
   left: 50%;
   top: 50%;
+  z-index: 10000;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   -webkit-transition: 0.9s ease;
   transition: 0.9s ease;
   opacity: 0;
+}
+.fvnBox .fvnBox_Width,
+.fvnBox .fvnBox_Height {
+  -webkit-transform: none;
+  transform: none;
+  -webkit-transition: none !important;
+  transition: none !important;
+}
+.fvnBox .fvnBox_Width {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+}
+.fvnBox .fvnBox_Height {
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0 auto;
 }
 .fvnInforBox,
 .fvnNavBox_pc,
@@ -103,7 +123,7 @@
 }
 .fvnNavBox_pc {
   letter-spacing: -4px;
-  z-index: 10000;
+  z-index: 10001;
 }
 .fvnNavBox_pc > .fvnBox_close {
   display: none;
@@ -175,25 +195,6 @@
 .fvnBox_img {
   background: #fff;
 }
-.fvnBox_img .fvnBox_Width,
-.fvnBox_img .fvnBox_Height {
-  -webkit-transform: none;
-  transform: none;
-  -webkit-transition: none;
-  transition: none;
-}
-.fvnBox_img .fvnBox_Width {
-  left: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-}
-.fvnBox_img .fvnBox_Height {
-  left: 0;
-  right: 0;
-  top: 0;
-  margin: 0 auto;
-}
 .fvnBox_none {
   -webkit-transition: linear !important;
   transition: linear !important;
@@ -227,10 +228,10 @@
   position: absolute;
   left: 50%;
   top: 50%;
+  z-index: 1000;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   opacity: 0;
-  overflow: hidden;
 }
 .fvnScrollBox_cnt {
   position: relative;
@@ -238,6 +239,7 @@
   height: 100%;
   -webkit-transition: 0.9s ease;
   transition: 0.9s ease;
+  overflow: hidden;
 }
 .fvnBox_showX:before {
   content: "";
