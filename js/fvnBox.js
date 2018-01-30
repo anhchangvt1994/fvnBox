@@ -1,10 +1,8 @@
 /************************************
-
 authors : Nguyễn Minh Trường
 first released by : Nguyễn Minh Trường in 2017
 email : anhchangvt1994@gmail.com / fvn.truongnm@gmail.com
 phone number : 0948621519
-
 ************************************/
 
 $(function($) {
@@ -566,9 +564,9 @@ $(function($) {
           scrollItem = $($(".fvnBox").find("img")[0]).parents(".fvnScrollBox")[0];          
           if ($($(".fvnBox").find("img")).length == 2) {            
             if(scrollItem !== undefined){              
-              $(scrollItem).removeClass("fvnBox_appear").addClass("disfvnBox_appear");
+              $(scrollItem).removeClass("fvnBox_appear").addClass("fvnBox_disappear");
             }else{
-              $($(".fvnBox").find("img")[0]).removeClass("fvnBox_appear fvnBox_show").addClass("disfvnBox_appear");
+              $($(".fvnBox").find("img")[0]).removeClass("fvnBox_appear fvnBox_show").addClass("fvnBox_disappear");
             }
             $($(".fvnBox").find("img")[0]).removeClass("fvnBox_show");
             id = 1;
@@ -593,6 +591,7 @@ $(function($) {
                 $(closeBtn).addClass("fvnBox_y");
               }                            
               setTimeout(function(){
+                console.log($($(".fvnBox").find("img")[id]).parent(".fvnScrollBox_cnt")[0]);
                 fvnBoxFeature.setCustomScroll($(scrollItem),$($(".fvnBox").find("img")[id]).parent(".fvnScrollBox_cnt")[0],trueW > trueH ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});
               },200);              
             }
@@ -699,7 +698,7 @@ $(function($) {
 
       function startDrag(ev){        
         if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){
-          $("body").css({"overflow":"fvnBox_hidden"});      
+          $("body").css({"overflow":"hidden"});      
           ev = ev.changedTouches[0];          
         }
         if(cordinate == "x"){
@@ -710,16 +709,22 @@ $(function($) {
           contentPos = $(wrapperContent).scrollTop();          
         }
         beginDrag = true;
+        console.log("rootPos :"+rootPos);
+        console.log("contentPos :"+contentPos);
+        console.log("beginDrag :"+beginDrag);
       }
       
-      function scrollBar(ev){          
+      function scrollBar(ev){                  
         if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){          
           ev = ev.changedTouches[0];                    
-        }               
-        if(beginDrag){          
-          if(cordinate == "x"){
+        }                     
+        if(beginDrag){
+          if(cordinate == "x"){            
             let mouseDifferential = ev.pageX - rootPos;
             let scrollEquivalent = mouseDifferential * (wrapperSize / scrollSize);
+            console.log("mouseDifferential :"+mouseDifferential);
+            console.log("scrollEquivalent :"+scrollEquivalent);
+            console.log("wrapperContent :"+$(wrapperContent));
             $(wrapperContent).scrollLeft(contentPos + scrollEquivalent);            
           }else{
             let mouseDifferential = ev.pageY - rootPos;
