@@ -7,6 +7,24 @@
   width: 100%;
   height: 100%;
 }
+.fvnBox img {
+  -webkit-touch-callout: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  white-space: nowrap;
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  -webkit-transition: 0.9s ease;
+  transition: 0.9s ease;
+  opacity: 0;
+}
 .fvnInforBox,
 .fvnNavBox_pc,
 .fvnBox_img {
@@ -20,8 +38,8 @@
   transform: translate(-50%, -50%);
   -webkit-transition: 0.9s ease;
   transition: 0.9s ease;
-  -webkit-transition-property: left;
-  transition-property: left;
+  -webkit-transition-property: left, opacity, width, height;
+  transition-property: left, opacity, width, height;
 }
 .fvnBox_number,
 .fvnBox_caption {
@@ -40,7 +58,9 @@
 .fvnBox_caption {
   max-width: 30%;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
+  right: 0;
 }
 [class*="fvnNavBox"] > .fvnBox_close {
   display: none;
@@ -56,10 +76,12 @@
 [class*="fvnNavBox"].fvnBox_show > .fvnBox_prev {
   display: inline-block;
 }
+.fvnBox_close {
+  display: none;
+}
 .fvnBox_close:before,
 .fvnBox_close:after {
   content: "";
-  display: block;
   position: absolute;
   left: 0;
   top: 0;
@@ -81,6 +103,7 @@
 }
 .fvnNavBox_pc {
   letter-spacing: -4px;
+  z-index: 10000;
 }
 .fvnNavBox_pc > .fvnBox_close {
   display: none;
@@ -120,42 +143,37 @@
   transition: 0.2s ease;
 }
 .fvnNavBox_pc > .fvnBox_prev {
+  float: right;
+}
+.fvnNavBox_pc > .fvnBox_prev:before {
   border-top: 5px solid #fff;
   border-right: 5px solid #fff;
   right: 70px;
-  float: right;
+}
+.fvnNavBox_pc > .fvnBox_prev:hover:before {
+  right: calc(20%);
+  opacity: 1;
 }
 .fvnNavBox_pc > .fvnBox_next {
+  float: left;
+}
+.fvnNavBox_pc > .fvnBox_next:before {
   border-bottom: 5px solid #fff;
   border-left: 5px solid #fff;
   left: 70px;
-  float: left;
+}
+.fvnNavBox_pc > .fvnBox_next:hover:before {
+  left: calc(20%);
+  opacity: 1;
 }
 .fvnNavBox_touch > .fvnBox_close {
+  display: block;
   position: absolute;
   top: 3%;
   right: 3%;
 }
 .fvnBox_img {
   background: #fff;
-}
-.fvnBox_img img {
-  -webkit-touch-callout: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  white-space: nowrap;
-  pointer-events: none;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  -webkit-transition: 0.9s ease;
-  transition: 0.9s ease;
-  opacity: 0;
 }
 .fvnBox_img .fvnBox_Width,
 .fvnBox_img .fvnBox_Height {
@@ -194,9 +212,9 @@
   transition: 0.8s ease !important;
 }
 .fvnBox_appear {
-  opacity: 1;
-  -webkit-transition: 1.5s ease;
-  transition: 1.5s ease;
+  opacity: 1 !important;
+  -webkit-transition: 1.5s ease !important;
+  transition: 1.5s ease !important;
 }
 .fvnBox_disappear {
   -webkit-transition: 0.7s ease !important;
@@ -276,4 +294,3 @@
   white-space: nowrap;
   z-index: 10000;
 }
-/*# sourceMappingURL=fvnBox.css.map */

@@ -58,13 +58,22 @@
   .position(@pos:fixed,@l:0,@t:0,@zindex:9999);
   background:fade(#000,80%);
   .size(@w:100%,@h:100%);
+  img{
+    .preventSelect();
+    white-space: nowrap;
+    pointer-events:none;
+    .position(@l:50%,@t:50%);
+    .transform(@transform:translate(-50%,-50%));
+    .transition(@set: 0.9s ease);
+    opacity:0;
+  }
 }
 .fvnInforBox{
   .position(@pos:fixed,@l:50%,@t:50%,@zindex:9999);
   .size(@w:100px,@h:100px);
   .transform(@transform:translate(-50%,-50%));
   .transition(@set:0.9s ease);
-  .transition-property(@set:left,opacity,width,height);
+  .transition-property(@set:left,opacity,width,height;);
 }
 .fvnBox_number{
   .preventSelect();
@@ -76,7 +85,9 @@
 .fvnBox_caption:extend(.fvnBox_number){
   max-width: 30%;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
+  right:0;
 }
 [class*="fvnNavBox"]{  
   > .fvnBox_close{
@@ -93,9 +104,9 @@
   }
 }
 .fvnBox_close{
+  display:none;
   &:before,&:after{
     content:"";
-    display:block;  
     .position(@l:0,@r:0,@t:0,@b:0,@zindex:10);  
     .size(@h:30px,@w:5px);
     background:#fff;    
@@ -110,6 +121,7 @@
 }
 .fvnNavBox_pc:extend(.fvnInforBox){
   letter-spacing: -4px;
+  z-index:10000;
   > .fvnBox{
     &_close{
       display: none;
@@ -139,35 +151,39 @@
       }
     }
     &_prev{
-      border-top: 5px solid #fff;
-      border-right: 5px solid #fff;
-      right: 70px;
       float:right;
+      &:before{
+        border-top: 5px solid #fff;
+        border-right: 5px solid #fff;
+        right: 70px;        
+      }
+      &:hover:before{
+        right: calc(100% - 80%);
+        opacity: 1;
+      } 
     }
     &_next{
-      border-bottom: 5px solid #fff;
-      border-left: 5px solid #fff;  
-      left: 70px;
       float:left;
+      &:before{
+        border-bottom: 5px solid #fff;
+        border-left: 5px solid #fff;  
+        left: 70px;        
+      } 
+      &:hover:before{
+        left: calc(100% - 80%);
+        opacity: 1;
+      } 
     }
   }         
 }
 .fvnNavBox_touch{
   > .fvnBox_close{
+    display: block;
     .position(@r:3%,@t:3%);
   }  
 }
 .fvnBox_img:extend(.fvnInforBox){
-  background:#fff;
-  img{
-    .preventSelect();
-    white-space: nowrap;
-    pointer-events:none;
-    .position(@l:50%,@t:50%);
-    .transform(@transform:translate(-50%,-50%));
-    .transition(@set: 0.9s ease);
-    opacity:0;
-  }
+  background:#fff;  
   .fvnBox{
     &_Width, &_Height{
       .transform(@transform:none);
@@ -191,8 +207,8 @@
   &_out{.transition(@set: 1.2s ease) !important;}
   &_fast{.transition(@set: 0.8s ease) !important;}
   &_appear{
-    opacity:1;
-    .transition(@set: 1.5s ease);
+    opacity:1 !important;
+    .transition(@set: 1.5s ease) !important;
   }
   &_disappear{
     .transition(@set: 0.7s ease) !important;
