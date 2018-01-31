@@ -69,7 +69,8 @@
   }
   & &_Width, & &_Height{
     .transform(@transform:none);
-    .transition(@set:none) !important;      
+    .transition-property(@set:opacity,width,height;) !important;
+    // .transition(@set:none) !important;      
   }    
   & &_Width{
     left:0;top:0;bottom:0;
@@ -162,7 +163,7 @@
         .transition(@set:0.2s ease);
       }
     }
-    &_prev{
+    &_next{
       float:right;
       &:before{
         border-top: 5px solid #fff;
@@ -174,7 +175,7 @@
         opacity: 1;
       } 
     }
-    &_next{
+    &_prev{
       float:left;
       &:before{
         border-bottom: 5px solid #fff;
@@ -198,15 +199,15 @@
   background:#fff;  
 }
 .fvnBox{
+  &_fast{.transition(@set: 0.8s ease) !important;}
   &_none{.transition(@set:linear) !important;}
   &_quick, &_return{
     .transition(@set: 0.5s ease) !important;
   } 
-  &_out{.transition(@set: 1.2s ease) !important;}
-  &_fast{.transition(@set: 0.8s ease) !important;}
+  &_out{.transition(@set: 1.2s ease) !important;}  
   &_appear{
     opacity:1 !important;
-    .transition(@set: 1.5s ease) !important;
+    .transition(@set: 1.5s ease);
   }
   &_disappear{
     .transition(@set: 0.7s ease) !important;
@@ -216,7 +217,7 @@
   }
 }
 .fvnScrollBox{
-  .position(@t:50%,@l:50%,@zindex:1000);
+  .position(@t:50%,@l:50%,@zindex:10000);
   .transform(@transform:translate(-50%,-50%));
   opacity:0;  
   &_cnt{
