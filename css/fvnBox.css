@@ -48,7 +48,7 @@
 .fvnInforBox,
 .fvnNavBox_pc,
 .fvnBox_img {
-  position: fixed;
+  position: absolute;
   left: 50%;
   top: 50%;
   z-index: 9999;
@@ -209,6 +209,7 @@
   transition: 0.5s ease !important;
 }
 .fvnBox_out {
+  opacity: 0 !important;
   -webkit-transition: 1.2s ease !important;
   transition: 1.2s ease !important;
 }
@@ -296,4 +297,3 @@
   white-space: nowrap;
   z-index: 10000;
 }
-/*# sourceMappingURL=fvnBox.css.map */

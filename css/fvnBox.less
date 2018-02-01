@@ -82,7 +82,7 @@
   }
 }
 .fvnInforBox{
-  .position(@pos:fixed,@l:50%,@t:50%,@zindex:9999);
+  .position(@l:50%,@t:50%,@zindex:9999);
   .size(@w:100px,@h:100px);
   .transform(@transform:translate(-50%,-50%));
   .transition(@set:0.9s ease);
@@ -204,14 +204,15 @@
   &_quick, &_return{
     .transition(@set: 0.5s ease) !important;
   } 
-  &_out{.transition(@set: 1.2s ease) !important;}  
+  &_out{
+    opacity:0 !important;
+    .transition(@set: 1.2s ease) !important;
+  }  
   &_appear{
     opacity:1 !important;
     .transition(@set: 1.5s ease);
   }
-  &_disappear{
-    .transition(@set: 0.7s ease) !important;
-  }
+  &_disappear{.transition(@set: 0.7s ease) !important;}
   &_hidden{
     display:none !important;
   }

@@ -300,7 +300,7 @@ $(function($) {
           console.log("left :"+left);
           curPoint = e.originalEvent.touches[0].clientX;                    
           $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
-          // $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left});
+          $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left});
           $(".fvnNavBox_pc").offset({ left: $(".fvnNavBox_pc").offset().left - left});                    
         });
         $(event.target).on("touchend",function(){
@@ -701,7 +701,7 @@ $(function($) {
 
       function startDrag(ev){        
         if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){
-          $("body").css({"overflow":"hidden"});      
+          // $("body").css({"overflow":"hidden"});      
           ev = ev.changedTouches[0];          
         }
         if(cordinate == "x"){
@@ -712,9 +712,6 @@ $(function($) {
           contentPos = $(wrapperContent).scrollTop();          
         }
         beginDrag = true;
-        console.log("rootPos :"+rootPos);
-        console.log("contentPos :"+contentPos);
-        console.log("beginDrag :"+beginDrag);
       }
       
       function scrollBar(ev){                  
