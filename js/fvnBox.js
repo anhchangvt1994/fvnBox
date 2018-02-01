@@ -277,6 +277,7 @@ $(function($) {
       }
     },
     dragAnimate: function(storage) {
+      console.log(storage.event);
       if (storage.type === undefined) {
         var fvnScroll = storage.item.nextAll();
         fvnScroll = fvnScroll[fvnScroll.length - 1],curPoint=0,left=0;
@@ -291,13 +292,15 @@ $(function($) {
         // }
         // console.log(fvnScroll);        
         curPoint = storage.event.originalEvent.touches[0].clientX;         
-        $(event.target).on("touchmove",function(e){
+        console.log("curPoint :"+curPoint);
+        $(event.target).on("touchmove",function(e){          
+          console.log("next point :"+e.originalEvent.touches[0].clientX);
           left = curPoint - e.originalEvent.touches[0].clientX;                        
           distance += left;
           console.log("left :"+left);
           curPoint = e.originalEvent.touches[0].clientX;                    
           $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
-          $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left});
+          // $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left});
           $(".fvnNavBox_pc").offset({ left: $(".fvnNavBox_pc").offset().left - left});                    
         });
         $(event.target).on("touchend",function(){
