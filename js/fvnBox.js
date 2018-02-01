@@ -24,10 +24,18 @@ $(function($) {
     if ($(this).length > 1) { //cause we maybe use same class for multiple components in a page, so this will help us to break them.
       // chúng ta có thể sử dụng chỉ 1 class cho nhiều components và dùng class đó để khởi chạy 1 plugin, tính năng này giúp plugin có thể phân chia tác vụ riêng biệt cho từng components.      
       const components = this;
+      var expand = false;
       // return;
+      setTimeout(function(){if(!expand){
+        console.log("run");
+        components.each(function(id, data) {
+          $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll:opt.scroll, w:opt.w, h:opt.h }, id);          
+        });        
+      }},0);
       return{
         except:function(item){
           var slick=false;
+          expand = true;
           setTimeout(function(){
             if(!slick){
               components.each(function(id, data) {
@@ -45,6 +53,7 @@ $(function($) {
           };
         },
         slick:function(slick_opt){
+          expand = true;
           components.each(function(id, data) {
             $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll:opt.scroll, w:opt.w, h:opt.h }, id).except(undefined).slick(slick_opt);          
           });          
@@ -74,7 +83,7 @@ $(function($) {
       // setting fvnNavBox by detecting what device on use.
 
       if (fvnBoxFeature.detectDevice()) {
-        $(".fvnBox").addClass(".fvnNavBox_touch");
+        $(".fvnBox").addClass("fvnNavBox_touch");
       } else {
         $(".fvnNavBox_pc").addClass("fvnBox_show");
       }
@@ -204,7 +213,7 @@ $(function($) {
 
       function navTouchEvent() {
         $(".fvnNavBox_pc" + targetEl).on("touchstart", function(e) {          
-          $("body,html").addClass("preventWindowScroll");
+          $("body,html").addClass("fvnBox_preventScroll");
           $(this).addClass("fvnBox_none");
           fvnBoxAnimation.dragAnimate({ event: e, item: $(this),imgs: imgsGB, opt: optGB });
         });
@@ -213,7 +222,7 @@ $(function($) {
         //   prevPoint = dragVariables.prevPoint;
         //   distance = dragVariables.distance;
         // }).on("touchend", function(e) {          
-        //   $("body").removeClass("preventWindowScroll");
+        //   $("body").removeClass("fvnBox_preventScroll");
         //   var dragVariables = fvnBoxAnimation.dragAnimate({ prevPoint: prevPoint, distance: distance, outImg: true, imgs: imgsGB, opt: optGB,item: $(this) });
         // });
         $(".fvnBox").on("touchstart", ".fvnBox_close", function() {
@@ -277,7 +286,6 @@ $(function($) {
       }
     },
     dragAnimate: function(storage) {
-      console.log(storage.event);
       if (storage.type === undefined) {
         var fvnScroll = storage.item.nextAll();
         fvnScroll = fvnScroll[fvnScroll.length - 1],curPoint=0,left=0;
@@ -292,12 +300,10 @@ $(function($) {
         // }
         // console.log(fvnScroll);        
         curPoint = storage.event.originalEvent.touches[0].clientX;         
-        console.log("curPoint :"+curPoint);
-        $(event.target).on("touchmove",function(e){          
-          console.log("next point :"+e.originalEvent.touches[0].clientX);
+        $(".fvnNavBox_pc").addClass("fvnBox_none");                   
+        $(event.target).on("touchmove",function(e){                    
           left = curPoint - e.originalEvent.touches[0].clientX;                        
-          distance += left;
-          console.log("left :"+left);
+          distance += left;          
           curPoint = e.originalEvent.touches[0].clientX;                    
           $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
           $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left});
@@ -305,7 +311,7 @@ $(function($) {
         });
         $(event.target).on("touchend",function(){
           $(".fvnNavBox_pc").removeClass("fvnBox_none");           
-          $("body,html").addClass("preventWindowScroll");
+          $("body,html").removeClass("fvnBox_preventScroll");
           checkDragOut();          
           $(this).unbind("touchmove");           
           $(this).unbind("touchend");          
@@ -336,7 +342,6 @@ $(function($) {
         function checkDragOut(){
           var remove = false,
             outBorder;
-            console.log("distance :"+distance);
           distance = distance != 0 ? distance : undefined;
           if ($(fvnScroll).hasClass("fvnBox_quick")) {
             outBorder = 80;
@@ -360,7 +365,7 @@ $(function($) {
           if (remove) {
             var img = $(fvnScroll);
             fvnBox_img = $(".fvnBox .fvnBox_img");
-            $(".fvnNavBox_pc").addClass("fvnBox_none");
+            // $(".fvnNavBox_pc").addClass("fvnBox_none");
             $(".fvnBox").append("<div class='fvnBox_img'></div>");
             var height = fvnBox_img[0].clientHeight;
             var width = fvnBox_img[0].clientWidth;
@@ -401,14 +406,11 @@ $(function($) {
     detectSuffixImage: function(img, suffix) {
       var src = img.attr("src");
       var oldImg = src.split("/")[src.split("/").length - 1];
-      console.log(oldImg);
       var newImg;
       if (fvnImgObj === undefined) {
         newImg = src;
       } else {
-        console.log(oldImg.split(".")[0]);
-        $.each(fvnImgObj[suffix], function(id, data) {
-          console.log(data);
+        $.each(fvnImgObj[suffix], function(id, data) {          
           if (oldImg.split(".")[0] == data) {            
             newImg = src.split(oldImg)[0] + oldImg.split(".")[0] + "-" + suffix + "." + oldImg.split(".")[1];
             return;
@@ -593,8 +595,7 @@ $(function($) {
                 },100);
                 $(closeBtn).addClass("fvnBox_y");
               }                            
-              setTimeout(function(){
-                console.log($($(".fvnBox").find("img")[id]).parent(".fvnScrollBox_cnt")[0]);
+              setTimeout(function(){                
                 fvnBoxFeature.setCustomScroll($(scrollItem),$($(".fvnBox").find("img")[id]).parent(".fvnScrollBox_cnt")[0],trueW > trueH ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});
               },200);              
             }
@@ -699,7 +700,8 @@ $(function($) {
         }        
       }
 
-      function startDrag(ev){        
+      function startDrag(ev){ 
+      $("html,body").addClass("fvnBox_preventScroll");
         if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){
           // $("body").css({"overflow":"hidden"});      
           ev = ev.changedTouches[0];          
@@ -722,9 +724,6 @@ $(function($) {
           if(cordinate == "x"){            
             let mouseDifferential = ev.pageX - rootPos;
             let scrollEquivalent = mouseDifferential * (wrapperSize / scrollSize);
-            console.log("mouseDifferential :"+mouseDifferential);
-            console.log("scrollEquivalent :"+scrollEquivalent);
-            console.log("wrapperContent :"+$(wrapperContent));
             $(wrapperContent).scrollLeft(contentPos + scrollEquivalent);            
           }else{
             let mouseDifferential = ev.pageY - rootPos;
@@ -736,6 +735,7 @@ $(function($) {
 
       function stopDrag(ev){
         $("body").css({"overflow":""});
+        $("html,body").removeClass("fvnBox_preventScroll");
         beginDrag = false;
       }      
       function createScroll(){      
