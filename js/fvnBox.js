@@ -21,13 +21,13 @@ $(function($) {
   var fvnImgObj = {}, // global object for suffixImg (object toàn cục, dùng để lưu trữ các file có suffix nếu suffix được khai báo)
     wWidth, wHeight,pWidth,pHeight;    
   $.fn.fvnBox = function(opt, id) { // fvnBox plugin (khởi chạy fvnBox plugin)    
+    var opt = opt || {};
     if ($(this).length > 1) { //cause we maybe use same class for multiple components in a page, so this will help us to break them.
       // chúng ta có thể sử dụng chỉ 1 class cho nhiều components và dùng class đó để khởi chạy 1 plugin, tính năng này giúp plugin có thể phân chia tác vụ riêng biệt cho từng components.      
       const components = this;
       var expand = false;
       // return;
       setTimeout(function(){if(!expand){
-        console.log("run");
         components.each(function(id, data) {
           $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll:opt.scroll, w:opt.w, h:opt.h }, id);          
         });        
@@ -162,8 +162,8 @@ $(function($) {
             });
           }
         }else{
-          // set percent value of window size.                            
-          pWidth = opt.w;pHeight = opt.h;
+          // set percent value of window size.      
+          pWidth = opt.w || 90;pHeight = opt.h || 90;
           fvnBoxFeature["init"]({ opt: "setSizePercent",width:opt.w, height:opt.h });          
           targetEl = curObj;
           imgsGB = imgs;
