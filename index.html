@@ -173,7 +173,7 @@
             </li>
             <li>
                 <a href="#" class="scroll">
-                    <img src="images/pdt_25.jpg" alt="product">
+                    <img class="none" src="images/pdt_25.jpg" alt="product">
                 </a>
             </li>
             <li>
@@ -181,7 +181,7 @@
                     <img src="images/pdt_24.jpg" alt="product">
                 </a>
             </li>
-            <li>
+            <li class="hidden">
                 <a href="#">
                     <img src="images/pdt_05.jpg" alt="product">
                 </a>
@@ -193,7 +193,7 @@
             </li>
             <li>
                 <a href="#">
-                    <img src="images/pdt_07.jpg" alt="product">
+                    <img class="hidden" src="images/pdt_07.jpg" alt="product">
                 </a>
             </li>
             <li>
@@ -201,7 +201,7 @@
                     <img src="images/pdt_08.jpg" alt="product">
                 </a>
             </li>
-            <li>
+            <li class="hidden">
                 <a href="#">
                     <img src="images/pdt_09.jpg" alt="product">
                 </a>
@@ -213,7 +213,7 @@
             </li>
             <li>
                 <a href="#">
-                    <img src="images/pdt_11.jpg" alt="product">
+                    <img class="hidden" src="images/pdt_11.jpg" alt="product">
                 </a>
             </li>
             <li>
@@ -284,8 +284,8 @@
     $(document).ready(function() {
         // $(".list-pdt").fvnBox({number:true,caption:true,scroll:".scroll",w:50,h:50});
         $("#tst01").fvnBox();
-        $("#tst02").fvnBox();
-        $(".slick01").fvnBox({number:true,caption:true,w:70,h:60}).slick({autoplay:true,prevArrow: false,nextArrow: false});
+        $("#tst02").fvnBox({scroll:".scroll"}).except(".none,.hidden");
+        $(".slick01").fvnBox({number:true,caption:true,w:70,h:60,scroll:".scroll"}).slick({autoplay:true,prevArrow: false,nextArrow: false});
         $("#slick03").fvnBox({number:true,caption:true,w:80,h:55}).except(".hid").slick({autoplay:true,prevArrow: false,nextArrow: false});
     })
     </script>

@@ -189,6 +189,23 @@
     }
   }         
 }
+.fvnNavBox_arrow{
+  > .fvnBox{
+    &_next, &_prev{
+      display:block;
+      &:before{
+        opacity:1;
+        top:calc(~"100% + 100px");
+        .transition(@set: 0.5s ease);
+        .transition-property(@set: opacity);              
+      }
+      &:hover:before{
+        left:auto !important;
+        right:auto !important;
+      }                  
+    }
+  }
+}
 .fvnNavBox_touch{
   > .fvnBox_close{
     display: block;
