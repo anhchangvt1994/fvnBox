@@ -19,7 +19,7 @@ $(function($) {
     turnOn = false, // turnOn = false will come true after the event functions of "setup" module is actived, and it'll stop active more then
     imgID; // global varieties
   var fvnImgObj = {}, // global object for suffixImg (object toàn cục, dùng để lưu trữ các file có suffix nếu suffix được khai báo)
-    wWidth, wHeight,pWidth,pHeight;    
+    wWidth, wHeight, pWidth, pHeight;
   $.fn.fvnBox = function(opt, id) { // fvnBox plugin (khởi chạy fvnBox plugin)    
     opt = opt || {};
     if ($(this).length > 1) { //cause we maybe use same class for multiple components in a page, so this will help us to break them.
@@ -27,57 +27,59 @@ $(function($) {
       const components = this;
       var expand = false;
       // return;
-      setTimeout(function(){if(!expand){
-        components.each(function(id, data) {
-          $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll:opt.scroll, w:opt.w, h:opt.h }, id);          
-        });        
-      }},0);
-      return{
-        except:function(item){          
-          var slick=false;
-          expand = true;          
-          setTimeout(function(){
-            if(!slick){
+      setTimeout(function() {
+        if (!expand) {
+          components.each(function(id, data) {
+            $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll: opt.scroll, w: opt.w, h: opt.h }, id);
+          });
+        }
+      }, 0);
+      return {
+        except: function(item) {
+          var slick = false;
+          expand = true;
+          setTimeout(function() {
+            if (!slick) {
               components.each(function(id, data) {
-                $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption,scroll:opt.scroll, w:opt.w, h:opt.h }, id).except(item);          
-              });          
+                $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll: opt.scroll, w: opt.w, h: opt.h }, id).except(item);
+              });
             }
-          },0);
-          return {            
-            slick:function(slick_opt){
+          }, 0);
+          return {
+            slick: function(slick_opt) {
               slick = true;
               components.each(function(id, data) {
-                $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll:opt.scroll, w:opt.w, h:opt.h }, id).except(item).slick(slick_opt);          
-              });          
+                $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll: opt.scroll, w: opt.w, h: opt.h }, id).except(item).slick(slick_opt);
+              });
             }
           };
         },
-        slick:function(slick_opt){
+        slick: function(slick_opt) {
           expand = true;
           components.each(function(id, data) {
-            $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll:opt.scroll, w:opt.w, h:opt.h }, id).except(undefined).slick(slick_opt);          
-          });          
+            $(data).fvnBox({ suffixImg: opt.suffixImg, number: opt.number, caption: opt.caption, scroll: opt.scroll, w: opt.w, h: opt.h }, id).except(undefined).slick(slick_opt);
+          });
         }
       };
     }
     if ($("body").find(".fvnBox").length === 0) {
 
       // auto add file css into bottom of head tag (tự động add file fancy css vào cuối head tag)
-      
+
       $("<link>").appendTo("head").attr({
-        rel:  "stylesheet",
+        rel: "stylesheet",
         type: "text/css",
         href: "css/fvnBox.css"
       });
 
       // add new popup for fvnBox. (thêm mới cửa sổ bật hình ảnh cho fvnBox)
 
-      $("body").append('<div class="fvnBox fvnBox_hidden"><span class="fvnBox_close"></span><div class="fvnInforBox fvnBox_hidden"><span class="fvnBox_number"></span><span class="fvnBox_caption"></span></div><div class="fvnNavBox_pc fvnBox_hidden"><span class="fvnBox_prev">&nbsp;</span><span class="fvnBox_close"></span><span class="fvnBox_next">&nbsp;</span></div><div class="fvnBox_img"></div></div>');      
+      $("body").append('<div class="fvnBox fvnBox_hidden"><span class="fvnBox_close"></span><div class="fvnInforBox fvnBox_hidden"><span class="fvnBox_number"></span><span class="fvnBox_caption"></span></div><div class="fvnNavBox_pc fvnBox_hidden"><span class="fvnBox_prev">&nbsp;</span><span class="fvnBox_close"></span><span class="fvnBox_next">&nbsp;</span></div><div class="fvnBox_img"></div></div>');
 
       // modify the resize function() for image in other screen size
 
-      $(window).resize(function() {        
-        fvnBoxFeature.setResizeImg({width:pWidth,height:pHeight});
+      $(window).resize(function() {
+        fvnBoxFeature.setResizeImg({ width: pWidth, height: pHeight });
       });
 
       // setting fvnNavBox by detecting what device on use.
@@ -91,8 +93,8 @@ $(function($) {
       // for IE, cause IE doesn't support remove and replaceWith functions in jquery, so we will custom a remove function if browser doesn't support
       // link for solution in it: https://stackoverflow.com/questions/20428877/javascript-remove-doesnt-work-in-ie
 
-      fvnBoxFeature.settingRemoveFunc();      
-    }    
+      fvnBoxFeature.settingRemoveFunc();
+    }
     if (id === undefined) { id = "1"; }
     var curObj = "fvnBox" + (id < 10 ? "0" + id : id); // add new class for components to difference orther (thêm mới class để phân biệt chúng với nhau)
     while ($($("body").find("." + curObj)).length !== 0) {
@@ -104,40 +106,41 @@ $(function($) {
 
     if (opt !== undefined) {
       if (!("suffixImg" in opt)) { // if current coponent have "opt.suffixImg" then must add list of images (nếu component hiện tại có opt.suffixImg thì mới thêm danh sách hình ảnh tương ứng với suffix đó)
-        opt["suffixImg"] = undefined ;
+        opt["suffixImg"] = undefined;
       } else {
-        if(opt.suffixImg !== undefined){
+        if (opt.suffixImg !== undefined) {
           setTimeout(function() {
             fvnBoxFeature["init"]({ opt: "setSuffix", suffix: opt.suffixImg }); // add new list images with suffix before. (thêm mới danh sách images được định nghĩa trước bởi suffix)        
           }, 0);
-        }        
+        }
       }
     }
-    var except=false;    
-    $($(curObj).find("img")).attr("data-except",false);    
-    setTimeout(function(){
-      if(!except){
-        fvnBoxFeature.setListImg(curObj,opt);        
+    var except = false;
+    $($(curObj).find("img")).attr("data-except", false);
+    setTimeout(function() {
+      if (!except) {
+        fvnBoxFeature.setListImg(curObj, opt);
       }
-    },0);
+    }, 0);
     return {
-      except: function(item,obj,option){        
-        item = item || "";         
-        obj = obj || curObj; option = option || opt;
-        except = true;       
-        fvnBoxFeature.except(item,obj,option);        
+      except: function(item, obj, option) {
+        item = item || "";
+        obj = obj || curObj;
+        option = option || opt;
+        except = true;
+        fvnBoxFeature.except(item, obj, option);
         return {
-          slick:function(slick_opt,obj){
+          slick: function(slick_opt, obj) {
             obj = obj || curObj;
-            fvnBoxFeature.slick(obj,slick_opt,opt);            
+            fvnBoxFeature.slick(obj, slick_opt, opt);
           }
         };
       },
-      slick:function(slick_opt,obj){        
+      slick: function(slick_opt, obj) {
         obj = obj || curObj;
-        setTimeout(function(){
-          fvnBoxFeature.slick(obj,slick_opt);
-        },0);
+        setTimeout(function() {
+          fvnBoxFeature.slick(obj, slick_opt);
+        }, 0);
       }
     };
   };
@@ -150,34 +153,50 @@ $(function($) {
       var pos;
       var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
       fvnBoxController.detectEvent({ obj: curObj, tg: target });
-      $(curObj).find("img").on("mousedown",function(e){
-        pos = e.pageX;        
+      $(curObj).find("img").on("mousedown", function(e) {
+        pos = e.pageX;
       });
-      $(curObj).find("img").on("touchstart click", function(e) {        
-        if($(this).attr("data-except")=="true"){
-          var atag = $(e.target).parents("a");          
-          if(atag.length>=1 && $(atag[0]).attr("href")=="#"){
-            $(atag[0]).on("click",function(e){
+      const targetParent = $($(curObj).find("img")).parent();
+      // $(curObj).find("img").parent().on("click",function(e){        
+      //   const parentW = $(this).outerWidth(),parentH=$(this).outerHeight(),
+      //   imgW = $($(this).find("img")).outerWidth(), imgH = $($(this).find("img")).outerHeight();             
+      //   if(parentW - imgW <= 60 || parentH - imgH <= 60){ 
+      //     $(this).find("img").click();                    
+      //   }       
+      // })
+      $(curObj).on("touchstart click", function(e) { 
+        const curTarget = (e.target.localName == "img" ? e.target : $(e.target).children()[0].localName == "img" ? $(e.target).children()[0] : false);
+        console.log(curTarget);
+        if(!curTarget){
+          return false;
+        };
+        console.log($(curTarget).attr("data-except"));
+        if ($(curTarget).attr("data-except") == "true") {                    
+          console.log($(curTarget).attr("data-except"));
+          var atag = $(e.target).parents("a");
+          if (atag.length >= 1 && $(atag[0]).attr("href") == "#") {
+            $(atag[0]).on("click", function(e) {              
               e.preventDefault();
             });
           }
-        }else{
+        } else {          
           // set percent value of window size.      
-          pWidth = opt.w || 90;pHeight = opt.h || 90;
-          fvnBoxFeature["init"]({ opt: "setSizePercent",width:opt.w, height:opt.h });          
+          pWidth = (opt.w || 83) <= 83 ? (opt.w || 83) : 83;
+          pHeight = (opt.h || 90) <= 90 ? (opt.h || 90) : 90;
+          fvnBoxFeature["init"]({ opt: "setSizePercent", width: pWidth, height: pHeight });
           targetEl = curObj;
           imgsGB = imgs;
           optGB = opt;
-          imgID = $(this).attr("data-index");
+          imgID = $(curTarget).attr("data-index");
           $(".fvnNavBox_pc").addClass(curObj.split(".")[1]);
-          if(!fvnBoxController.detectImgsLength(imgsGB)){
-            $(".fvnBox_prev,.fvnBox_next").css("display","none");  
-          }else{
+          if (!fvnBoxController.detectImgsLength(imgsGB)) {
+            $(".fvnBox_prev,.fvnBox_next").css("display", "none");
+          } else {
             $(".fvnBox_prev,.fvnBox_next").removeAttr("style");
           }
-          if (!fvnBoxFeature.detectDevice()) {    
-            if(pos == e.pageX){
-              fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
+          if (!fvnBoxFeature.detectDevice()) {
+            if (pos == e.pageX) {
+              fvnBoxAnimation.mainAnimate({ item: $(curTarget), imgs: imgs, opt: opt });
               if (!turnOn) {
                 setTimeout(function() {
                   navClickEvent();
@@ -185,16 +204,16 @@ $(function($) {
                 }, 0);
                 turnOn = true;
               }
-              return false; 
-            }            
+              return false;
+            }
           } else {
-            var drag = false;              
+            var drag = false;
             $(document).on("touchmove", function() {
               drag = true;
             });
-            $(this).on("touchend", function(e) {
+            $(curTarget).on("touchend", function(e) {
               if (!drag) {
-                fvnBoxAnimation.mainAnimate({ item: $(this), imgs: imgs, opt: opt });
+                fvnBoxAnimation.mainAnimate({ item: $(curTarget), imgs: imgs, opt: opt });
               } else {
                 drag = false;
               }
@@ -204,40 +223,32 @@ $(function($) {
                   navTouchEvent();
                 }, 0);
                 turnOn = true;
-              }                                
+              }
               e.preventDefault();
             });
           }
-        }        
+        }
       });
 
       function navTouchEvent() {
-        $(".fvnNavBox_pc" + targetEl).on("touchstart", function(e) {         
+        $(".fvnNavBox_pc" + targetEl).on("touchstart", function(e) {
           $(this).addClass("fvnBox_none");
-          fvnBoxAnimation.dragAnimate({ event: e, item: $(this),imgs: imgsGB, opt: optGB });
+          fvnBoxAnimation.dragAnimate({ event: e, item: $(this), imgs: imgsGB, opt: optGB });
         });
-        // .on("touchmove", function(e) {
-        //   var dragVariables = fvnBoxAnimation.dragAnimate({ event: e, prevPoint: prevPoint, distance: distance, outImg: false, item: $(this) });
-        //   prevPoint = dragVariables.prevPoint;
-        //   distance = dragVariables.distance;
-        // }).on("touchend", function(e) {          
-        //   $("body").removeClass("fvnBox_preventScroll");
-        //   var dragVariables = fvnBoxAnimation.dragAnimate({ prevPoint: prevPoint, distance: distance, outImg: true, imgs: imgsGB, opt: optGB,item: $(this) });
-        // });
         $(".fvnBox").on("touchstart", ".fvnBox_close", function() {
           targetEl = fvnBoxController.settingClose(targetEl, $(this));
           return false;
         });
       }
 
-      function navClickEvent() {        
-        $(".fvnNavBox_pc" + targetEl).on("click", ".fvnBox_prev, .fvnBox_next, .fvnBox_close", function() {          
+      function navClickEvent() {
+        $(".fvnNavBox_pc" + targetEl).on("click", ".fvnBox_prev, .fvnBox_next, .fvnBox_close", function() {
           if ($(this)[0].className.split(" ")[0] != "fvnBox_close") {
             var src = fvnBoxController.detectContinueImg(targetEl, $(this));
             if (src !== undefined) {
               fvnBoxAnimation.mainAnimate({ item: $(src), imgs: imgsGB, opt: optGB });
             }
-          } else {            
+          } else {
             targetEl = fvnBoxController.settingClose(targetEl, $(this));
           }
         });
@@ -249,35 +260,34 @@ $(function($) {
     mainAnimate: function(storage) {
       if (storage.type === undefined) {
         var animate = 50;
-        var src, caption,html;
+        var src, caption, html;
         if (storage.opt.caption) {
           caption = storage.item.attr("alt");
         }
         // check if have suffix                                
-        if (storage.opt.suffixImg !== undefined) {          
-          if (storage.item.attr("data-src") === undefined) {            
+        if (storage.opt.suffixImg !== undefined) {
+          if (storage.item.attr("data-src") === undefined) {
             storage.item.attr("data-src", fvnBoxController.detectSuffixImage(storage.item, storage.opt.suffixImg));
           }
-          // $("body").find(".fvnBox").append("<img src=" + storage.item.attr("data-src") + " draggable='false'>").removeClass("fvnBox_hidden");
           src = storage.item.attr("data-src");
           animate = 0;
         } else {
           src = storage.item.attr("src");
-        }       
+        }
         html = "<img src='" + src + "'>";
-        if($(storage.item[0]).attr("data-fvnScroll") === undefined){
+        if ($(storage.item[0]).attr("data-fvnScroll") === undefined) {
           $("body").find(".fvnBox").append(html);
-        }else{
-          $("body").find(".fvnBox").append("<div class='fvnScrollBox'><div class='fvnScrollBox_cnt'>"+html+"</div></div>").removeClass("fvnBox_hidden");
-        } 
-        $($(".fvnBox").find(".fvnScrollBox")).css("z-index",10000);
-        if ($($(".fvnBox").find("img")).length > 2) {          
-          const scrollBox = $($(".fvnBox").find("img")[0]).parents(".fvnScrollBox")[0];                                      
-          if(scrollBox === undefined){
+        } else {
+          $("body").find(".fvnBox").append("<div class='fvnScrollBox'><div class='fvnScrollBox_cnt'>" + html + "</div></div>").removeClass("fvnBox_hidden");
+        }
+        $($(".fvnBox").find(".fvnScrollBox")).css("z-index", 10000);
+        if ($($(".fvnBox").find("img")).length > 2) {
+          const scrollBox = $($(".fvnBox").find("img")[0]).parents(".fvnScrollBox")[0];
+          if (scrollBox === undefined) {
             $(".fvnBox").find("img")[0].remove();
-          }else{
+          } else {
             $(scrollBox).remove();
-          }          
+          }
         }
         $('img').on('dragstart', function(event) {
           event.preventDefault();
@@ -288,41 +298,41 @@ $(function($) {
     dragAnimate: function(storage) {
       if (storage.type === undefined) {
         var fvnScroll = storage.item.nextAll();
-        fvnScroll = fvnScroll[fvnScroll.length - 1],curPoint=0,left=0;
-        var distance = 0,        
-        // console.log(fvnScroll.length > 0);
-        // if(fvnScroll.length > 0){
+        fvnScroll = fvnScroll[fvnScroll.length - 1], curPoint = 0, left = 0;
+        var distance = 0,
+          // console.log(fvnScroll.length > 0);
+          // if(fvnScroll.length > 0){
           // fvnScroll = $(fvnScroll[fvnScroll.length - 1]).find(".fvnBox_scroller");            
           // fvnScroll = (fvnScroll.length == 0 ? undefined : $(fvnScroll).parents(".fvnScrollBox"));                        
-        // }else{
-        //   console.log("image");
-        //   fvnScroll = $(".fvnBox").find("img");
-        // }
-        // console.log(fvnScroll);        
-        curPoint = storage.event.originalEvent.touches[0].clientX;         
-        $(".fvnNavBox_pc").addClass("fvnBox_none");                   
-        $(event.target).on("touchmove",function(e){                    
-          left = curPoint - e.originalEvent.touches[0].clientX;                        
-          distance += left;          
-          curPoint = e.originalEvent.touches[0].clientX;                    
-          $(fvnScroll).offset({left: $(fvnScroll).offset().left - left});
-          $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left});
-          $(".fvnNavBox_pc").offset({ left: $(".fvnNavBox_pc").offset().left - left});                    
+          // }else{
+          //   console.log("image");
+          //   fvnScroll = $(".fvnBox").find("img");
+          // }
+          // console.log(fvnScroll);        
+          curPoint = storage.event.originalEvent.touches[0].clientX;
+        $(".fvnNavBox_pc").addClass("fvnBox_none");
+        $(event.target).on("touchmove", function(e) {
+          left = curPoint - e.originalEvent.touches[0].clientX;
+          distance += left;
+          curPoint = e.originalEvent.touches[0].clientX;
+          $(fvnScroll).offset({ left: $(fvnScroll).offset().left - left });
+          $(".fvnBox .fvnBox_img").offset({ left: $(".fvnBox .fvnBox_img").offset().left - left });
+          $(".fvnNavBox_pc").offset({ left: $(".fvnNavBox_pc").offset().left - left });
         });
-        $(event.target).on("touchend",function(){
-          $(".fvnNavBox_pc").removeClass("fvnBox_none");          
-          checkDragOut();          
-          $(this).unbind("touchmove");           
-          $(this).unbind("touchend");          
+        $(event.target).on("touchend", function() {
+          $(".fvnNavBox_pc").removeClass("fvnBox_none");
+          checkDragOut();
+          $(this).unbind("touchmove");
+          $(this).unbind("touchend");
         });
-        curPoint = storage.event.originalEvent.touches[0].clientX;          
+        curPoint = storage.event.originalEvent.touches[0].clientX;
         // $(fvnScroll).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");            
         // $($(".fvnBox").find(".fvnBox_img")).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");
-        if ($($(".fvnBox").find("img"))[1] === undefined) {            
-          $(fvnScroll).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");            
+        if ($($(".fvnBox").find("img"))[1] === undefined) {
+          $(fvnScroll).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");
           $($(".fvnBox").find(".fvnBox_img")).removeClass("fvnBox_return fvnBox_quick").addClass("fvnBox_none");
-        } else {            
-          $(fvnScroll).removeClass("fvnBox_return").addClass("fvnBox_quick");                      
+        } else {
+          $(fvnScroll).removeClass("fvnBox_return").addClass("fvnBox_quick");
           $($(".fvnBox").find(".fvnBox_img")[0]).removeClass("fvnBox_return").addClass("fvnBox_quick");
         }
         // leftImgPos = $(fvnScroll).offset().left;
@@ -336,9 +346,9 @@ $(function($) {
         //   leftfvnBox_img = leftfvnBox_img - 5;
         //   storage.distance = storage.distance - 1;
         // }
-        
+
         // return { prevPoint: storage.event.originalEvent.touches[0].pageX, distance: storage.distance };
-        function checkDragOut(){
+        function checkDragOut() {
           var remove = false,
             outBorder;
           distance = distance != 0 ? distance : undefined;
@@ -346,9 +356,9 @@ $(function($) {
             outBorder = 80;
           } else {
             outBorder = 90;
-          }          
+          }
           $(fvnScroll).removeClass("fvnBox_none fvnBox_quick");
-          $(".fvnBox .fvnBox_img").removeClass("fvnBox_none fvnBox_quick");          
+          $(".fvnBox .fvnBox_img").removeClass("fvnBox_none fvnBox_quick");
           if (distance <= -outBorder && fvnBoxController.detectImgsLength(imgsGB)) {
             $(fvnScroll).addClass("fvnBox_out").css("left", 100 + "%");
             $(".fvnBox .fvnBox_img").addClass("fvnBox_out").css("left", 100 + "%");
@@ -369,8 +379,8 @@ $(function($) {
             var height = fvnBox_img[0].clientHeight;
             var width = fvnBox_img[0].clientWidth;
             setTimeout(function() {
-              var src = fvnBoxController.detectContinueImg(targetEl, distance <= -outBorder ? [{ className: "fvnBox_prev" }] : [{ className: "fvnBox_next" }]);              
-              fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });              
+              var src = fvnBoxController.detectContinueImg(targetEl, distance <= -outBorder ? [{ className: "fvnBox_prev" }] : [{ className: "fvnBox_next" }]);
+              fvnBoxAnimation.mainAnimate({ item: $(src), imgs: storage.imgs, opt: storage.opt });
             }, 50);
             setTimeout(function() {
               img.css({ height: img.height() / 3, width: img.width() / 3 });
@@ -409,8 +419,8 @@ $(function($) {
       if (fvnImgObj === undefined) {
         newImg = src;
       } else {
-        $.each(fvnImgObj[suffix], function(id, data) {          
-          if (oldImg.split(".")[0] == data) {            
+        $.each(fvnImgObj[suffix], function(id, data) {
+          if (oldImg.split(".")[0] == data) {
             newImg = src.split(oldImg)[0] + oldImg.split(".")[0] + "-" + suffix + "." + oldImg.split(".")[1];
             return;
           }
@@ -421,8 +431,8 @@ $(function($) {
         return newImg;
       }
     },
-    detectImageSize: function(curW, curH, scroll) {      
-      if(!scroll){        
+    detectImageSize: function(curW, curH, scroll) {
+      if (!scroll) {
         if (curW > wWidth) {
           currentPercent = (wWidth / curW) * 100;
           curW = wWidth;
@@ -432,49 +442,51 @@ $(function($) {
           currentPercent = (wHeight / curH) * 100;
           curH = wHeight;
           curW = (curW * currentPercent) / 100;
-        }        
+        }
         if (curW > wWidth || curH > wHeight) {
           return arguments.callee(curW, curH, false);
-        } else {          
-          return { "trueWidth": curW, "trueHeight": curH, "actualWidth": undefined,"actualHeight":undefined};          
+        } else {
+          return { "trueWidth": curW, "trueHeight": curH, "actualWidth": undefined, "actualHeight": undefined };
         }
-      }else{        
-        const rootW = curW,rootH = curH;        
-        if(rootW > rootH){                    
-          let ratioH = $(window).outerHeight(true) * 0.5,ratioW = $(window).outerWidth(true) * 0.8;
-          if(curH > ratioH){
+      } else {
+        const rootW = curW,
+          rootH = curH,
+          screenH = ($(window).outerHeight(true) > $(window).outerWidth(true) ? 0.5 : 0.7);
+        if (rootW > rootH) {
+          let ratioH = $(window).outerHeight(true) * 0.5,
+            ratioW = $(window).outerWidth(true) * 0.92;
+          if (curH > ratioH) {
             currentPercent = (ratioH / curH) * 100;
-            curH = ratioH;  
+            curH = ratioH;
             curW = (curW * currentPercent) / 100;
-          }          
-          if(curW > ratioW){
-            return {"trueWidth":curW,"trueHeight":curH,"actualWidth":ratioW,"actualHeight":undefined}; 
           }
-          else{
+          if (curW > ratioW) {
+            return { "trueWidth": curW, "trueHeight": curH, "actualWidth": ratioW, "actualHeight": undefined };
+          } else {
             return arguments.callee(rootW, rootH, false);
-          }        
-        }else{
-          let ratioH = $(window).outerHeight(true) * 0.7,ratioW = $(window).outerWidth(true) * 0.8;
-          if(curW > ratioW){
-            currentPercent = (ratioW / curW) * 100;
-            curW = ratioW;  
-            curH = (curH * currentPercent) / 100;
-          }          
-          if(curH > ratioH){
-            return {"trueWidth":curW,"trueHeight":curH,"actualWidth":undefined,"actualHeight":ratioH}; 
           }
-          else{
+        } else {
+          let ratioH = $(window).outerHeight(true) * screenH,
+            ratioW = $(window).outerWidth(true) * 0.92;
+          if (curW > ratioW) {
+            currentPercent = (ratioW / curW) * 100;
+            curW = ratioW;
+            curH = (curH * currentPercent) / 100;
+          }
+          if (curH > ratioH) {
+            return { "trueWidth": curW, "trueHeight": curH, "actualWidth": undefined, "actualHeight": ratioH };
+          } else {
             return arguments.callee(rootW, rootH, false);
           }
         }
-      }      
+      }
     },
-    detectContinueImg: function(targetEl, nav) { 
+    detectContinueImg: function(targetEl, nav) {
       if (targetEl != "") {
         if (nav[0].className == "fvnBox_prev") {
           if (imgID > 0) {
             imgID--;
-          } else {            
+          } else {
             imgID = imgsGB.length - 1;
           }
         } else if (nav[0].className == "fvnBox_next") {
@@ -488,134 +500,149 @@ $(function($) {
         return getImgByID;
       }
     },
-    calcActualSize:function(fvnScroll,item,resize){      
+    calcActualSize: function(fvnScroll, item, resize) {
       var imgSize;
-      if(fvnScroll === undefined){
-        imgSize = fvnBoxController.detectImageSize($(item).prop("naturalWidth"), $(item).prop("naturalHeight"),false);          
-      }else{
-        imgSize = fvnBoxController.detectImageSize($(item).prop("naturalWidth"), $(item).prop("naturalHeight"),true);
-      }        
+      if (fvnScroll === undefined) {
+        imgSize = fvnBoxController.detectImageSize($(item).prop("naturalWidth"), $(item).prop("naturalHeight"), false);
+      } else {
+        imgSize = fvnBoxController.detectImageSize($(item).prop("naturalWidth"), $(item).prop("naturalHeight"), true);
+      }
       trueW = parseInt(imgSize.trueWidth);
       trueH = parseInt(imgSize.trueHeight);
       actualWidth = (imgSize.actualWidth !== undefined ? parseInt(imgSize.actualWidth) : undefined);
-      actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined);       
-      var increaseSize,navWidth;      
-      if(fvnBoxFeature.detectDevice()){        
+      actualHeight = (imgSize.actualHeight !== undefined ? parseInt(imgSize.actualHeight) : undefined);
+      var increaseSize, navWidth;
+      if (fvnBoxFeature.detectDevice()) {
         increaseSize = 0;
-        navWidth = 1;        
+        navWidth = 1;
         overflow_cord = "scroll";
-      }else{        
+      } else {
         increaseSize = 70;
         overflow_cord = "";
-      }      
-      var scrollBox,scrollContent,fvnBox_img,fvnNavBox,fvnInforBox,commonSize;    
-      if(actualWidth!==undefined && actualHeight === undefined){        
-        scrollBox = {"width":actualWidth,"height":trueH+increaseSize,"z-index":(fvnBoxFeature.detectDevice() === true ? "10000" : "99999")};
-        scrollContent = {"overflow":overflow_cord};
-        fvnBox_img = {"width":actualWidth+10,"height":trueH+10};
-        fvnNavBox = {"width":actualWidth * (navWidth !== undefined ? navWidth : 1.25),"height":trueH};        
-        fvnInforBox = {"width":actualWidth,"height":trueH+70};
-      }else if(actualWidth===undefined && actualHeight !== undefined){        
-        scrollBox = {"width":trueW + increaseSize,"height":actualHeight,"z-index":(fvnBoxFeature.detectDevice() === true ? "10000" : "99999")};
-        scrollContent = {"overflow":overflow_cord};
-        fvnBox_img = {"width":trueW + 10,"height":actualHeight + 10};
-        fvnNavBox = {"width":trueW * (navWidth !== undefined ? navWidth : 1.45),"height":actualHeight};
-        fvnInforBox = {"width":trueW,"height":actualHeight};
-      }else if(actualWidth===undefined && actualHeight === undefined){
-        commonSize = {"width":trueW + 10,"height": trueH + 10,"z-index":"","padding-right":"","padding-bottom":"","overflow":"visible"};
       }
-      return {"scrollBox":scrollBox,"scrollContent":scrollContent,"fvnBox_img":fvnBox_img,"fvnNavBox":fvnNavBox,"fvnInforBox":fvnInforBox,"commonSize":commonSize};
+      var scrollBox, scrollContent, fvnBox_img, fvnNavBox, fvnInforBox, commonSize;
+      if (actualWidth !== undefined && actualHeight === undefined) {
+        scrollBox = { "width": actualWidth, "height": trueH + increaseSize, "z-index": 10000};
+        scrollContent = { "overflow": overflow_cord };
+        fvnBox_img = { "width": actualWidth + 10, "height": trueH + 10 };
+        fvnNavBox = { "width": actualWidth, "height": trueH };
+        fvnInforBox = { "width": actualWidth, "height": trueH + 70 };
+      } else if (actualWidth === undefined && actualHeight !== undefined) {        
+        scrollBox = { "width": trueW + increaseSize, "height": actualHeight, "z-index": (fvnBoxFeature.detectDevice() === true ? "10000" : "99999") };
+        scrollContent = { "overflow": overflow_cord };
+        fvnBox_img = { "width": trueW + 10, "height": actualHeight + 10 };
+        fvnNavBox = { "width": trueW * (navWidth !== undefined ? navWidth : $(window).outerWidth(true) - trueW > 170 ? 1.45 : 1), "height": actualHeight };
+        fvnInforBox = { "width": trueW, "height": actualHeight };
+      } else if (actualWidth === undefined && actualHeight === undefined) {
+        commonSize = { "width": trueW + 10, "height": trueH + 10, "z-index": "", "padding-right": "", "padding-bottom": "", "overflow": "visible" };
+      }
+      return { "scrollBox": scrollBox, "scrollContent": scrollContent, "fvnBox_img": fvnBox_img, "fvnNavBox": fvnNavBox, "fvnInforBox": fvnInforBox, "commonSize": commonSize };
     },
     settingTimer: function(opt, item, src, animate, caption, imgs) {
       $(".fvnBox").find("img[src*='" + src + "']").load(function() {
         // get width and height in fact of that image acording to % width and height of window                                                
         var itemSize;
         const closeBtn = $(".fvnNavBox_pc").find(".fvnBox_close");
-        $(closeBtn).removeClass("fvnBox_x fvnBox_y");        
-        itemSize = fvnBoxController.calcActualSize($(item).attr("data-fvnScroll"),this);        
-        var scrollBox,scrollContent,fvnBox_img,fvnNavBox,fvnInforBox,commonSize;
+        $(closeBtn).removeClass("fvnBox_x fvnBox_y");
+        itemSize = fvnBoxController.calcActualSize($(item).attr("data-fvnScroll"), this);
+        var scrollBox, scrollContent, fvnBox_img, fvnNavBox, fvnInforBox, commonSize;
         scrollBox = itemSize.scrollBox;
         scrollContent = itemSize.scrollContent;
         fvnBox_img = itemSize.fvnBox_img;
         fvnNavBox = itemSize.fvnNavBox;
         fvnInforBox = itemSize.fvnInforBox;
         commonSize = itemSize.commonSize;
-               
+
         // animte for fancybox
 
-        $("body").find(".fvnBox").removeClass("fvnBox_hidden");        
+        $("body").find(".fvnBox").removeClass("fvnBox_hidden");
         $("body").find(".fvnNavBox_pc").removeClass("fvnBox_hidden");
-        $("body").find(".fvnInforBox").removeClass("fvnBox_hidden");        
-        setTimeout(function(){
+        $("body").find(".fvnInforBox").removeClass("fvnBox_hidden");
+        setTimeout(function() {
           const fvnBox_imgs = $("body").find(".fvnBox img");
-          $.each(fvnBox_imgs,function(id,item){
-            var parent = $(item).parents("[class*='fvnShow']")[0];            
-            if(parent){              
-              $(parent).find(".fvnScrollBox_cnt").css({"opacity":0});
-            }else{
+          $.each(fvnBox_imgs, function(id, item) {
+            var parent = $(item).parents("[class*='fvnShow']")[0];
+            if (parent) {
+              $(parent).find(".fvnScrollBox_cnt").css({ "opacity": 0 });
+            } else {
               $(item).css({ "width": parseInt(trueW), "height": parseInt(trueH) })
             }
           })
-          // $("body").find(".fvnBox img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });              
-          if($("body").find(".fvnScrollBox").length > 0){                      
+          // $("body").find(".fvnBox img").css({ "width": parseInt(trueW), "height": parseInt(trueH) });                                  
+          if ($("body").find(".fvnScrollBox").length > 0) {
             let curScrollBox = $("body").find(".fvnScrollBox");
-            curScrollBox = (curScrollBox.length > 1 ? curScrollBox[curScrollBox.length - 1] : curScrollBox);                                    
-            $(curScrollBox).css(scrollBox !== undefined ? scrollBox : commonSize);                                            
-            if(fvnBoxFeature.detectDevice()){
-              setTimeout(function(){
-                if($(curScrollBox).find(".fvnBox_scroller").length > 0){
-                  $(curScrollBox).css("z-index",10002);
+            curScrollBox = (curScrollBox.length > 1 ? curScrollBox[curScrollBox.length - 1] : curScrollBox);
+            $(curScrollBox).css(scrollBox !== undefined ? scrollBox : commonSize);
+            if (scrollBox !== undefined) {
+              if (fvnBoxFeature.detectDevice()) {
+                setTimeout(function() {
+                  if ($(curScrollBox).find(".fvnBox_scroller").length > 0) {
+                    $(curScrollBox).css("z-index", 10002);
+                    $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
+                  }                  
+                }, 500);                
+                if(trueW < $(window).outerWidth(true)){
+                  $(".fvnNavBox_pc").addClass("fvnNavBox_y");
+                }else{
+                  $(".fvnNavBox_pc").removeClass("fvnNavBox_y");
+                }
+              } else {                
+                if ($(window).outerWidth(true) - (actualWidth || trueW) > 170) {
+                  $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
+                } else {
                   $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
-                }              
-              },500);
-            }else{
+                }                
+              }
+            } else {
               $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
-            }            
-          }        
-        },100)        
+            }
+          } else {
+            $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
+          }
+        }, 100);
         setTimeout(function() {
-          var id = 0,          
-          imgPosition,
-          scrollItem = $($(".fvnBox").find("img")[0]).parents(".fvnScrollBox")[0];          
-          if ($($(".fvnBox").find("img")).length == 2) {            
-            if(scrollItem !== undefined){              
-              $(scrollItem).removeClass("fvnBox_appear").addClass("fvnBox_disappear");              
-            }else{
+          var id = 0,
+            imgPosition,
+            scrollItem = $($(".fvnBox").find("img")[0]).parents(".fvnScrollBox")[0];
+          if ($($(".fvnBox").find("img")).length == 2) {
+            if (scrollItem !== undefined) {
+              $(scrollItem).removeClass("fvnBox_appear").addClass("fvnBox_disappear");
+            } else {
               $($(".fvnBox").find("img")[0]).removeClass("fvnBox_appear fvnBox_show").addClass("fvnBox_disappear");
             }
             $($(".fvnBox").find("img")[0]).removeClass("fvnBox_show");
             id = 1;
           }
-          scrollItem = $($(".fvnBox").find("img")[id]).parents(".fvnScrollBox")[0];  
+          scrollItem = $($(".fvnBox").find("img")[id]).parents(".fvnScrollBox")[0];
           $($(".fvnBox").find("img")[id]).addClass("fvnBox_appear fvnBox_show");
-          if(scrollItem !== undefined){
-            $("body").find(".fvnScrollBox_cnt").css(scrollContent !== undefined ? scrollContent : {});            
-            if(commonSize !== undefined){              
-              $(scrollItem).addClass("fvnBox_appear").css({"z-index":""});                            
-            }else{
-              $(scrollItem).addClass("fvnBox_appear");             
-              if(trueW > trueH){                                
-                setTimeout(function(){
-                  $($(scrollItem).find("img")).addClass("fvnBox_Width");                                  
-                },100);
+          if (scrollItem !== undefined) {
+            $("body").find(".fvnScrollBox_cnt").css(scrollContent !== undefined ? scrollContent : {});
+            if (commonSize !== undefined) {
+              $(scrollItem).addClass("fvnBox_appear").css({ "z-index": "" });
+            } else {
+              $(scrollItem).addClass("fvnBox_appear");
+              if (trueW > trueH) {
+                setTimeout(function() {
+                  $($(scrollItem).find("img")).addClass("fvnBox_Width");
+                }, 100);
                 $(closeBtn).addClass("fvnBox_x");
-              }else{                
-                setTimeout(function(){
-                  $($(scrollItem).find("img")).addClass("fvnBox_Height");                                  
-                },100);
+              } else {
+                setTimeout(function() {
+                  $($(scrollItem).find("img")).addClass("fvnBox_Height");
+                }, 100);
                 $(closeBtn).addClass("fvnBox_y");
-              }                            
-              setTimeout(function(){                
-                fvnBoxFeature.setCustomScroll($(scrollItem),$($(".fvnBox").find("img")[id]).parent(".fvnScrollBox_cnt")[0],trueW > trueH ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});
-              },200);              
+              }
+              setTimeout(function() {
+                fvnBoxFeature.setCustomScroll($(scrollItem), $($(".fvnBox").find("img")[id]).parent(".fvnScrollBox_cnt")[0], trueW > trueH ? "x" : "y", { "width": itemSize.scrollBox["width"], "height": itemSize.scrollBox["height"] }, { "width": trueW, "height": trueH });
+              }, 200);
             }
-          }else{                        
+          } else {
             // $($(".fvnBox").find("img")[id]).addClass("fvnNormal");
           }
         }, 200);
         setTimeout(function() {
-          $("body").find(".fvnBox_img").css(fvnBox_img !== undefined ? fvnBox_img : commonSize);                    
-          $("body").find(".fvnNavBox_pc").css(fvnNavBox !== undefined ? fvnNavBox : commonSize);          
+          $("body").find(".fvnBox_img").css(fvnBox_img !== undefined ? fvnBox_img : commonSize);
+          $("body").find(".fvnNavBox_pc").css(fvnNavBox !== undefined ? fvnNavBox : commonSize);
           $("body").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize);
           if (opt.number) {
             $("body").find(".fvnInforBox .fvnBox_number").html(parseInt(imgID) + 1 + " of " + imgs);
@@ -636,10 +663,10 @@ $(function($) {
         $(".fvnBox").addClass("fvnBox_hidden");
         const removeImgs = $(".fvnBox").find("img");
         var amount = 0;
-        $.each(removeImgs,function(id,item){
-          if($(item).parents(".fvnScrollBox")[0] !== undefined){
+        $.each(removeImgs, function(id, item) {
+          if ($(item).parents(".fvnScrollBox")[0] !== undefined) {
             $(item).parents(".fvnScrollBox").remove();
-          }else{
+          } else {
             item.remove();
           }
         });
@@ -650,9 +677,9 @@ $(function($) {
         return targetEl;
       }
     },
-    detectImgsLength:function(imgs){
+    detectImgsLength: function(imgs) {
       var check = false;
-      if(imgs.length != 1){
+      if (imgs.length != 1) {
         check = true;
       }
       return check;
@@ -663,112 +690,114 @@ $(function($) {
     init: function(fn_Opt) {
       if (fn_Opt.opt == "setSuffix") {
         this.setListSuffix(fn_Opt.suffix);
-      } else if (fn_Opt.opt == "setSizePercent") {              
-        this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);
+      } else if (fn_Opt.opt == "setSizePercent") {
+        this.setSizePercent(fn_Opt.width === undefined ? 80 : fn_Opt.width > 90 ? 90 : fn_Opt.width < 50 ? 50 : fn_Opt.width, fn_Opt.height === undefined ? 80 : fn_Opt.height > 90 ? 90 : fn_Opt.height < 50 ? 50 : fn_Opt.height);
       }
     },
     setListSuffix: function(suffix) {
-      if (fvnImgObj[suffix] === undefined) {        
+      if (fvnImgObj[suffix] === undefined) {
         fvnImgObj[suffix] = {};
         var imgSrc = $("body img").attr("src");
-        var imgName = imgSrc.split("/")[imgSrc.split("/").length - 1];                
+        var imgName = imgSrc.split("/")[imgSrc.split("/").length - 1];
         imgSrc = imgSrc.split(imgName)[0];
-        $.get(imgSrc, function(data) {          
+        $.get(imgSrc, function(data) {
           $(data).find("a[href*=" + suffix + "]").each(function(id, data) {
-            var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];            
+            var rootImgSrc = $(data).attr("href").split("-" + suffix)[0];
             fvnImgObj[suffix][id] = rootImgSrc;
           });
         });
       }
     },
-    setCustomScroll:function(parent,item,cordinate,scrollCntSize,wrapperCntSize){      
+    setCustomScroll: function(parent, item, cordinate, scrollCntSize, wrapperCntSize) {
       var scrollContent = parent,
-      wrapperContent = item,
-      content = $(item).find("img"),
-      contentPos = 0,
-      beginDrag = false,
-      scroller,
-      scrollerCordinate,
-      topPos,
-      rootPos;
+        wrapperContent = item,
+        content = $(item).find("img"),
+        contentPos = 0,
+        beginDrag = false,
+        scroller,
+        scrollerCordinate,
+        topPos,
+        rootPos;
       const scrollSize = cordinate == "x" ? scrollCntSize.width : scrollCntSize.height,
-      wrapperSize = cordinate == "x" ? wrapperCntSize.width : wrapperCntSize.height;           
+        wrapperSize = cordinate == "x" ? wrapperCntSize.width : wrapperCntSize.height;
+
       function calcScrollCordinate() {
         let visibleRatio = scrollSize / wrapperSize;
-        return visibleRatio * scrollSize;                       
+        return visibleRatio * scrollSize;
       }
 
-      function moveScroller(ev){
-        if(cordinate == "x"){
+      function moveScroller(ev) {
+        if (cordinate == "x") {
           let scrollPercent = ev.target.scrollLeft / wrapperSize;
           topPos = scrollPercent * (scrollSize - 5);
-          scroller.style.left = topPos+'px';
-        }else{
+          scroller.style.left = topPos + 'px';
+        } else {
           let scrollPercent = ev.target.scrollTop / wrapperSize;
           topPos = scrollPercent * (scrollSize - 5);
-          scroller.style.top = topPos+'px';
-        }        
+          scroller.style.top = topPos + 'px';
+        }
       }
 
-      function startDrag(ev){ 
-        if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){
+      function startDrag(ev) {
+        if (ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()) {
           // $("body").css({"overflow":"hidden"});      
-          ev = ev.changedTouches[0];          
+          ev = ev.changedTouches[0];
         }
-        if(cordinate == "x"){
+        if (cordinate == "x") {
           rootPos = ev.pageX;
-          contentPos = $(wrapperContent).scrollLeft();          
-        }else{
+          contentPos = $(wrapperContent).scrollLeft();
+        } else {
           rootPos = ev.pageY;
-          contentPos = $(wrapperContent).scrollTop();          
+          contentPos = $(wrapperContent).scrollTop();
         }
         beginDrag = true;
       }
-      
-      function scrollBar(ev){                  
-        if(ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()){          
-          ev = ev.changedTouches[0];                    
-        }                     
-        if(beginDrag){
-          if(cordinate == "x"){            
+
+      function scrollBar(ev) {
+        if (ev.changedTouches !== undefined && fvnBoxFeature.detectDevice()) {
+          ev = ev.changedTouches[0];
+        }
+        if (beginDrag) {
+          if (cordinate == "x") {
             let mouseDifferential = ev.pageX - rootPos;
             let scrollEquivalent = mouseDifferential * (wrapperSize / scrollSize);
-            $(wrapperContent).scrollLeft(contentPos + scrollEquivalent);            
-          }else{
+            $(wrapperContent).scrollLeft(contentPos + scrollEquivalent);
+          } else {
             let mouseDifferential = ev.pageY - rootPos;
             let scrollEquivalent = mouseDifferential * (wrapperSize / scrollSize);
             $(wrapperContent).scrollTop(contentPos + scrollEquivalent);
-          }                    
+          }
         }
       }
 
-      function stopDrag(ev){
-        $("body").css({"overflow":""});
+      function stopDrag(ev) {
+        $("body").css({ "overflow": "" });
         beginDrag = false;
-      }      
-      function createScroll(){              
+      }
+
+      function createScroll() {
         scroller = document.createElement("div");
         scroller.className = "fvnBox_scroller";
-        scrollerCordinate = calcScrollCordinate();         
-        if(scrollerCordinate / scrollSize < 1){                              
-          const display = (fvnBoxFeature.detectDevice()===true ? "none" : "");
-          if(cordinate == "x"){                        
-            $(scroller).css({"width":scrollerCordinate+"px","height":15+"px","bottom":3+"px","left":($(wrapperContent).scrollLeft()/wrapperSize)*(scrollSize - 5)+"px",display:display});
-            if(fvnBoxFeature.detectDevice()){
-              scrollContent.removeClass("fvnBox_showX");  
-            }else{
-              scrollContent.addClass("fvnBox_showX");    
-            }            
-          }else{                        
-            $(scroller).css({"width":15+"px","height":scrollerCordinate+"px","top":($(wrapperContent).scrollTop()/wrapperSize)*(scrollSize - 5)+"px","right":2+"px",display:display});
-            if(fvnBoxFeature.detectDevice()){
-              scrollContent.removeClass("fvnBox_showY");  
-            }else{
-              scrollContent.addClass("fvnBox_showY");    
+        scrollerCordinate = calcScrollCordinate();
+        if (scrollerCordinate / scrollSize < 1) {
+          const display = (fvnBoxFeature.detectDevice() === true ? "none" : "");
+          if (cordinate == "x") {
+            $(scroller).css({ "width": scrollerCordinate + "px", "height": 15 + "px", "bottom": 3 + "px", "left": ($(wrapperContent).scrollLeft() / wrapperSize) * (scrollSize - 5) + "px", display: display });
+            if (fvnBoxFeature.detectDevice()) {
+              scrollContent.removeClass("fvnBox_showX");
+            } else {
+              scrollContent.addClass("fvnBox_showX");
             }
-          }                    
-          scroller.addEventListener('mousedown',startDrag);
-          scroller.addEventListener('touchstart',startDrag);
+          } else {
+            $(scroller).css({ "width": 15 + "px", "height": scrollerCordinate + "px", "top": ($(wrapperContent).scrollTop() / wrapperSize) * (scrollSize - 5) + "px", "right": 2 + "px", display: display });
+            if (fvnBoxFeature.detectDevice()) {
+              scrollContent.removeClass("fvnBox_showY");
+            } else {
+              scrollContent.addClass("fvnBox_showY");
+            }
+          }
+          scroller.addEventListener('mousedown', startDrag);
+          scroller.addEventListener('touchstart', startDrag);
           // if(fvnBoxFeature.detectDevice()){
           //   scrollContent.addClass('fvnHideCord');
           // }else{            
@@ -776,10 +805,10 @@ $(function($) {
           //   scrollContent.append(scroller);      
           // }
           scrollContent.append(scroller);
-          window.addEventListener('mouseup',stopDrag);
-          window.addEventListener('mousemove',scrollBar);
-          window.addEventListener('touchend',stopDrag);
-          window.addEventListener('touchmove',scrollBar);
+          window.addEventListener('mouseup', stopDrag);
+          window.addEventListener('mousemove', scrollBar);
+          window.addEventListener('touchend', stopDrag);
+          window.addEventListener('touchmove', scrollBar);
           // $(scroller).on("mousedown",function(e){
           //   startDrag(e);
           // });
@@ -792,45 +821,45 @@ $(function($) {
         }
       }
       createScroll();
-      wrapperContent.addEventListener('scroll',moveScroller);
+      wrapperContent.addEventListener('scroll', moveScroller);
     },
-    setSizePercent: function(w,h) {      
+    setSizePercent: function(w, h) {
       var winW = $(window).outerWidth(false),
         winH = $(window).outerHeight(true);
-      wWidth = winW < winH ? winW * w / 100 : winW <= 640 ? winW * (w >= 50 && w <= 79? w:w-20) / 100 : winW * (w <= 90 && w >= 80? w:w+5) / 100;
-      wHeight = winW < winH ? winH * h / 100 : winW <= 640 ? winH * (h >= 50 && h <= 79? h:h-20) / 100 : winH * (h <= 90 && h >= 80? h:h+5) / 100;
+      wWidth = winW < winH ? winW * w / 100 : winW <= 640 ? winW * (w >= 50 && w <= 79 ? w : w - 20) / 100 : winW * (w <= 90 && w >= 80 ? w : w + 5) / 100;
+      wHeight = winW < winH ? winH * h / 100 : winW <= 640 ? winH * (h >= 50 && h <= 79 ? h : h - 20) / 100 : winH * (h <= 90 && h >= 80 ? h : h + 5) / 100;
     },
-    setListImg:function(curObj,opt){
+    setListImg: function(curObj, opt) {
       let listImg = $(curObj).find("img[data-except='false']"); // declare list of images in current new class (khai báo danh sách hình thuộc từng component riêng biệt)                               
       $.each(listImg, function(id, data) {
         $(data).attr("data-index", id);
       });
       setupFVNBox["init"](curObj, opt, listImg); // main brain to controll and resovle the main feature of fvnBox animation.                  
     },
-    except:function(item,curObj,opt){                  
+    except: function(item, curObj, opt) {
       const exceptItem = $(curObj).find(item),
         scrollItem = $(curObj).find(opt.scroll),
-        fboxFeature = this;        
-        scrollItem.attr("data-fvnScroll",true);
-        $(scrollItem.find("img")).attr("data-fvnScroll",true);
-        $(item).attr("data-except",true);
-        $($(item).find("img")).attr("data-except",true);
-        fboxFeature.setListImg(curObj,opt);
+        fboxFeature = this;
+      scrollItem.attr("data-fvnScroll", true);
+      $(scrollItem.find("img")).attr("data-fvnScroll", true);
+      $(item).attr("data-except", true);
+      $($(item).find("img")).attr("data-except", true);
+      fboxFeature.setListImg(curObj, opt);
     },
-    slick:function(obj,slick_opt){
+    slick: function(obj, slick_opt) {
       $(obj).slick(slick_opt);
     },
     detectDevice: function() {
       var isMobile = false; //initiate as false
       // device detection
       const is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
-        is_android = navigator.platform.toLowerCase().indexOf("android") > -1;      
+        is_android = navigator.platform.toLowerCase().indexOf("android") > -1;
       if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
         /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) isMobile = true;
-      else if(is_firefox && is_android){isMobile = true;} 
+      else if (is_firefox && is_android) { isMobile = true; }
       return isMobile;
     },
-    setResizeImg: function(fn_Opt) {      
+    setResizeImg: function(fn_Opt) {
       if (this.detectDevice() && !$(".fvnBox").hasClass("fvnNavBox_touch")) {
         $(".fvnNavBox_pc").removeClass("fvnBox_show");
         $(".fvnBox").addClass("fvnNavBox_touch");
@@ -838,54 +867,60 @@ $(function($) {
         $(".fvnNavBox_pc").addClass("fvnBox_show");
         $(".fvnBox").removeClass("fvnNavBox_touch");
       }
-      this.setSizePercent(fn_Opt.width===undefined?80:fn_Opt.width>90?90:fn_Opt.width<50?50:fn_Opt.width,fn_Opt.height===undefined?80:fn_Opt.height>90?90:fn_Opt.height<50?50:fn_Opt.height);      
+      this.setSizePercent(fn_Opt.width === undefined ? 80 : fn_Opt.width > 90 ? 90 : fn_Opt.width < 50 ? 50 : fn_Opt.width, fn_Opt.height === undefined ? 80 : fn_Opt.height > 90 ? 90 : fn_Opt.height < 50 ? 50 : fn_Opt.height);
       if (!$(".fvnBox").hasClass("fvnBox_hidden")) {
-        const isExist = $(".fvnBox").find(".fvnScrollBox.fvnBox_appear");        
-        var isScroll = undefined,itemSize;
-        if(isExist.length == 1){
-          isScroll = true;          
-          if(isExist.find(".fvnBox_scroller")[0] !== undefined){
+        const isExist = $(".fvnBox").find(".fvnScrollBox.fvnBox_appear");
+        var isScroll = undefined,
+          itemSize;
+        if (isExist.length == 1) {
+          isScroll = true;
+          if (isExist.find(".fvnBox_scroller")[0] !== undefined) {
             $(isExist.find(".fvnBox_scroller")).remove();
-          }                    
+          }
         }
-        itemSize = fvnBoxController.calcActualSize(isScroll,$(".fvnBox").find("img.fvnBox_show"),true);                        
-        var scrollBox,scrollContent,fvnBox_img,fvnNavBox,fvnInforBox,commonSize;
-        scrollBox = itemSize.scrollBox;
-        scrollContent = itemSize.scrollContent;
-        fvnBox_img = itemSize.fvnBox_img;
-        fvnNavBox = itemSize.fvnNavBox;
-        fvnInforBox = itemSize.fvnInforBox;
-        commonSize = itemSize.commonSize;        
-        $(".fvnBox").find("img").css({ "width": parseInt(trueW), "height": parseInt(trueH) }).addClass("fvnBox_fast");
-        $(".fvnBox").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize).addClass("fvnBox_fast");
-        $(".fvnBox").find(".fvnScrollBox_cnt").css(scrollContent !== undefined ? scrollContent : {"overflow":"visible"}).addClass("fvnBox_fast");              
-        $(".fvnBox").find(".fvnBox_img").css(fvnBox_img !== undefined ? fvnBox_img : commonSize).addClass("fvnBox_fast");                    
-        $(".fvnBox").find(".fvnNavBox_pc").css(fvnNavBox !== undefined ? fvnNavBox : commonSize).addClass("fvnBox_fast");          
-        $(".fvnBox").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize).addClass("fvnBox_fast");        
-        const fvnBox_imgs = $(".fvnBox").find("img");        
-        if(commonSize === undefined){          
-          if(actualWidth){
-            $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Width");
-            $(isExist).addClass("fvnBox_showX");
-          }else{
-            const closeBtn = $(".fvnNavBox_pc").find(".fvnBox_close");
-            $(closeBtn).removeClass("fvnBox_x fvnBox_y");
-            $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Height");
-            $(isExist).addClass("fvnBox_showY");
-          }                    
-          $(isExist).css("z-index",10002);
-          if(fvnBoxFeature.detectDevice()){
-            $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
-          }else{
+        setTimeout(function() {
+          itemSize = fvnBoxController.calcActualSize(isScroll, $(".fvnBox").find("img.fvnBox_show"), true);
+          var scrollBox, scrollContent, fvnBox_img, fvnNavBox, fvnInforBox, commonSize;
+          scrollBox = itemSize.scrollBox;
+          scrollContent = itemSize.scrollContent;
+          fvnBox_img = itemSize.fvnBox_img;
+          fvnNavBox = itemSize.fvnNavBox;
+          fvnInforBox = itemSize.fvnInforBox;
+          commonSize = itemSize.commonSize;
+          $(".fvnBox").find("img").css({ "width": parseInt(trueW), "height": parseInt(trueH) }).addClass("fvnBox_fast");
+          $(".fvnBox").find(".fvnScrollBox").css(scrollBox !== undefined ? scrollBox : commonSize).addClass("fvnBox_fast");
+          $(".fvnBox").find(".fvnScrollBox_cnt").css(scrollContent !== undefined ? scrollContent : { "overflow": "visible" }).addClass("fvnBox_fast");
+          $(".fvnBox").find(".fvnBox_img").css(fvnBox_img !== undefined ? fvnBox_img : commonSize).addClass("fvnBox_fast");
+          $(".fvnBox").find(".fvnNavBox_pc").css(fvnNavBox !== undefined ? fvnNavBox : commonSize).addClass("fvnBox_fast");
+          $(".fvnBox").find(".fvnInforBox").css(fvnInforBox !== undefined ? fvnInforBox : commonSize).addClass("fvnBox_fast");
+          const fvnBox_imgs = $(".fvnBox").find("img");
+          if (commonSize === undefined) {
+            if (actualWidth) {
+              $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Width");
+              $(isExist).addClass("fvnBox_showX");
+            } else {
+              const closeBtn = $(".fvnNavBox_pc").find(".fvnBox_close");
+              $(closeBtn).removeClass("fvnBox_x fvnBox_y");
+              $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).addClass("fvnBox_Height");
+              $(isExist).addClass("fvnBox_showY");
+            }
+            if (fvnBoxFeature.detectDevice()) {
+              $(isExist).css("z-index", 10002);
+              $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
+            } else {
+              if ($(window).outerWidth(true) - (actualWidth || trueW) > 150) {
+                $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
+              } else {
+                $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
+              }              
+            }
+            fvnBoxFeature.setCustomScroll($(isExist), $(isExist).find(".fvnScrollBox_cnt")[0], $(isExist).hasClass("fvnBox_showX") === true ? "x" : "y", { "width": itemSize.scrollBox["width"], "height": itemSize.scrollBox["height"] }, { "width": trueW, "height": trueH });
+          } else {
+            $(isExist).removeClass("fvnBox_showX fvnBox_showY");
             $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
-          }          
-          fvnBoxFeature.setCustomScroll($(isExist),$(isExist).find(".fvnScrollBox_cnt")[0],$(isExist).hasClass("fvnBox_showX") === true ? "x" : "y",{"width":itemSize.scrollBox["width"],"height":itemSize.scrollBox["height"]},{"width":trueW,"height":trueH});            
-        }else{
-          $(isExist).removeClass("fvnBox_showX fvnBox_showY");
-          $(isExist).css("z-index",10000);
-          $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
-          $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).removeClass("fvnBox_Width fvnBox_Height");
-        }        
+            $($(fvnBox_imgs)[fvnBox_imgs.length - 1]).removeClass("fvnBox_Width fvnBox_Height");
+          }
+        }, 100);
       }
     },
     settingRemoveFunc: function() {

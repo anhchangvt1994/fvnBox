@@ -34,7 +34,7 @@
         </ul>
     </div>
     <div class="section">
-        <ul class="slick slick01">
+        <ul class="slick slick02">
             <li>
                 <img src="images/pdt_00.jpg" alt="product">
             </li>
@@ -173,7 +173,17 @@
             </li>
             <li>
                 <a href="#" class="scroll">
-                    <img class="none" src="images/pdt_25.jpg" alt="product">
+                    <img src="images/pdt_25.jpg" alt="product">
+                </a>
+            </li>
+            <li>
+                <a href="#" class="scroll">
+                    <img src="images/pdt_25.jpg" alt="product">
+                </a>
+            </li>
+            <li>
+                <a href="#" class="scroll">
+                    <img src="images/pdt_25.jpg" alt="product">
                 </a>
             </li>
             <li>
@@ -284,8 +294,9 @@
     $(document).ready(function() {
         // $(".list-pdt").fvnBox({number:true,caption:true,scroll:".scroll",w:50,h:50});
         $("#tst01").fvnBox();
-        $("#tst02").fvnBox({scroll:".scroll"}).except(".none,.hidden");
+        $("#tst02").fvnBox({scroll:".scroll",w:83,h:90}).except(".none,.hidden");
         $(".slick01").fvnBox({number:true,caption:true,w:70,h:60,scroll:".scroll"}).slick({autoplay:true,prevArrow: false,nextArrow: false});
+        $(".slick02").fvnBox({number:true,caption:true}).slick({autoplay:true,prevArrow: false,nextArrow: false});
         $("#slick03").fvnBox({number:true,caption:true,w:80,h:55}).except(".hid").slick({autoplay:true,prevArrow: false,nextArrow: false});
     })
     </script>

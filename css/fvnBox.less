@@ -1,42 +1,62 @@
-.transform(@transform...){  
+.transform(@transform...) {
   -webkit-transform: @arguments;
   -moz-transform: @arguments;
   -ms-transform: @arguments;
   -o-transform: @arguments;
   transform: @arguments;
 }
-.position(@pos:absolute,@l:"",@t:"",@r:"",@b:"",@zindex:""){
-  position:@pos;
-  .left() when not (@l = ""){left: @l};
-  .left();  
-  .top() when not (@t = ""){top: @t};
+
+.position(@pos: absolute, @l: "", @t: "", @r: "", @b: "", @zindex: "") {
+  position: @pos;
+  .left() when not (@l ="") {
+    left: @l
+  }
+  ;
+  .left();
+  .top() when not (@t ="") {
+    top: @t
+  }
+  ;
   .top();
-  .right() when not (@r = ""){right: @r};
-  .right();  
-  .bottom() when not (@b = ""){bottom: @b};
+  .right() when not (@r ="") {
+    right: @r
+  }
+  ;
+  .right();
+  .bottom() when not (@b ="") {
+    bottom: @b
+  }
+  ;
   .bottom();
-  .zindex() when not (@zindex=""){z-index:@zindex};  
+  .zindex() when not (@zindex="") {
+    z-index: @zindex
+  }
+  ;
   .zindex();
 }
-.size(@w:"",@h:""){  
-  width:@w;
-  height:@h;  
+
+.size(@w: "", @h: "") {
+  width: @w;
+  height: @h;
 }
-.transition(@set...){
+
+.transition(@set...) {
   -webkit-transition: @arguments;
   -moz-transition: @arguments;
   -ms-transition: @arguments;
   -o-transition: @arguments;
   transition: @arguments;
 }
-.transition-property(@set...){
+
+.transition-property(@set...) {
   -webkit-transition-property: @arguments;
   -moz-transition-property: @arguments;
   -ms-transition-property: @arguments;
   -o-transition-property: @arguments;
   transition-property: @arguments;
 }
-.preventSelect(){
+
+.preventSelect() {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -54,241 +74,377 @@
 
 
 
-.fvnBox{
-  .position(@pos:fixed,@l:0,@t:0,@zindex:9999);
-  background:fade(#000,80%);
-  .size(@w:100%,@h:100%);
-  img{
+.fvnBox {
+  .position(@pos: fixed, @l: 0, @t: 0, @zindex: 9999);
+  background: fade(#000, 80%);
+  .size(@w: 100%, @h: 100%);
+  img {
     .preventSelect();
     white-space: nowrap;
-    pointer-events:none;
-    .position(@l:50%,@t:50%,@zindex:10000);
-    .transform(@transform:translate(-50%,-50%));
-    .transition(@set: 0.9s ease);    
-    opacity:0;    
+    pointer-events: none;
+    .position(@l: 50%, @t: 50%, @zindex: 10000);
+    .transform(@transform: translate(-50%, -50%));
+    .transition(@set: 0.9s ease);
+    opacity: 0;
   }
-  & &_Width, & &_Height{
-    .transform(@transform:none);
-    .transition-property(@set:opacity,width,height;) !important;
-    // .transition(@set:none) !important;      
-  }    
-  & &_Width{
-    left:0;top:0;bottom:0;
-    margin: auto 0;    
+  & &_Width,
+  & &_Height {
+    .transform(@transform: none);
+    .transition-property(@set: opacity, width, height;
+    ) !important; // .transition(@set:none) !important;      
   }
-  & &_Height{
-    left: 0;right: 0;top: 0;
+  & &_Width {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+  }
+  & &_Height {
+    left: 0;
+    right: 0;
+    top: 0;
     margin: 0 auto;
   }
 }
-.fvnInforBox{
-  .position(@l:50%,@t:50%,@zindex:9999);
-  .size(@w:100px,@h:100px);
-  .transform(@transform:translate(-50%,-50%));
-  .transition(@set:0.9s ease);
-  .transition-property(@set:left,opacity,width,height;);
+
+.fvnInforBox {
+  .position(@l: 50%, @t: 50%, @zindex: 9999);
+  .size(@w: 100px, @h: 100px);
+  .transform(@transform: translate(-50%, -50%));
+  .transition(@set: 0.9s ease);
+  .transition-property(@set: left, opacity, width, height;
+  );
 }
-.fvnBox_number{
+
+.fvnBox_number {
   .preventSelect();
   white-space: nowrap;
-  .position(@t:calc(~"100% + 7px"));
+  .position(@t: calc(~"100% + 7px"));
   color: #fff;
   font-size: 20px;
 }
-.fvnBox_caption:extend(.fvnBox_number){
+
+.fvnBox_caption:extend(.fvnBox_number) {
   max-width: 30%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  right:0;
+  right: 0;
 }
-[class*="fvnNavBox"]{  
-  > .fvnBox_close{
-    display:none;    
-    .size(@w:50px;@h:50px);    
+
+[class*="fvnNavBox"] {
+  >.fvnBox_close {
+    display: none;
+    .size(@w: 50px;
+    @h: 50px);
     cursor: pointer;
-    z-index:9999;
-  }  
-  &.fvnBox_show{
-    > .fvnBox_close{
-      display:block;
+    z-index: 9999;
+  }
+  &.fvnBox_show {
+    >.fvnBox_close {
+      display: block;
     }
-    > .fvnBox_next, & > .fvnBox_prev{display: inline-block}
+    >.fvnBox_next,
+    &>.fvnBox_prev {
+      display: inline-block
+    }
   }
 }
-.fvnBox_close{
-  display:none;
-  &:before,&:after{
-    content:"";
-    .position(@l:0,@r:0,@t:0,@b:0,@zindex:10);  
-    .size(@h:30px,@w:5px);
-    background:#fff;    
-    margin:auto;    
+
+.fvnBox_close {
+  display: none;
+  &:before,
+  &:after {
+    content: "";
+    .position(@l: 0, @r: 0, @t: 0, @b: 0, @zindex: 10);
+    .size(@h: 30px, @w: 5px);
+    background: #fff;
+    margin: auto;
   }
-  &:before{
-    .transform(@transform:rotate(45deg));
+  &:before {
+    .transform(@transform: rotate(45deg));
   }
-  &:after{
-    .transform(@transform:rotate(-45deg));
+  &:after {
+    .transform(@transform: rotate(-45deg));
   }
 }
-.fvnNavBox_pc:extend(.fvnInforBox){
+
+.fvnNavBox_pc:extend(.fvnInforBox) {
   letter-spacing: -4px;
-  z-index:10001;
-  > .fvnBox{
-    &_close{
+  z-index: 10001;
+  >.fvnBox {
+    &_close {
       display: none;
-      .position(@l:100%,@t:0);
-      .transition(@set: 0.5s ease);      
+      .position(@l: 100%, @t: 0);
+      .transition(@set: 0.5s ease);
     }
-    &_x{
-      left:calc(~"100% - 80px");
+    &_x {
+      left: calc(~"100% - 80px");
     }
-    &_y{
+    &_y {
       left: calc(~"100% - 70px");
     }
-    &_prev, &_next{
-      position:relative;
-      display:none;
-      .size(@w:25%,@h:100%);
+    &_prev,
+    &_next {
+      position: relative;
+      display: none;
+      .size(@w: 25%, @h: 100%);
       cursor: pointer;
-      &:before{
+      &:before {
         content: "";
-        .size(@w:30px,@h:30px);
+        .size(@w: 30px, @h: 30px);
         opacity: 0;
-        .position(@t:0,@b:0);
+        .position(@t: 0, @b: 0);
         position: absolute;
-        .transform(@transform:rotate(45deg));
+        .transform(@transform: rotate(45deg));
         margin: auto 0;
-        .transition(@set:0.2s ease);
+        .transition(@set: 0.2s ease);
       }
     }
-    &_next{
-      float:right;
-      &:before{
+    &_next {
+      float: right;
+      &:before {
         border-top: 5px solid #fff;
         border-right: 5px solid #fff;
-        right: 70px;        
+        right: 70px;
       }
-      &:hover:before{
+      &:hover:before {
         right: calc(100% - 80%);
         opacity: 1;
-      } 
+      }
     }
-    &_prev{
-      float:left;
-      &:before{
+    &_prev {
+      float: left;
+      &:before {
         border-bottom: 5px solid #fff;
-        border-left: 5px solid #fff;  
-        left: 70px;        
-      } 
-      &:hover:before{
+        border-left: 5px solid #fff;
+        left: 70px;
+      }
+      &:hover:before {
         left: calc(100% - 80%);
         opacity: 1;
-      } 
-    }
-  }         
-}
-.fvnNavBox_arrow{
-  > .fvnBox{
-    &_next, &_prev{
-      display:block;
-      &:before{
-        opacity:1;
-        top:calc(~"100% + 100px");
-        .transition(@set: 0.5s ease);
-        .transition-property(@set: opacity);              
       }
-      &:hover:before{
-        left:auto !important;
-        right:auto !important;
-      }                  
     }
   }
 }
-.fvnNavBox_touch{
-  > .fvnBox_close{
+
+.fvnNavBox {
+  &_arrow {
+    text-align: center;
+    >.fvnBox {
+      &_close {
+        left: auto;
+        right: 0;
+        top: auto;
+        bottom: 100%;
+      }
+      &_next,
+      &_prev {
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: fade(#fff, 70%);
+        top: calc(~"100% + 80px");
+        float: none;
+        &:before {
+          display: inline-block;
+          opacity: 1;
+          width: 15px;
+          height: 15px;
+          border-color: #000;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          margin: auto;
+        }
+      }
+      &_next {
+        &:hover:before,
+        &:before {
+          right: 7px;
+        }
+        margin-left:50px;
+      }
+      &_prev {
+        margin-right: 50px;
+        &:hover:before,
+        &:before {
+          left: 7px;
+        }
+      }
+    }
+  }
+  &_y {
+    >.fvnBox {
+      &_next,
+      &_prev {
+        top: calc(~"100% + 30px");
+      }
+    }
+  }
+}
+
+.fvnNavBox_touch {
+  >.fvnBox_close {
     display: block;
-    .position(@r:3%,@t:3%);
-  }  
+    .position(@r: 3%, @t: 3%);
+  }
 }
-.fvnBox_img:extend(.fvnInforBox){
-  background:#fff;  
+
+.fvnBox_img:extend(.fvnInforBox) {
+  background: #fff;
 }
-.fvnBox{
-  &_fast{.transition(@set: 0.8s ease) !important;}
-  &_none{.transition(@set:linear) !important;}
-  &_quick, &_return{
+
+.fvnBox {
+  &_fast {
+    .transition(@set: 0.8s ease) !important;
+  }
+  &_none {
+    .transition(@set: linear) !important;
+  }
+  &_quick,
+  &_return {
     .transition(@set: 0.5s ease) !important;
-  } 
-  &_out{
-    opacity:0 !important;
+  }
+  &_out {
+    opacity: 0 !important;
     .transition(@set: 1.2s ease) !important;
-  }  
-  &_appear{
-    opacity:1 !important;
+  }
+  &_appear {
+    opacity: 1 !important;
     .transition(@set: 1.5s ease);
   }
-  &_disappear{.transition(@set: 0.7s ease) !important;}
-  &_hidden{
-    display:none !important;
+  &_disappear {
+    .transition(@set: 0.7s ease) !important;
+  }
+  &_hidden {
+    display: none !important;
   }
 }
-.fvnScrollBox{
-  .position(@t:50%,@l:50%,@zindex:10000);
-  .transform(@transform:translate(-50%,-50%));
-  opacity:0;  
-  &_cnt{
+
+.fvnScrollBox {
+  .position(@t: 50%, @l: 50%, @zindex: 10000);
+  .transform(@transform: translate(-50%, -50%));
+  opacity: 0;
+  &_cnt {
     position: relative;
-    .size(@w:100%,@h:100%);
+    .size(@w: 100%, @h: 100%);
     .transition(@set: 0.9s ease);
-    overflow:hidden;
+    overflow: hidden;
   }
 }
-.fvnBox{
-  &_showX{
-    &:before{
+
+.fvnBox {
+  &_showX {
+    &:before {
       content: "";
-      .position(@l:0,@b:0,@zindex:9999);      
-      .size(@w:100%,@h:30px);
-      border-radius: 5px;      
+      .position(@l: 0, @b: 0, @zindex: 9999);
+      .size(@w: 100%, @h: 30px);
+      border-radius: 5px;
     }
-    &:after{
+    &:after {
       content: "";
-      .position(@l:0,@b:0,@zindex:9999);
-      .size(@w:100%,@h:20px);
+      .position(@l: 0, @b: 0, @zindex: 9999);
+      .size(@w: 100%, @h: 20px);
       border-radius: 8px;
       background: #444;
     }
   }
-  &_showY{
-    &:before{
+  &_showY {
+    &:before {
       content: "";
-      .position(@t:0,@r:0,@zindex:9999);
-      .size(@w:30px,@h:100%);      
-      border-radius: 5px;      
+      .position(@t: 0, @r: 0, @zindex: 9999);
+      .size(@w: 30px, @h: 100%);
+      border-radius: 5px;
     }
-    &:after{
+    &:after {
       content: "";
-      .position(@t:0,@r:0,@zindex:9999);
-      .size(@w:20px,@h:100%);      
+      .position(@t: 0, @r: 0, @zindex: 9999);
+      .size(@w: 20px, @h: 100%);
       border-radius: 8px;
       background: #444;
     }
   }
-  &_scroller{
+  &_scroller {
     position: absolute;
     border-radius: 5px;
-    background:#b1b1b1;
-    .preventSelect();    
+    background: #b1b1b1;
+    .preventSelect();
     white-space: nowrap;
     z-index: 10000;
   }
 }
-.fvnBox{
-  &_preventScroll{
-    max-width:100%;
-    max-height:100%;
-    overflow:hidden;
+
+.fvnBox {
+  &_preventScroll {
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+  }
+}
+
+@media screen and (max-width: 940px) and (max-aspect-ratio: 13/9) {
+  .fvnNavBox_pc {
+    >.fvnBox_close {
+      left: auto;
+      right: 0;
+      top: auto;
+      bottom: 100%;
+    }
+    >.fvnBox_x {
+      left: auto;
+    }
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .fvnNavBox {
+    &_arrow {
+      .fvnBox {
+        &_next,
+        &_prev {
+          width: 40px;
+          height: 40px;
+          top: calc(~"100% + 30px");
+          &:before {
+            width: 10px;
+            height: 10px;
+          }
+        }
+        &_next {
+          &:before,
+          &:hover:before {
+            right: 5px;
+          }
+        }
+        &_prev {
+          &:before,
+          &:hover:before {
+            left: 5px;
+          }
+        }
+      }
+    }
+    &_y{
+      .fvnBox{
+        &_next, &_prev{
+          top: calc(~"100% + 10px");
+        }
+      }
+    }
+  }
+  @media (max-aspect-ratio: 13/9) {
+    .fvnNavBox_arrow {
+      .fvnBox {
+        &_next,
+        &_prev {
+          width: 50px;
+          height: 50px;
+          top: calc(~"100% + 60px");
+        }
+      }
+    }
   }
 }
