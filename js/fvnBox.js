@@ -153,7 +153,7 @@ $(function($) {
       var pos;
       var target = ($(curObj).find("a").length != 0 ? "a" : $(curObj).find("li").length != 0 ? "li" : $(curObj).find("div").length != 0 ? "div" : $(curObj).find("dd").length != 0 ? "dd" : "img");
       fvnBoxController.detectEvent({ obj: curObj, tg: target });
-      $(curObj).find("img").on("mousedown", function(e) {
+      $(curObj).on("mousedown", function(e) {
         pos = e.pageX;
       });
       const targetParent = $($(curObj).find("img")).parent();
@@ -163,23 +163,26 @@ $(function($) {
       //   if(parentW - imgW <= 60 || parentH - imgH <= 60){ 
       //     $(this).find("img").click();                    
       //   }       
-      // })
-      $(curObj).on("touchstart click", function(e) { 
-        const curTarget = (e.target.localName == "img" ? e.target : $(e.target).children()[0].localName == "img" ? $(e.target).children()[0] : false);
-        console.log(curTarget);
-        if(!curTarget){
+      // })      
+      $(curObj).on("touchstart click", function(e) {                       
+        const curTarget = ($(e.target)[0].localName == "img" ? e.target : ($(e.target).children()[0] || $(e.target)[0]).localName == "img" ? $(e.target).children()[0] : false);
+        if (!curTarget) {
+          e.preventDefault();
           return false;
-        };
-        console.log($(curTarget).attr("data-except"));
-        if ($(curTarget).attr("data-except") == "true") {                    
-          console.log($(curTarget).attr("data-except"));
-          var atag = $(e.target).parents("a");
+        }        
+        if (!fvnBoxFeature.detectParent(e.target)) {
+          e.preventDefault();
+          return false;
+        }
+        if ($(curTarget).attr("data-except") == "true") {
+          console.log(curTarget);
+          var atag = $(curTarget).parents("a");
           if (atag.length >= 1 && $(atag[0]).attr("href") == "#") {
-            $(atag[0]).on("click", function(e) {              
+            $(atag[0]).on("click", function(e) {
               e.preventDefault();
             });
           }
-        } else {          
+        } else {
           // set percent value of window size.      
           pWidth = (opt.w || 83) <= 83 ? (opt.w || 83) : 83;
           pHeight = (opt.h || 90) <= 90 ? (opt.h || 90) : 90;
@@ -207,13 +210,14 @@ $(function($) {
               return false;
             }
           } else {
-            var drag = false;
+            var drag = false;            
             $(document).on("touchmove", function() {
               drag = true;
-            });
-            $(curTarget).on("touchend", function(e) {
+            });            
+            $(this).on("touchend", function(e) {
               if (!drag) {
                 fvnBoxAnimation.mainAnimate({ item: $(curTarget), imgs: imgs, opt: opt });
+                console.log(curTarget);
               } else {
                 drag = false;
               }
@@ -522,12 +526,12 @@ $(function($) {
       }
       var scrollBox, scrollContent, fvnBox_img, fvnNavBox, fvnInforBox, commonSize;
       if (actualWidth !== undefined && actualHeight === undefined) {
-        scrollBox = { "width": actualWidth, "height": trueH + increaseSize, "z-index": 10000};
+        scrollBox = { "width": actualWidth, "height": trueH + increaseSize, "z-index": 10000 };
         scrollContent = { "overflow": overflow_cord };
         fvnBox_img = { "width": actualWidth + 10, "height": trueH + 10 };
         fvnNavBox = { "width": actualWidth, "height": trueH };
         fvnInforBox = { "width": actualWidth, "height": trueH + 70 };
-      } else if (actualWidth === undefined && actualHeight !== undefined) {        
+      } else if (actualWidth === undefined && actualHeight !== undefined) {
         scrollBox = { "width": trueW + increaseSize, "height": actualHeight, "z-index": (fvnBoxFeature.detectDevice() === true ? "10000" : "99999") };
         scrollContent = { "overflow": overflow_cord };
         fvnBox_img = { "width": trueW + 10, "height": actualHeight + 10 };
@@ -579,19 +583,19 @@ $(function($) {
                   if ($(curScrollBox).find(".fvnBox_scroller").length > 0) {
                     $(curScrollBox).css("z-index", 10002);
                     $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
-                  }                  
-                }, 500);                
-                if(trueW < $(window).outerWidth(true)){
+                  }
+                }, 500);
+                if (trueW < $(window).outerWidth(true)) {
                   $(".fvnNavBox_pc").addClass("fvnNavBox_y");
-                }else{
+                } else {
                   $(".fvnNavBox_pc").removeClass("fvnNavBox_y");
                 }
-              } else {                
+              } else {
                 if ($(window).outerWidth(true) - (actualWidth || trueW) > 170) {
                   $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
                 } else {
                   $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
-                }                
+                }
               }
             } else {
               $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
@@ -859,6 +863,16 @@ $(function($) {
       else if (is_firefox && is_android) { isMobile = true; }
       return isMobile;
     },
+    detectParent: function(item) {      
+      var check = true;
+      if (item.localName != "img") {    
+      const child = $(item).find("img");    
+        if ($(item).outerWidth(true) - $(child).outerWidth(true) > 80 || $(item).outerHeight(true) - $(child).outerHeight(true) > 80) {
+          check = false;
+        }
+      }
+      return check;
+    },
     setResizeImg: function(fn_Opt) {
       if (this.detectDevice() && !$(".fvnBox").hasClass("fvnNavBox_touch")) {
         $(".fvnNavBox_pc").removeClass("fvnBox_show");
@@ -912,7 +926,7 @@ $(function($) {
                 $(".fvnNavBox_pc").removeClass("fvnNavBox_arrow");
               } else {
                 $(".fvnNavBox_pc").addClass("fvnNavBox_arrow");
-              }              
+              }
             }
             fvnBoxFeature.setCustomScroll($(isExist), $(isExist).find(".fvnScrollBox_cnt")[0], $(isExist).hasClass("fvnBox_showX") === true ? "x" : "y", { "width": itemSize.scrollBox["width"], "height": itemSize.scrollBox["height"] }, { "width": trueW, "height": trueH });
           } else {
